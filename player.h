@@ -6,7 +6,4 @@ class Player {
     int points;
     Player(int points): points{points} {}
 
-    int points;
-    Player(int points): points{points} {}
-
 };
