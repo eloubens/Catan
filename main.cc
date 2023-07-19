@@ -20,9 +20,9 @@ int main() {
 		
 		
 		// if user doesn't want to start a new game
-		if (....) {
-			exit
-		}
+		// if (....) {
+		// 	exit;
+		// }
 	}
 
 }
