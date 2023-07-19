@@ -3,6 +3,7 @@
 using namespace std;
 
 int main() {
+	// I MADE A CHNGE HERE IN MAIN
 	// for starting new game loop
 	while(true) {
 		
