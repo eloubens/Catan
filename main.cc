@@ -3,7 +3,6 @@
 using namespace std;
 
 int main() {
-	
 	// for starting new game loop
 	while(true) {
 		
@@ -11,20 +10,13 @@ int main() {
 			I made a change
 			
 		}
+
+		HERE IS A CHANGE
 		
 		for (int i = 3; i >=0; --i) {
 			
 			
 		}
-		
-
-		TESTINGTESTINGS
-		
-		
-		// if user doesn't want to start a new game
-		// if (....) {
-		// 	exit;
-		// }
 	}
 
 }
