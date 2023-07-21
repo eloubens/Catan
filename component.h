@@ -9,7 +9,7 @@ class Vertex;
 
 class Component {
    int location; //vertex number or edge number
-   Color playerType = Color::DNE; //Player that built res/road, DNE if one doesn't exist
+   Color playerType = Color::DNE; // Doesn't get initialized if empty!! //Player that built res/road
    std::vector<Vertex*> adjVertices;
    std::vector<Edge*> adjEdges;
  protected:
@@ -22,6 +22,8 @@ class Component {
    // virtual void print() const = 0;
 };
 
+
+
 class Edge final : public Component {
    bool isRoad = false;
  public:
@@ -29,6 +31,9 @@ class Edge final : public Component {
    // void print() const override;
    void checkRoad(Color color, int edge) const;
 };
+
+
+
 
 class Vertex final : public Component {
    Residence residenceType = Residence::NONE;

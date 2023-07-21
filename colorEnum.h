@@ -7,7 +7,7 @@ enum class Color {
     R = 1, // Player 2
     O = 2, // Player 3
     Y = 3,  // Player 4
-    DNE = -1 // player does not exist
+    DNE = -1
 };
 
 #endif
