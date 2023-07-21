@@ -1,0 +1,1 @@
+resourceEnum.o: resourceEnum.cc
