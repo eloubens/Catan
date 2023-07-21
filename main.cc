@@ -1,11 +1,18 @@
 #include <iostream>
-#include "tile.h"
-#include "component.h"
-#include "player.h"
+#include "controller.h"
 
 using namespace std;
 
 int main() {
+	// read in input from stdin 
+	// figure out how to define board here as
+
+
+	while(true){
+		Controller controller{};
+		controller.general();
+	}
+	
 	//just doing testing here
 	// Edge test{5};
 	// Vertex test2{4};

@@ -18,7 +18,8 @@ class Component {
    bool hasAdjVertices() const;
    bool hasAdjEdges() const;
  public:
-   Component(int location);
+   explicit Component(int location);
+   Component(int location,  Color playerType);
    // virtual void print() const = 0;
 };
 

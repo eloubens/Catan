@@ -1,7 +1,7 @@
 CXX = g++					
 CXXFLAGS = -g -Wall -MMD -Werror=vla	
 
-OBJECTS = resourceEnum.o tile.o color.o component.o main.o player.o # CHANGE HERE
+OBJECTS = resourceEnum.o colorEnum.o residenceEnum.o tile.o component.o player.o controller.o dice.o main.o# CHANGE HERE
 DEPENDS = ${OBJECTS:.o=.d}			
 EXEC = a.out					# executable name
 

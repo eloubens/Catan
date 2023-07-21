@@ -12,15 +12,19 @@ enum class Settlement {
 
 class Controller {
     int tileValRolled;
-    Color turn = Color::DNE;
+    Color turn = Color::B;
     std::map<Settlement, std::map<Resource,int>> settlementCost; // stores how many resorces each settlement costs
     Player players[4];
-    void general();
+    Board board{};
+
+
+   
+    void roll();
+    void trade();
 
  public: 
     Controller();
     void general();
-
 };
 
 

@@ -11,7 +11,9 @@ class Player {
     std::map<Resource, int> resocMap;
     std::vector<int> occupiedTiles;
  public:
-    Player(Color color);
+    explicit Player(Color color);
+    Player(Color color, int buildingPoints, int resocTotal, std::map<Resource, 
+                                int> resocMap, std::vector<int> occupiedTiles);
     
     
     void roll();
