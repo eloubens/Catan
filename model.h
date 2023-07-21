@@ -20,14 +20,14 @@ class Model {
     // stores how many resorces each settlement costs
     // SET MAP HERE (not in ctor)
     std::map<Settlement, std::map<Resource,int>> settlementCost;
-    //= {
-        //{B, }, 
-        //{H, },
-        //{T, }, 
-        //{R, }
+    = {
+        {B,     }, 
+        {H, },
+        {T, }, 
+        {R, }
 
 
-    //}
+    }
 
 
 

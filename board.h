@@ -1,5 +1,6 @@
 #include <iostream>
 #include <utility>
+#include <fstream>
 #include "resourceEnum.h"
 #include "colorEnum.h"
 #include "tile.h"
