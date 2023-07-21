@@ -9,7 +9,7 @@ enum class Settlement {
     T, // Tower
     R  // Road
 };
-
+ 
 class Controller {
     int tileValRolled;
     Color turn = Color::B;

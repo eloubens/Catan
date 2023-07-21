@@ -6,7 +6,7 @@
 
 class Edge;
 class Vertex;
-
+ 
 class Component {
    int location; //vertex number or edge number
    Color playerType = Color::DNE; // Doesn't get initialized if empty!! //Player that built res/road

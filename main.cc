@@ -4,10 +4,10 @@
 using namespace std;
 
 int main() {
-	// read in input from stdin 
+	// read in input from stdin   
 	// figure out how to define board here as
 
-
+ 
 	while(true){
 		Controller controller{};
 		controller.general();

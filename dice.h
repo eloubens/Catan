@@ -3,7 +3,7 @@
 
 enum class DiceType {
     FAIR,
-    LOADED
+    LOADED  
 };
 
 

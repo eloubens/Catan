@@ -1,5 +1,5 @@
 #include "controller.h"
-
+ 
 using namespace std;
 
 Controller::Controller() : players{Player{Color::B}, Player{Color::R}, Player{Color::O}, Player{Color::Y}} {}
@@ -27,11 +27,11 @@ void Controller::roll() {
 }
 
 
-/* 
+/*    
 
 int tileValRolled;
 Color turn = Color::DNE;
 std::map<Settlement, std::map<Resource,int>> settlementCost; 
 Player players[4];
 
-*/
+*/ 

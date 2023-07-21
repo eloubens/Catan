@@ -8,7 +8,7 @@
 class Tile {
     int tileNum, tileValue;
     Resource resocType;
-
+ 
     Vertex vertices[6]; // vertices at this tile
     Edge edges[6]; // edges at this tile
     bool isGeese; // if a tile has a goose

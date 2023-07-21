@@ -4,7 +4,7 @@
 #include "resourceEnum.h"
 #include <map>
 #include <vector>
-
+ 
 class Player {
     Color color;
     int buildingPoints = 0, resocTotal = 0;
