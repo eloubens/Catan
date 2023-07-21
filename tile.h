@@ -20,7 +20,7 @@ class Tile {
  public:
     //ctor
     Tile(int tileNum, int tileValue, Resource resocType, int v1, int v2, int v3, int v4, 
-        int v5, int v6, int e1, int e2, int e3, int e4, int e5, int e6, bool isGeese = false);
+        int v5, int v6, int e1, int e2, int e3, int e4, int e5, int e6);
 
     std::pair<Resource, int> evalResoc(int tileValRolled, Color player) const;
     
