@@ -1,11 +1,11 @@
 #include <iostream>
-#include <ifstream>
+#include <fstream>
 #include "board.h"
  
 using namespace std;
 
 
-Board::Board(std::ifstream ifs) {
+Board::Board(ifstream ifs) {
     int tileVal;
     Resource r;
 
