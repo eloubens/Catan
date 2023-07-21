@@ -7,7 +7,7 @@ using namespace std;
 
 Board::Board(std::ifstream ifs) {
     int tileVal;
-    Resource r;
+    int r;
 
     // tile 0
     ifs >> r >> tileVal;

@@ -1,3 +1,6 @@
+#ifndef BOARD_H
+#define BOARD_H
+
 #include <iostream>
 #include <utility>
 #include "resourceEnum.h"
@@ -18,3 +21,5 @@ class Board {
     //Delete
     std::pair<Resource, int> getResoc(int tileNum, int tileValRolled, Color player) const;
 };
+
+#endif
