@@ -86,6 +86,25 @@ Board::Board(ifstream ifs) {
     ifs >> tileVal >> r;
     Tile(18, tileVal, static_cast<Resource>(r), "44", "45", "49", "50", "52", "53", "61", "64", "65", "69", "70", "71");
 
+   
+   
+    /*
+
+
+    tile[0].placeAdjVerticesV(0, vector<Vertex*> temp {tile[0].getVertexAt(1), tile[0].getVertexAt(3)});
+    placeAdjEdgesV
+
+    Vertex Class:
+    placeAdjVerticesV
+    placeAdjEdgesV
+
+    Edge Class:
+    placeAdjVerticesE
+    placeAdjEdgesE
+
+    */
+ 
+
     
 }
 
