@@ -3,7 +3,7 @@ CXXFLAGS = -g -Wall -MMD -Werror=vla
 
 OBJECTS = main.o
 DEPENDS = ${OBJECTS:.o=.d}			
-EXEC = a.out					# executable name
+EXEC = a.out					
 
 .PHONY : clean					
 
