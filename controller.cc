@@ -13,7 +13,7 @@ void Controller::general() {
    
 
     
-    
+
    // all input and output should be dealt in here!
 
 }
@@ -27,7 +27,7 @@ void Controller::roll() {
 }
 
 
-/*
+/* 
 
 int tileValRolled;
 Color turn = Color::DNE;
