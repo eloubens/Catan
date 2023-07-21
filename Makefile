@@ -1,9 +1,9 @@
 CXX = g++					
 CXXFLAGS = -g -Wall -MMD -Werror=vla	
 
-OBJECTS = main.o
+OBJECTS = resourceEnum.o colorEnum.o residenceEnum.o tile.o component.o player.o controller.o dice.o board.o main.o
 DEPENDS = ${OBJECTS:.o=.d}			
-EXEC = a.out					# executable name
+EXEC = a.out			
 
 .PHONY : clean					
 
