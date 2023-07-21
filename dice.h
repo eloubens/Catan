@@ -6,7 +6,6 @@ enum class DiceType {
     LOADED  
 };
 
-
 class Dice final {
     DiceType type = DiceType::LOADED;
 

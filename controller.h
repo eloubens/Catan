@@ -3,6 +3,8 @@
 #include "player.h"
 #include "board.h"
 
+extern const int playerNum;
+
 enum class Settlement {
     B, // Basement
     H, // House
@@ -11,8 +13,8 @@ enum class Settlement {
 };
  
 class Controller {
-    int tileValRolled;
-    Color turn = Color::B;
+    //int tileValRolled;
+    Color turn = Color::B; // Blue goes first 
     std::map<Settlement, std::map<Resource,int>> settlementCost; // stores how many resorces each settlement costs
     Player players[4];
     Board board{};

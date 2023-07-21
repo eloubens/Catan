@@ -1,1 +1,1 @@
-player.o: player.cc player.h colorEnum.h resourceEnum.h
+player.o: player.cc player.h resourceEnum.h colorEnum.h dice.h

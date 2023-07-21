@@ -1,29 +1,27 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#include "colorEnum.h"
-#include "resourceEnum.h"
 #include <map>
 #include <vector>
- 
+#include <utility>
+#include "resourceEnum.h"
+#include "colorEnum.h"
+#include "dice.h"
+
 class Player {
-<<<<<<< HEAD
     Color color;
     int buildingPoints = 0, resocTotal = 0;
+    Dice dice;
     std::map<Resource, int> resocMap;
     std::vector<int> occupiedTiles;
  public:
     explicit Player(Color color);
-    Player(Color color, int buildingPoints, int resocTotal, std::map<Resource, 
-                                int> resocMap, std::vector<int> occupiedTiles);
+    Player(Color color, int buildingPoints, int resocTotal, Dice dice, 
+        std::map<Resource, int> resocMap, std::vector<int> occupiedTiles);
     
-    
-    void roll();
+    void updateResocMap(const std::pair<Resource, int> &gainedResoc);
 
-=======
-    int points;
-    Player(int points): points{points} {}
->>>>>>> 27eb0a4234634e9715d927796c1ab7fdb8ff866f
-
+    std::vector<int>& getOccupiedTiles();
+    int roll(); //returns tilevalue rolled
 };
 
 

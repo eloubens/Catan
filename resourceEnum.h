@@ -8,7 +8,8 @@ enum class Resource {
     GLASS,
     HEAT,
     WIFI,
-    PARK
+    PARK, 
+    NA // not applicable, acts like null for pointers
 };
 
 #endif
