@@ -1,29 +1,18 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
-#include "player.h"
-#include "board.h"
+#include <map>
 
-extern const int playerNum;
 
-enum class Settlement {
-    B, // Basement
-    H, // House
-    T, // Tower
-    R  // Road
-};
  
 class Controller {
-    //int tileValRolled;
     Color turn = Color::B; // Blue goes first 
-    std::map<Settlement, std::map<Resource,int>> settlementCost; // stores how many resorces each settlement costs
-    Player players[4];
-    Board board{};
+    Model *model;
 
-
-   
     void roll();
     void trade();
+    void generateRandomBoard();// change up
 
+    // more functions
  public: 
     Controller();
     void general();
