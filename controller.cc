@@ -4,7 +4,7 @@
  
 using namespace std;
 
-// Controller::Controller() : model{
+// Controller::Controller() : model {
 
 // // In here call a controller function that deals with all the comand line argumenst for loading a board and gett
 // /// getting a file
@@ -12,11 +12,6 @@ using namespace std;
 
 // // here determines if reading in file from standard file, provided file, random generated board, 
 // // or if loading a game
-
-
-
-
-
 
 // } {}
 
