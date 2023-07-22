@@ -1,6 +1,5 @@
 #ifndef BOARD_H
 #define BOARD_H
-
 #include <iostream>
 #include <utility>
 #include <fstream>
@@ -13,16 +12,16 @@ using namespace std;
 extern const int tilesNum;
  
 class Board {
-    //Delete
-    Tile tiles[19]; // this is just code I wrote to be able to compile 
-    //Delete
-
+    Tile tiles[19]; 
 
  public:
-    //Delete
-    Board(std::ifstream ifs); // this is just code I wrote to be able to compile 
-    //Delete
+
+    Board(std::ifstream &ifs); 
+
     std::pair<Resource, int> getResoc(int tileNum, int tileValRolled, Color player) const;
+
+
+
 };
 
 #endif

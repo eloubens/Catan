@@ -1,13 +1,13 @@
 #include <iostream>
 #include "controller.h"
-
+#include <fstream>
 using namespace std;
 
 int main() {
 	// read in input from stdin   
 	// figure out how to define board here as
-
- 
+	ifstream ifs{"layout.txt"};
+	Board board{ifs};
 	// while(true){
 	// 	Controller controller{};
 	// 	controller.general();

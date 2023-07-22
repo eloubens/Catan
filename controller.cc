@@ -1,5 +1,5 @@
 #include <utility>
-#include "controller.h"
+#include <iostream>
 #include "controller.h"
  
 using namespace std;
@@ -20,18 +20,44 @@ using namespace std;
 void Controller::general() {
     // deal with input 
 
-    // then create board 
-    //Board(ifstream ifs);
-   
 
     
+    // Liz: Work in progress. Commented out since not finished
 
-   // all input and output should be dealt in here!
+    // Next Day (for me to remember) : 
+        // figure out if you can initialize ifstream with string
+        // ^ for reading in playerData, want to give it as an istringstream or ifs
+        // ^ for board randomization, read into string that has all the data. and then 
+        // create a ifs from that string and then give to model. 
+        // If can't, then Model and Board should take in an stringstream and when reading in
+        // from a file, convert to istringstream by converting to string from ifs and then to 
+        // istringstream
+    
 
+    /// have ifstream fully created by here ///
+    
+    // CASE 1: creating a model where we're just loading a board
+    // model = make_unqie<Model>(ifs);
+
+    // // CASE 2: creating model where we know we're loading a game
+    // getline(ifs, turn);
+    // string playerData;
+    // getline(ifs, playerData);
+    // ifstream player1{playerData};
+    // getline(ifs, playerData);
+    // ifstream player2{playerData};
+    // getline(ifs, playerData);
+    // ifstream player3{playerData};
+    // getline(ifs, playerData);
+    // ifstream player4{playerData};
+    //     // ifs now only stores <board>, <geese>, on each line
+    // model = make_unique<Model>(player1, player2, player3, player4, ifs);
+
+    //Liz: Work in progress. Commenting out since not done.
 }
 
 void Controller::roll(Color turn) {
-    model.roll(turn);
+    model->roll(turn);
 }
 
 
