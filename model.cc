@@ -2,9 +2,9 @@
 
 const int playerNum = 4;
 
-Model::Model() : players{Player{Color::B}, Player{Color::R}, Player{Color::O}, Player{Color::Y}},
-board{}
-{}
+// Model::Model() : players{Player{Color::B}, Player{Color::R}, Player{Color::O}, Player{Color::Y}},
+// board{}
+// {}
 
 /*    
     std::map<Settlement, std::map<Resource,int>> settlementCost;

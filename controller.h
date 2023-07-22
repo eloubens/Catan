@@ -16,7 +16,7 @@ class Controller {
 
     // more functions
  public: 
-    Controller();
+    // Controller();
     void general();
 };
 

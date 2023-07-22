@@ -1,17 +1,15 @@
 #include <iostream>
 #include "board.h"
+#include "tile.h"
 #include "resourceEnum.h"
  
 using namespace std;
 
 
-Board::Board(ifstream ifs) {
-    int tileVal;
-    int r;
-
+Board::Board(ifstream ifs, int tileVal, int r) : tiles{
     // tile 0
     ifs >> r >> tileVal;
-    Tile(0, tileVal, static_cast<Resource>(r), "0", "1", "3", "4", "8", "9", "0", "1", "2", "6", "7", "10");
+    Tile(0, "0", "1", "3", "4", "8", "9", "0", "1", "2", "6", "7", "10");
     
     // tile 1
     ifs >> tileVal >> r;
@@ -105,11 +103,15 @@ Board::Board(ifstream ifs) {
  
 
     
+} {
+
+
+    
 }
 
 // this is just code I wrote to be able to compile 
 //Delete
-Board::Board() : tiles{Tile{13, 2, Resource::BRICK, 1, 2, 3, 4, 5,5, 5, 5, 5, 5, 5, 6}} {} 
+//Board::Board() : tiles{Tile{13, 2, Resource::BRICK, 1, 2, 3, 4, 5,5, 5, 5, 5, 5, 5, 6}} {} 
 //Delete
 
 pair<Resource, int> Board::getResoc(int tileNum, int tileValRolled, Color player) const {

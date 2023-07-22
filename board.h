@@ -12,13 +12,13 @@ using namespace std;
  
 class Board {
     //Delete
-    Tile tiles[1]; // this is just code I wrote to be able to compile 
+    Tile tiles[19]; // this is just code I wrote to be able to compile 
     //Delete
 
 
  public:
     //Delete
-    Board(std::ifstream ifs); // this is just code I wrote to be able to compile 
+    Board(std::ifstream ifs, int tileVal = 0, int r = 0); // this is just code I wrote to be able to compile 
     //Delete
     std::pair<Resource, int> getResoc(int tileNum, int tileValRolled, Color player) const;
 };
