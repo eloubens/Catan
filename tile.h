@@ -1,10 +1,13 @@
 #ifndef TILE_H
 #define TILE_H
 #include <utility>
+#include <string>
 #include <iostream>
 #include "resourceEnum.h"
 #include "colorEnum.h"
 #include "component.h"
+#include "vertexEnum.h"
+#include "edgeEnum.h"
 
 extern const int verticesNum, edgesNum;
 
@@ -25,11 +28,16 @@ class Tile {
 
     std::pair<Resource, int> evalResoc(int tileValRolled, Color player) const;
 
-    Vertex &getVertex(int num);
-    Edge &getEdge(int num);
+    Vertex *getVertexAdr(vertexEnum num);
+    Edge *getEdgeAdr(edgeEnum num);
 
     void setTileVal(int tileVal);
     void setResoc(Resource resocType);
+    void placeAdjVerticesV(vertexEnum vertex, std::vector<Vertex*> &&adjVertices);
+    void placeAdjEdgesV(vertexEnum vertex, std::vector<Edge*> &&adjEdges);
+    void placeAdjVerticesE(edgeEnum edge, std::vector<Vertex*> &&adjVertices);
+    void placeAdjEdgesE(edgeEnum edge,std::vector<Edge*> &&adjEdges);
+
     
 };
 

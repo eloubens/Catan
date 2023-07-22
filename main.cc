@@ -1,4 +1,5 @@
 #include <iostream>
+<<<<<<< HEAD
 #include <vector>
 #include <algorithm>
 #include <fstream>
@@ -6,6 +7,10 @@
 #include <chrono>
 #include "string.h"
 
+=======
+#include "controller.h"
+#include <fstream>
+>>>>>>> main
 using namespace std;
 
 int main(int argc, char * argv[]) {
@@ -67,7 +72,12 @@ int main(int argc, char * argv[]) {
 
 	// read in input from stdin   
 	// figure out how to define board here as
+<<<<<<< HEAD
  
+=======
+	ifstream ifs{"layout.txt"};
+	Board board{ifs};
+>>>>>>> main
 	// while(true){
 	// 	Controller controller{};
 	// 	controller.general();

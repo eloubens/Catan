@@ -3,12 +3,14 @@
 #include "tile.h"
 #include "resourceEnum.h"
 #include "tile.h"
+#include "edgeEnum.h"
+#include "vertexEnum.h"
  
 using namespace std;
 
 const int tilesNum = 19;
 
-Board::Board(ifstream ifs): tiles{
+Board::Board(ifstream &ifs): tiles{
     Tile(0, "0", "1", "3", "4", "8", "9", "0", "1", "2", "6", "7", "10"),
     Tile(1, "2", "3", "7", "8", "13", "14", "3", "5", "6", "13", "14", "18"),
     Tile(2, "4", "5", "9", "10", "15", "16", "4", "7", "8", "15", "16", "19"),
@@ -29,12 +31,30 @@ Board::Board(ifstream ifs): tiles{
     Tile(17, "39", "40", "45", "46", "50", "51", "53", "57", "58", "65", "66", "68"),
     Tile(18, "44", "45", "49", "50", "52", "53", "61", "64", "65", "69", "70", "71")
 } {
-    int tileVal, r;
+    
+    // reading in resources and tile values from ifs
+    int tileVal, resoc;
     for (int i = 0 ; i < tilesNum; i++) {
-        ifs >> r >> tileVal;
+        ifs >> resoc >> tileVal;
         tiles[i].setTileVal(tileVal);
-        tiles[i].setResoc(static_cast<Resource>(r));
+        tiles[i].setResoc(static_cast<Resource>(resoc));
     }
+
+    // This is for 1 vertex in 1 tile
+    // In tile 0, vertex Top left having adjacent vertices at Top Right and Middle Left
+    tiles[0].placeAdjVerticesV(vertexEnum::TL, 
+        vector<Vertex*>{tiles[0].getVertexAdr(vertexEnum::TR), tiles[0].getVertexAdr(vertexEnum::ML)});
+    // In tile 0, vertex Top left having adjacent edges at Top and Top Left
+    tiles[0].placeAdjEdgesV(vertexEnum::TL, 
+        vector<Edge*>{tiles[0].getEdgeAdr(edgeEnum::T), tiles[0].getEdgeAdr(edgeEnum::TL)});
+
+    // This is for 1 edge in 1 tile
+    // In tile 0, edge Top having adjacent vertices at Top Left and Top Right
+    tiles[0].placeAdjVerticesE(edgeEnum::T,
+        vector<Vertex*>{tiles[0].getVertexAdr(vertexEnum::TL), tiles[0].getVertexAdr(vertexEnum::TR)});
+    // In tile 0, edge Top having adjacent edges at Top Left and Top Right
+    tiles[0].placeAdjEdgesE(edgeEnum::T,
+        vector<Edge*>{tiles[0].getEdgeAdr(edgeEnum::TL), tiles[0].getEdgeAdr(edgeEnum::TR)});
 
 
 }

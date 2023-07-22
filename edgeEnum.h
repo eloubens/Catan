@@ -1,4 +1,4 @@
-#ifndef EDGRENUM_H
+#ifndef EDGEENUM_H
 #define EDGEENUM_H
 
 enum class edgeEnum {
