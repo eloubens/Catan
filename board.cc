@@ -1,11 +1,12 @@
 #include <iostream>
-#include <fstream>
 #include "board.h"
+#include "tile.h"
 #include "resourceEnum.h"
 #include "tile.h"
  
 using namespace std;
 
+const int tilesNum = 19;
 
 Board::Board(ifstream ifs): tiles{
     Tile(0, "0", "1", "3", "4", "8", "9", "0", "1", "2", "6", "7", "10"),
@@ -28,6 +29,15 @@ Board::Board(ifstream ifs): tiles{
     Tile(17, "39", "40", "45", "46", "50", "51", "53", "57", "58", "65", "66", "68"),
     Tile(18, "44", "45", "49", "50", "52", "53", "61", "64", "65", "69", "70", "71")
 } {
+    int tileVal, r;
+    for (int i = 0 ; i < tilesNum; i++) {
+        ifs >> r >> tileVal;
+        tiles[i].setTileVal(tileVal);
+        tiles[i].setResoc(static_cast<Resource>(r));
+    }
+
+
+}
     /*
     int tileVal, r;
     ifs >> r >> tileVal;
@@ -44,9 +54,7 @@ Board::Board(ifstream ifs): tiles{
     Edge Class:
     placeAdjVerticesE
     placeAdjEdgesE
-
-    */ 
-}
+*/
 
 pair<Resource, int> Board::getResoc(int tileNum, int tileValRolled, Color player) const {
     return tiles[tileNum].evalResoc(tileValRolled, player);

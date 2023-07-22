@@ -1,10 +1,10 @@
 #ifndef TILE_H
 #define TILE_H
-
+#include <utility>
+#include <iostream>
 #include "resourceEnum.h"
 #include "colorEnum.h"
 #include "component.h"
-#include <utility>
 
 extern const int verticesNum, edgesNum;
 
@@ -19,10 +19,17 @@ class Tile {
     void removeGoose();
  public:
     //ctor
-    Tile(int tileNum, int tileValue, Resource resocType, int v1, int v2, int v3, int v4, 
-        int v5, int v6, int e1, int e2, int e3, int e4, int e5, int e6);
+    Tile(int tileNum, std::string v1, std::string v2, std::string v3, 
+    std::string v4, std::string v5, std::string v6, std::string e1, std::string e2, std::string e3, 
+    std::string e4, std::string e5, std::string e6);
 
     std::pair<Resource, int> evalResoc(int tileValRolled, Color player) const;
+
+    Vertex &getVertex(int num);
+    Edge &getEdge(int num);
+
+    void setTileVal(int tileVal);
+    void setResoc(Resource resocType);
     
 };
 

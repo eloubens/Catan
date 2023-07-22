@@ -4,16 +4,12 @@ using namespace std;
  
 const int verticesNum = 6, edgesNum = 6;
 
-Tile::Tile(int tileNum, int v1, int v2, int v3, int v4, 
-    int v5, int v6, int e1, int e2, int e3, int e4, int e5, int e6) :
-    tileNum{tileNum}, tileValue{tileValue}, resocType{resocType}, 
+Tile::Tile(int tileNum, string v1, string v2, string v3, 
+    string v4, string v5, string v6, string e1, string e2, string e3, 
+    string e4, string e5, string e6) :
+    tileNum{tileNum},
     vertices{Vertex{v1}, Vertex{v2}, Vertex{v3}, Vertex{v4}, Vertex{v5}, Vertex{v6}}, 
-    edges{Edge{e1}, Edge{e2}, Edge{e3}, Edge{e4}, Edge{e5}, Edge{e6}} {
-        if (resocType == Resource::PARK) {
-            isGeese = true;
-            tileValue = 0;
-        }
-    }
+    edges{Edge{e1}, Edge{e2}, Edge{e3}, Edge{e4}, Edge{e5}, Edge{e6}} {}
 
 pair<Resource, int> Tile::evalResoc(int tileValRolled, Color player) const{
     if ((tileValue != tileValRolled) || (resocType == Resource::PARK)) return {Resource::NA, 0};
@@ -22,6 +18,19 @@ pair<Resource, int> Tile::evalResoc(int tileValRolled, Color player) const{
         resocTotal += vertices[i].getResidenceAmount(player);
     }
     return {resocType, resocTotal};
+}
+
+Vertex &Tile::getVertex(int num) {return vertices[num];}
+Edge &Tile::getEdge(int num) {return edges[num];}
+
+
+void Tile::setTileVal(int tileVal) {tileValue = tileVal;}
+void Tile::setResoc(Resource resocType) {
+    if (resocType == Resource::PARK) {
+        isGeese = true;
+        tileValue = 0;
+    }
+    resocType = resocType;
 }
 
 /*
