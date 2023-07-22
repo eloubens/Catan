@@ -10,8 +10,26 @@ using namespace std;
 
 const int tilesNum = 19;
 
-Board::Board(ifstream &ifs): tiles{
-    Tile(0, "0", "1", "3", "4", "8", "9", "0", "1", "2", "6", "7", "10"),
+//Board::Board(istringstream &iss, int geeseTile)
+
+
+
+Board::Board(istringstream &iss): 
+vertices{
+    {Vertex{"0"}},
+    {Vertex{"1"}},
+    // ...
+    // 53
+},
+edges{
+    {Edge{"0"}},
+    {Edge{"1"}},
+    // ....
+    // 70
+
+},
+tiles{
+    Tile(0, vertices[0], "1", "3", "4", "8", "9", edges[0], "1", "2", "6", "7", "10"),
     Tile(1, "2", "3", "7", "8", "13", "14", "3", "5", "6", "13", "14", "18"),
     Tile(2, "4", "5", "9", "10", "15", "16", "4", "7", "8", "15", "16", "19"),
     Tile(3, "6", "7", "12", "13", "18", "19", "9", "12", "13", "20", "21", "26"),
@@ -24,7 +42,7 @@ Board::Board(ifstream &ifs): tiles{
     Tile(10, "22", "23", "28", "29", "34", "35", "28", "33", "34", "41", "42", "45"),
     Tile(11, "25", "26", "31", "32", "37", "38", "35", "38", "39", "47", "48", "52"),
     Tile(12, "27", "28", "33", "34", "39", "40", "36", "40", "41", "49", "50", "53"),
-    Tile(13,  "30", "31", "36", "37", "42", "43", "43", "46", "47", "54", "55", "60"),
+    Tile(13, "30", "31", "36", "37", "42", "43", "43", "46", "47", "54", "55", "60"),
     Tile(14, "32", "33", "38", "39", "44", "45", "44", "48", "49", "56", "57", "61"),
     Tile(15, "34", "35", "40", "41", "46", "47", "45", "50", "51", "58", "59", "62"),
     Tile(16, "37", "38", "43", "44", "48", "49", "52", "55", "56", "63", "64", "67"),
@@ -35,7 +53,7 @@ Board::Board(ifstream &ifs): tiles{
     // reading in resources and tile values from ifs
     int tileVal, resoc;
     for (int i = 0 ; i < tilesNum; i++) {
-        ifs >> resoc >> tileVal;
+        iss >> resoc >> tileVal;
         tiles[i].setTileVal(tileVal);
         tiles[i].setResoc(static_cast<Resource>(resoc));
     }
