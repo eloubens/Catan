@@ -4,7 +4,7 @@
  
 using namespace std;
 
-// Controller::Controller() : model {
+Controller::Controller() : {
 
 // // In here call a controller function that deals with all the comand line argumenst for loading a board and gett
 // /// getting a file
@@ -13,7 +13,7 @@ using namespace std;
 // // here determines if reading in file from standard file, provided file, random generated board, 
 // // or if loading a game
 
-// } {}
+}
 
 
 //this acts like the main function essentially 
@@ -34,26 +34,33 @@ void Controller::general() {
         // istringstream
     
 
-    /// have ifstream fully created by here ///
     
-    // CASE 1: creating a model where we're just loading a board
-    // model = make_unqie<Model>(ifs);
+    // CASE 1, 2, 3 will be in an if statement. 
 
-    // // CASE 2: creating model where we know we're loading a game
-    // getline(ifs, turn);
-    // string playerData;
-    // getline(ifs, playerData);
-    // ifstream player1{playerData};
-    // getline(ifs, playerData);
-    // ifstream player2{playerData};
-    // getline(ifs, playerData);
-    // ifstream player3{playerData};
-    // getline(ifs, playerData);
-    // ifstream player4{playerData};
-    //     // ifs now only stores <board>, <geese>, on each line
-    // model = make_unique<Model>(player1, player2, player3, player4, ifs);
+    // CASE 1: creating a model where we're loading a board from a file
+    // converting from ifstream to istringstream
+    ostringstream oss;
+    oss << ifs.rdbuf(); // ifs is the file layout.txt
+    string fileContent = oss.str();
+    istringstream iss(fileContent);
+    model = make_unique<Model>(iss);
+    
+    // CASE 2: creating a model where we're creating and loading a random generated board
+    model = make_unique<Model>(iss); // iss is an istringstream 
 
-    //Liz: Work in progress. Commenting out since not done.
+    // // CASE 3: creating model where we know we're loading a game
+    getline(ifs, turn); // setting field variable
+    string playerData;
+    getline(ifs, playerData);
+    istringstream player1{playerData};
+    getline(ifs, playerData);
+    istringstream player2{playerData};
+    getline(ifs, playerData);
+    istringstream player3{playerData};
+    getline(ifs, playerData);
+    istringstream player4{playerData};
+    // ifs now only stores <board>, <geese>, each on seperate line
+    model = make_unique<Model>(player1, player2, player3, player4, ifs);
 }
 
 void Controller::roll(Color turn) {
