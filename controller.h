@@ -13,7 +13,7 @@ class Controller {
     View view;
 
 
-    void roll();
+    void roll(Color turn);
     void trade();
     void generateRandomBoard();// change up
 

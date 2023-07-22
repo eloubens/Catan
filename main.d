@@ -1,2 +1,2 @@
-main.o: main.cc controller.h player.h resourceEnum.h colorEnum.h dice.h \
- board.h tile.h component.h residenceEnum.h
+main.o: main.cc controller.h colorEnum.h model.h player.h resourceEnum.h \
+ dice.h board.h tile.h component.h residenceEnum.h view.h

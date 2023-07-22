@@ -3,15 +3,18 @@
 
 #include <iostream>
 #include <utility>
+#include <fstream>
 #include "resourceEnum.h"
 #include "colorEnum.h"
 #include "tile.h"
 
 using namespace std;
+
+extern const int tilesNum;
  
 class Board {
     //Delete
-    Tile tiles[1]; // this is just code I wrote to be able to compile 
+    Tile tiles[19]; // this is just code I wrote to be able to compile 
     //Delete
 
 

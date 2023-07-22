@@ -1,10 +1,10 @@
-#include <model.h>
+#include "model.h"
 
 const int playerNum = 4;
 
-Model::Model() : players{Player{Color::B}, Player{Color::R}, Player{Color::O}, Player{Color::Y}},
-board{}
-{}
+// Model::Model() : players{Player{Color::B}, Player{Color::R}, Player{Color::O}, Player{Color::Y}},
+// board{}
+// {}
 
 /*    
     std::map<Settlement, std::map<Resource,int>> settlementCost;
@@ -13,7 +13,7 @@ board{}
 */ 
 
 
-void Model::roll() {
+void Model::roll(Color turn) {
     int tileValRolled = players[static_cast<int>(turn)].roll();
     if (tileValRolled == 7) {
         // GEESE STUFF HERE 

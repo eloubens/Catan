@@ -1,14 +1,15 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 #include <vector>
+#include <string>
 #include "residenceEnum.h"
 #include "colorEnum.h"
 
 class Edge;
 class Vertex;
  
-class Component {
-    int location; //vertex number or edge number
+class Component {   
+    std::string location; //vertex number or edge number
  protected:
     Color playerType = Color::DNE; //Player that built res/road
     std::vector<Vertex*> adjVertices;
@@ -19,8 +20,8 @@ class Component {
     bool hasAdjVertices() const;
     bool hasAdjEdges() const;
  public:
-    explicit Component(int location);
-    Component(int location,  Color playerType);
+    explicit Component(std::string location);
+    Component(std::string location,  Color playerType);
     // virtual void print() const = 0;
 };
 
@@ -28,9 +29,9 @@ class Component {
 class Edge final : public Component {
     bool isRoad = false;
  public:
-    Edge(int location);
+    Edge(std::string location);
     // void print() const override;
-    void checkRoad(Color color, int edge) const;
+    void checkRoad(Color color, int edge) const; // ???
 };
 
 
@@ -39,7 +40,7 @@ class Edge final : public Component {
 class Vertex final : public Component {
     Residence residenceType = Residence::NONE;
  public: 
-  Vertex(int location);
+  Vertex(std::string location);
     int getResidenceAmount(Color color) const;
     void printResidences() const;
     //void print() const override;
