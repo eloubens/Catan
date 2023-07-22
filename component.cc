@@ -14,6 +14,14 @@ int Vertex::getResidenceAmount(Color color) const {
 
 }
 
+void Component::setAdjV(vector<Vertex*> &&adjVertices) {
+    this->adjVertices = adjVertices;
+}
+
+void Component::setAdjE(std::vector<Edge*> &&adjEdges) {
+    this->adjEdges = adjEdges;
+}
+
 /*
 Component:
 
