@@ -2,7 +2,7 @@
 #define BOARD_H
 #include <iostream>
 #include <utility>
-#include <fstream>
+#include <sstream>
 #include "resourceEnum.h"
 #include "colorEnum.h"
 #include "tile.h"
@@ -12,11 +12,15 @@ using namespace std;
 extern const int tilesNum;
  
 class Board {
-    Tile tiles[19]; 
+    Vertex vertices[53];
+    Edge edges[70];
+    
+    Tile tiles[19];
+    int geeseTile; 
 
  public:
-
-    Board(std::ifstream &ifs); 
+    Board(std::istringstream &iss); 
+    //Board(std::istringstream &iss, int geeseTile); 
 
     std::pair<Resource, int> getResoc(int tileNum, int tileValRolled, Color player) const;
 
