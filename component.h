@@ -23,6 +23,9 @@ class Component {
     explicit Component(std::string location);
     Component(std::string location,  Color playerType);
     // virtual void print() const = 0;
+
+    void setAdjV(std::vector<Vertex*> &&adjVertices);
+    void setAdjE(std::vector<Edge*> &&adjEdges);
 };
 
 
