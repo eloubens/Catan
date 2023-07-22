@@ -35,8 +35,8 @@ void Controller::general() {
 
 }
 
-void Controller::roll() {
-    model.roll();
+void Controller::roll(Color turn) {
+    model.roll(turn);
 }
 
 

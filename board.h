@@ -9,6 +9,8 @@
 #include "tile.h"
 
 using namespace std;
+
+extern const int tilesNum;
  
 class Board {
     //Delete
@@ -18,7 +20,7 @@ class Board {
 
  public:
     //Delete
-    Board(std::ifstream ifs, int tileVal = 0, int r = 0); // this is just code I wrote to be able to compile 
+    Board(std::ifstream ifs); // this is just code I wrote to be able to compile 
     //Delete
     std::pair<Resource, int> getResoc(int tileNum, int tileValRolled, Color player) const;
 };

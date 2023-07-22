@@ -22,38 +22,45 @@ class Model {
     // stores how many resorces each settlement costs
     // SET MAP HERE (not in ctor)
     std::map<Settlement, std::map<Resource,int>> settlementCost = {
-        {Settlement::B, {
+        { Settlement::B, 
+        {
             {Resource::BRICK, 1},
             {Resource::GLASS, 1},
             {Resource::ENERGY, 1},
             {Resource::WIFI, 1}
-        }},
-        {Settlement::H, {
+            }
+        },
+        { Settlement::H, 
+            {
             {Resource::GLASS, 2},
             {Resource::HEAT, 3}
-        }},
-        {Settlement::T, {
+            }
+        },
+        { Settlement::T, {
             {Resource::BRICK, 3},
-            {Resource::ENERGY, 2}
+            {Resource::ENERGY, 2},
             {Resource::GLASS, 2},
             {Resource::WIFI, 1},
             {Resource::HEAT, 2}
-        }}, 
-        {Settlement::R, {
+        }
+        }, 
+        { Settlement::R, 
+            {
             {Resource::HEAT, 1},
             {Resource::WIFI, 1}
-        }}
-    }
+            }
+        }
+    };
 
 
 
     Player players[4];
-    //Board board{};
+    Board board;
  public:
     // Model(std::ifstream ifs, bool loadingGame); // for loading a full game 
     // Model(std::ifstream ifs); // for just loading a board
 
-    void roll();
+    void roll(Color turn);
 
 
 };

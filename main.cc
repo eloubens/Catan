@@ -8,10 +8,10 @@ int main() {
 	// figure out how to define board here as
 
  
-	while(true){
-		Controller controller{};
-		controller.general();
-	}
+	// while(true){
+	// 	Controller controller{};
+	// 	controller.general();
+	// }
 	
 	//just doing testing here
 	// Edge test{5};

@@ -1,4 +1,4 @@
-#include <model.h>
+#include "model.h"
 
 const int playerNum = 4;
 
@@ -13,7 +13,7 @@ const int playerNum = 4;
 */ 
 
 
-void Model::roll() {
+void Model::roll(Color turn) {
     int tileValRolled = players[static_cast<int>(turn)].roll();
     if (tileValRolled == 7) {
         // GEESE STUFF HERE 

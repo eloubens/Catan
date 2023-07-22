@@ -6,6 +6,8 @@
  
 using namespace std;
 
+const int tilesNum = 19;
+
 Board::Board(ifstream ifs): tiles{
     Tile(0, "0", "1", "3", "4", "8", "9", "0", "1", "2", "6", "7", "10"),
     Tile(1, "2", "3", "7", "8", "13", "14", "3", "5", "6", "13", "14", "18"),
@@ -26,7 +28,16 @@ Board::Board(ifstream ifs): tiles{
     Tile(16, "37", "38", "43", "44", "48", "49", "52", "55", "56", "63", "64", "67"),
     Tile(17, "39", "40", "45", "46", "50", "51", "53", "57", "58", "65", "66", "68"),
     Tile(18, "44", "45", "49", "50", "52", "53", "61", "64", "65", "69", "70", "71")
-} {}
+} {
+    int tileVal, r;
+    for (int i = 0 ; i < tilesNum; i++) {
+        ifs >> r >> tileVal;
+        tiles[i].setTileVal(tileVal);
+        tiles[i].setResoc(static_cast<Resource>(r));
+    }
+
+
+}
     /*
     int tileVal, r;
     ifs >> r >> tileVal;

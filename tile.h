@@ -19,7 +19,7 @@ class Tile {
     void removeGoose();
  public:
     //ctor
-    Tile(int tileNum, int tileValue, Resource resocType, std::string v1, std::string v2, std::string v3, 
+    Tile(int tileNum, std::string v1, std::string v2, std::string v3, 
     std::string v4, std::string v5, std::string v6, std::string e1, std::string e2, std::string e3, 
     std::string e4, std::string e5, std::string e6);
 
@@ -27,6 +27,9 @@ class Tile {
 
     Vertex &getVertex(int num);
     Edge &getEdge(int num);
+
+    void setTileVal(int tileVal);
+    void setResoc(Resource resocType);
     
 };
 
