@@ -1,16 +1,12 @@
 #include <iostream>
-<<<<<<< HEAD
 #include <vector>
 #include <algorithm>
 #include <fstream>
 #include <random>
 #include <chrono>
 #include "string.h"
-
-=======
 #include "controller.h"
-#include <fstream>
->>>>>>> main
+
 using namespace std;
 
 int main(int argc, char * argv[]) {
@@ -21,9 +17,10 @@ int main(int argc, char * argv[]) {
         string arg = argv[i];
         arg_vec.emplace_back(arg); 
 	}
-
+	
+	int size = arg_vec.size();
 	// setting the seed if specified
-    for (int i = 0; i < arg_vec.size(); i++) {
+    for (int i = 0; i < size; i++) {
         if (arg_vec[i] == "-seed") {
             i++; 
             seed = stoi(arg_vec[i]);
@@ -35,7 +32,8 @@ int main(int argc, char * argv[]) {
 	// setting random board in an ifstream object
 	ofstream file; // convert this back to ifstream 
 	file.open("layout.txt"); // check contents of the file
-	for (int i = 0; i < arg_vec.size(); i++) {
+	size = arg_vec.size();
+	for (int i = 0; i < size; i++) {
         if (arg_vec[i] == "-random-board") {
             vector<int> tileVal = {2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12}; // die roll
     		vector<int> tileResource = {0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5}; // 4 bricks(0), 4 energy(1), 4 glass(2), 3 heat(3), 3 wifi(4), 1 park(5)
@@ -72,12 +70,9 @@ int main(int argc, char * argv[]) {
 
 	// read in input from stdin   
 	// figure out how to define board here as
-<<<<<<< HEAD
  
-=======
-	ifstream ifs{"layout.txt"};
-	Board board{ifs};
->>>>>>> main
+	// make
+	
 	// while(true){
 	// 	Controller controller{};
 	// 	controller.general();

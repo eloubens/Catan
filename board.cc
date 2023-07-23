@@ -10,52 +10,65 @@ using namespace std;
 
 const int tilesNum = 19;
 
-//Board::Board(istringstream &iss, int geeseTile)
+Board::Board(istringstream &iss, int geeseTileNum) : Board{iss, true} { 
+    this->geeseTileNum = geeseTileNum; 
+    tiles[geeseTileNum].setGeese();
+}
 
-
-
-Board::Board(istringstream &iss): 
+Board::Board(istringstream &iss, bool isLoadGame): 
 vertices{
-    {Vertex{"0"}},
-    {Vertex{"1"}},
-    // ...
-    // 53
+    Vertex{"0"}, Vertex{"1"}, Vertex{"2"}, Vertex{"3"}, Vertex{"4"}, Vertex{"5"}, Vertex{"6"},
+    Vertex{"7"}, Vertex{"8"}, Vertex{"9"}, Vertex{"10"}, Vertex{"11"}, Vertex{"12"}, Vertex{"13"},
+    Vertex{"14"}, Vertex{"15"}, Vertex{"16"}, Vertex{"17"}, Vertex{"18"}, Vertex{"19"}, Vertex{"20"},
+    Vertex{"21"}, Vertex{"22"}, Vertex{"23"}, Vertex{"24"}, Vertex{"25"}, Vertex{"26"}, Vertex{"27"},
+    Vertex{"28"}, Vertex{"29"}, Vertex{"30"}, Vertex{"31"}, Vertex{"32"}, Vertex{"33"}, Vertex{"34"},
+    Vertex{"35"}, Vertex{"36"}, Vertex{"37"}, Vertex{"38"}, Vertex{"39"}, Vertex{"40"}, Vertex{"41"},
+    Vertex{"42"}, Vertex{"43"}, Vertex{"44"}, Vertex{"45"}, Vertex{"46"}, Vertex{"47"}, Vertex{"48"},
+    Vertex{"49"}, Vertex{"50"}, Vertex{"51"}, Vertex{"52"}
 },
 edges{
-    {Edge{"0"}},
-    {Edge{"1"}},
-    // ....
-    // 70
-
+    Edge{"0"}, Edge{"1"}, Edge{"2"}, Edge{"3"}, Edge{"4"}, Edge{"5"}, Edge{"6"},
+    Edge{"7"}, Edge{"8"}, Edge{"9"}, Edge{"10"}, Edge{"11"}, Edge{"12"}, Edge{"13"},
+    Edge{"14"}, Edge{"15"}, Edge{"16"}, Edge{"17"}, Edge{"18"}, Edge{"19"}, Edge{"20"},
+    Edge{"21"}, Edge{"22"}, Edge{"23"}, Edge{"24"}, Edge{"25"}, Edge{"26"}, Edge{"27"},
+    Edge{"28"}, Edge{"29"}, Edge{"30"}, Edge{"31"}, Edge{"32"}, Edge{"33"}, Edge{"34"},
+    Edge{"35"}, Edge{"36"}, Edge{"37"}, Edge{"38"}, Edge{"39"}, Edge{"40"}, Edge{"41"},
+    Edge{"42"}, Edge{"43"}, Edge{"44"}, Edge{"45"}, Edge{"46"}, Edge{"47"}, Edge{"48"},
+    Edge{"49"}, Edge{"50"}, Edge{"51"}, Edge{"52"}, Edge{"53"}, Edge{"54"}, Edge{"55"},
+    Edge{"56"}, Edge{"57"}, Edge{"58"}, Edge{"59"}, Edge{"60"}, Edge{"61"}, Edge{"62"},
+    Edge{"63"}, Edge{"64"}, Edge{"65"}, Edge{"66"}, Edge{"67"}, Edge{"68"}, Edge{"69"}
 },
 tiles{
-    Tile(0, vertices[0], "1", "3", "4", "8", "9", edges[0], "1", "2", "6", "7", "10"),
-    Tile(1, "2", "3", "7", "8", "13", "14", "3", "5", "6", "13", "14", "18"),
-    Tile(2, "4", "5", "9", "10", "15", "16", "4", "7", "8", "15", "16", "19"),
-    Tile(3, "6", "7", "12", "13", "18", "19", "9", "12", "13", "20", "21", "26"),
-    Tile(4, "8", "9", "14", "15", "20", "21", "10", "14", "15", "22", "23", "27"),
-    Tile(5, "10", "11", "16", "17", "22", "23", "11", "16", "17", "24", "25", "28"),
-    Tile(6, "13", "14", "19", "20", "25", "26", "18", "21", "22", "30", "31", "35"),
-    Tile(7, "15", "16", "21", "22", "27", "28", "19", "23", "24", "32", "33", "36"),
-    Tile(8, "18", "19", "24", "25", "30", "31", "26", "29", "30", "37", "38", "43"),
-    Tile(9, "20", "21", "26", "27", "32", "33", "27", "31", "32", "29", "40", "44"),
-    Tile(10, "22", "23", "28", "29", "34", "35", "28", "33", "34", "41", "42", "45"),
-    Tile(11, "25", "26", "31", "32", "37", "38", "35", "38", "39", "47", "48", "52"),
-    Tile(12, "27", "28", "33", "34", "39", "40", "36", "40", "41", "49", "50", "53"),
-    Tile(13, "30", "31", "36", "37", "42", "43", "43", "46", "47", "54", "55", "60"),
-    Tile(14, "32", "33", "38", "39", "44", "45", "44", "48", "49", "56", "57", "61"),
-    Tile(15, "34", "35", "40", "41", "46", "47", "45", "50", "51", "58", "59", "62"),
-    Tile(16, "37", "38", "43", "44", "48", "49", "52", "55", "56", "63", "64", "67"),
-    Tile(17, "39", "40", "45", "46", "50", "51", "53", "57", "58", "65", "66", "68"),
-    Tile(18, "44", "45", "49", "50", "52", "53", "61", "64", "65", "69", "70", "71")
+    Tile(0, &vertices[0], &vertices[1], &vertices[3], &vertices[4], &vertices[8], &vertices[9], &edges[0], &edges[1], &edges[3], &edges[4], &edges[8], &edges[9]),
+    Tile(1, &vertices[2], &vertices[3], &vertices[7], &vertices[8], &vertices[13], &vertices[14], &edges[3], &edges[5], &edges[6], &edges[13], &edges[14], &edges[18]),
+    Tile(2, &vertices[4], &vertices[5], &vertices[9], &vertices[10], &vertices[15], &vertices[16], &edges[4], &edges[7], &edges[8], &edges[15], &edges[16], &edges[19]),
+    Tile(3, &vertices[6], &vertices[7], &vertices[12], &vertices[13], &vertices[18], &vertices[19], &edges[9], &edges[12], &edges[13], &edges[20], &edges[21], &edges[26]),
+    Tile(4, &vertices[8], &vertices[9], &vertices[14], &vertices[15], &vertices[20], &vertices[21], &edges[10], &edges[14], &edges[15], &edges[22], &edges[23], &edges[27]),
+    Tile(5, &vertices[10], &vertices[11], &vertices[16], &vertices[17], &vertices[22], &vertices[23], &edges[11], &edges[16], &edges[17], &edges[24], &edges[25], &edges[28]),
+    Tile(6, &vertices[13], &vertices[14], &vertices[19], &vertices[20], &vertices[25], &vertices[26], &edges[18], &edges[21], &edges[22], &edges[30], &edges[31], &edges[35]),
+    Tile(7, &vertices[15], &vertices[16], &vertices[21], &vertices[22], &vertices[27], &vertices[28], &edges[19], &edges[23], &edges[24], &edges[32], &edges[33], &edges[36]),
+    Tile(8, &vertices[18], &vertices[19], &vertices[24], &vertices[25], &vertices[30], &vertices[31], &edges[26], &edges[29], &edges[30], &edges[37], &edges[38], &edges[43]),
+    Tile(9, &vertices[20], &vertices[21], &vertices[26], &vertices[27], &vertices[32], &vertices[33], &edges[27], &edges[31], &edges[32], &edges[29], &edges[40], &edges[44]),
+    Tile(10, &vertices[22], &vertices[23], &vertices[28], &vertices[29], &vertices[34], &vertices[35], &edges[28], &edges[33], &edges[34], &edges[41], &edges[42], &edges[45]),
+    Tile(11, &vertices[25], &vertices[26], &vertices[31], &vertices[32], &vertices[37], &vertices[38], &edges[35], &edges[38], &edges[39], &edges[47], &edges[48], &edges[52]),
+    Tile(12, &vertices[27], &vertices[28], &vertices[33], &vertices[34], &vertices[39], &vertices[40], &edges[36], &edges[40], &edges[41], &edges[49], &edges[50], &edges[53]),
+    Tile(13, &vertices[30], &vertices[31], &vertices[36], &vertices[37], &vertices[42], &vertices[43], &edges[43], &edges[46], &edges[47], &edges[54], &edges[55], &edges[60]),
+    Tile(14, &vertices[32], &vertices[33], &vertices[38], &vertices[39], &vertices[44], &vertices[45], &edges[44], &edges[48], &edges[49], &edges[56], &edges[57], &edges[61]),
+    Tile(15, &vertices[34], &vertices[35], &vertices[40], &vertices[41], &vertices[46], &vertices[47], &edges[45], &edges[50], &edges[51], &edges[58], &edges[59], &edges[62]),
+    Tile(16, &vertices[37], &vertices[38], &vertices[43], &vertices[44], &vertices[48], &vertices[49], &edges[52], &edges[55], &edges[56], &edges[63], &edges[64], &edges[67]),
+    Tile(17, &vertices[39], &vertices[40], &vertices[45], &vertices[46], &vertices[50], &vertices[51], &edges[53], &edges[57], &edges[58], &edges[65], &edges[66], &edges[68]),
+    Tile(18, &vertices[44], &vertices[45], &vertices[49], &vertices[50], &vertices[52], &vertices[53], &edges[61], &edges[64], &edges[65], &edges[69], &edges[70], &edges[71])
 } {
-    
     // reading in resources and tile values from ifs
     int tileVal, resoc;
     for (int i = 0 ; i < tilesNum; i++) {
         iss >> resoc >> tileVal;
         tiles[i].setTileVal(tileVal);
-        tiles[i].setResoc(static_cast<Resource>(resoc));
+        if (isLoadGame) { 
+            tiles[i].setResoc(static_cast<Resource>(resoc));
+        } else if (tiles[i].setResocSetGeese(static_cast<Resource>(resoc))) { // isLoadGame = false here
+            geeseTileNum = i;
+        } 
     }
 
     // This is for 1 vertex in 1 tile
@@ -93,6 +106,28 @@ tiles{
     placeAdjVerticesE
     placeAdjEdgesE
 */
+
+// returns tileNum that road is on
+int Board::placeValidRoad(string edgeNum, Color color) {
+    // finding what tile the road is on and placing it
+    for (int i = 0; i < tilesNum; i++) {
+        if(tiles[i].isPlaceValidRoad(edgeNum, color)) {
+            return i;
+        }
+    }
+    return -1; // just so compiler doesn't give a warning for no return statement
+}
+
+int Board::placeValidRes(string vertexNum, Color color, Residence res) {
+     // finding what tile the res is on and placing it
+    for (int i = 0; i < tilesNum; i++) {
+        if(tiles[i].isPlaceValidRes(vertexNum, color, res)) {
+            return i;
+        }
+    }
+    return -1; // just so compiler doesn't give a warning for no return statement
+}
+
 
 pair<Resource, int> Board::getResoc(int tileNum, int tileValRolled, Color player) const {
     return tiles[tileNum].evalResoc(tileValRolled, player);

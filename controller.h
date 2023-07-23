@@ -7,9 +7,6 @@
 #include "colorEnum.h"
 #include "model.h"
 #include "view.h"
-
-
-
  
 class Controller {
     Color turn = Color::B; // Blue goes first 
