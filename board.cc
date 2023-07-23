@@ -796,7 +796,7 @@ tiles{
     tiles[15].placeAdjVerticesE(edgeEnum::B, 
         vector<Vertex*>{tiles[15].getVertexAdr(vertexEnum::BL), tiles[15].getVertexAdr(vertexEnum::BR)});
     tiles[15].placeAdjEdgesE(edgeEnum::B, 
-        vector<Edge*>{tiles[15].getEdgeAdr(edgeEnum::BL), tiles[15].getEdgeAdr(edgeEnum::BR), tiles[17].getEdgeAdr(edgeEnum::T=BR)});
+        vector<Edge*>{tiles[15].getEdgeAdr(edgeEnum::BL), tiles[15].getEdgeAdr(edgeEnum::BR), tiles[17].getEdgeAdr(edgeEnum::BR)});
 
     // Tile 15, Vertex 47
     tiles[15].placeAdjVerticesV(vertexEnum::BR, 
