@@ -11,6 +11,10 @@
  
 using namespace std;
 
+//Ideas:
+// - do we need argc and argv field
+// - break up controller ctor into different functoins, eg randomize board function...etc
+
 Controller::Controller(int argc, char *argv[]) : argc(argc), argv(argv) {
     vector<string> arg_vec;
     unsigned seed = chrono::system_clock::now().time_since_epoch().count();
@@ -26,7 +30,7 @@ Controller::Controller(int argc, char *argv[]) : argc(argc), argv(argv) {
 	// setting the seed if specified
     int size = arg_vec.size(); 
     for (int i = 0; i < size; i++) {
-        if (arg_vec[i] == "-seed") {
+        if (arg_vec[i] == "- m,seed") {
             i++; 
             seed = stoi(arg_vec[i]);
         } if (arg_vec[i] == "-load" || arg_vec[i] == "-board") { // if -load or -board are specified then we ignore the randomize
@@ -90,9 +94,8 @@ Controller::Controller(int argc, char *argv[]) : argc(argc), argv(argv) {
     // convert board_iss.srt into type istringstream and pass it to the board ctor 
     istringstream board_iss{board_oss.str()}; 
     // Board{board_iss}
-}
 
-/*
+
     // CASE 1, 2, 3 will be in an if statement. 
     // CASE 1: creating a model where we're loading a board from a file
     ifstream ifs{"test"}; // delete
@@ -127,13 +130,18 @@ Controller::Controller(int argc, char *argv[]) : argc(argc), argv(argv) {
     ifs >> geeseTileNum;
     // ifs now only stores <board>, <geese>, each on seperate line
     model = make_unique<Model>(move(pResocs), move(pSettlements), board, geeseTileNum);
+    view = make_unique<View>(model.get());
 
-*/
+
+
+}
+
+
 
 
 //this acts like the main function essentially 
 void Controller::general() {
-    // deal with input 
+    
 }
 
 void Controller::roll(Color turn) {

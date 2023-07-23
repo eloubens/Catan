@@ -4,6 +4,8 @@
 
 using namespace std;
 
+View::View(Model *model) : model{model} {}
+
 /*
 View::printBoard(Model* m) {
     m->b->print();
