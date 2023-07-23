@@ -13,14 +13,14 @@ using namespace std;
 
 Controller::Controller(int argc, char *argv[]) {
     vector<string> arg_vec;
-    bool randomize = true; 
+    //bool randomize = true;
+    bool randomize;  
     ostringstream board_oss; 
     unsigned seed = chrono::system_clock::now().time_since_epoch().count();
 
-    // reading in command line arguments
+    // reading in command line arguments, converting to string
     for (int i = 1; i < argc; i++) {
-        string arg = argv[i];
-        arg_vec.emplace_back(arg); 
+        arg_vec.emplace_back(argv[i]); 
 	}
 
 	// setting the seed if specified
@@ -33,6 +33,11 @@ Controller::Controller(int argc, char *argv[]) {
         if (arg_vec[i] == "-load" || arg_vec[i] == "-board") { // if -load or -board are specified then we ignore the randomize
 			randomize = false; 
 		}
+        if (arg_vec[i] == "-random-board") {
+            i++; 
+            seed = stoi(arg_vec[i]);
+        } 
+
 	}
     setModel(randomize, board_oss, seed, arg_vec);
     view = make_unique<View>(model.get());
@@ -58,6 +63,7 @@ void Controller::setModel(bool randomize, ostringstream &board_oss, unsigned &se
         for (int i = 0; i < size; i++) {
             // LOADING BOARD FROM FILE //
             if (arg_vec[i] == "-board") { 
+                i++;
                 ifstream ifs{arg_vec[i]};
                 if (!ifs) {
                     err << "Error: Could not open file" << endl;
@@ -70,6 +76,7 @@ void Controller::setModel(bool randomize, ostringstream &board_oss, unsigned &se
             } 
             // LOADING A GAME FROM FILE //
             else if (arg_vec[i] == "-load") { 
+                i++;
                 ifstream ifs{arg_vec[i]};
                 if (!ifs) {
                     err << "Error: Could not open file" << endl;
