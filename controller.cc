@@ -121,7 +121,7 @@ int Controller::createController(vector<string> &arg_vec) {
         } 
 	}
     setModel(canRandomize, foundRandomize, seed, arg_vec);
-    //view = make_unique<View>(model.get());
+    view = make_unique<View>(model.get());
     return 0;
 }
 
