@@ -13,8 +13,8 @@ using namespace std;
 extern const int tilesNum;
  
 class Board {
-    Vertex vertices[53];
-    Edge edges[70];
+    Vertex vertices[54];
+    Edge edges[72];
     Tile tiles[19];
     int geeseTileNum; 
     
