@@ -1,15 +1,12 @@
 #ifndef MODEL_H
 #define MODEL_H
-
-
 #include <utility>
 #include <fstream>
+#include <sstream>
 #include <map>
 #include "player.h"
 #include "board.h"
 #include "resourceEnum.h"
-
-extern const int playerNum;
 
 enum class Settlement {
     B, // Basement
@@ -18,7 +15,7 @@ enum class Settlement {
     R  // Road
 };
 
-class Model {
+class Model{
     // stores how many resorces each settlement costs
     // SET MAP HERE (not in ctor)
     std::map<Settlement, std::map<Resource,int>> settlementCost = {
@@ -29,7 +26,7 @@ class Model {
                 {Resource::ENERGY, 1},
                 {Resource::WIFI, 1}
             }
-        },
+        }, 
         { Settlement::H, 
             {
                 {Resource::GLASS, 2},
@@ -56,10 +53,12 @@ class Model {
     Player players[4];
     Board board;
  public:
-    Model(std::ifstream &ifs); // for just loading a board
-    //Liz: Work in progress. Commenting out since not done.
-    //Model(std::ifstream &player1, std::ifstream &player2, player3, player4, std::ifstream &ifs); // for loading a full game 
-    //Liz: Work in progress. Commenting out since not done.
+    Model(std::istringstream &iss); // for just loading a board (from file or random generated)
+
+    Model(std::vector<std::istringstream> &&pResocs, std::vector<std::istringstream> &&pSettlements, 
+                                                    std::istringstream &board ,int geeseTileNum);
+    // Model(std::istringstream &player1, std::istringstream &player2, std::istringstream &player3, 
+    //     std::istringstream &player4, std::istringstream &board, int geeseTileNum); // for loading a full game 
 
     void roll(Color turn);
 

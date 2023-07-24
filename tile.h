@@ -5,6 +5,7 @@
 #include <iostream>
 #include "resourceEnum.h"
 #include "colorEnum.h"
+#include "residenceEnum.h"
 #include "component.h"
 #include "vertexEnum.h"
 #include "edgeEnum.h"
@@ -12,19 +13,17 @@
 extern const int verticesNum, edgesNum;
 
 class Tile {
-    int tileNum, tileValue;
+    int tileNum, tileValue = 0;
     Resource resocType;
- 
-    Vertex vertices[6]; // vertices at this tile
-    Edge edges[6]; // edges at this tile
-    bool isGeese; // if a tile has a goose
+    Vertex *vertices[6]; // vertices at this tile
+    Edge *edges[6]; // edges at this tile
+    bool isGeese = false; // if a tile has a goose
     
     void removeGoose();
  public:
     //ctor
-    Tile(int tileNum, std::string v1, std::string v2, std::string v3, 
-    std::string v4, std::string v5, std::string v6, std::string e1, std::string e2, std::string e3, 
-    std::string e4, std::string e5, std::string e6);
+    Tile(int tileNum, Vertex *v1, Vertex *v2, Vertex *v3, Vertex *v4, Vertex *v5, Vertex *v6, 
+                        Edge *e1, Edge *e2, Edge *e3, Edge *e4, Edge *e5, Edge *e6);
 
     std::pair<Resource, int> evalResoc(int tileValRolled, Color player) const;
 
@@ -32,11 +31,25 @@ class Tile {
     Edge *getEdgeAdr(edgeEnum num);
 
     void setTileVal(int tileVal);
+    // function used in ctor of board (only used when reading in a board, not saved game)
+    // returns true if a Geese was placed aka if resocType == PARK. 
+    // Possibly places a geese on tile as side effect.
+    bool setResocSetGeese(Resource resocType);
+    void setGeese();
+    // basic setter method
     void setResoc(Resource resocType);
     void placeAdjVerticesV(vertexEnum vertex, std::vector<Vertex*> &&adjVertices);
     void placeAdjEdgesV(vertexEnum vertex, std::vector<Edge*> &&adjEdges);
     void placeAdjVerticesE(edgeEnum edge, std::vector<Vertex*> &&adjVertices);
     void placeAdjEdgesE(edgeEnum edge,std::vector<Edge*> &&adjEdges);
+
+    // returns true if edgeNum is an edge in the tile. 
+    // Also places a road on the edge if found.
+    bool isPlaceValidRoad(std::string edgeNum, Color color); 
+
+    // returns true if vertexNum is an vertex in the tile. 
+    // Also places a res on the vertex if found.
+    bool isPlaceValidRes(std::string vertexNum, Color color, Residence res);
 
     
 };

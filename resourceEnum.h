@@ -1,6 +1,8 @@
 #ifndef RESOURCEENUM_H
 #define RESOURCEENUM_H
  
+const int resocAmount = 6; 
+
 // types of resources
 enum class Resource {
     BRICK = 0,
