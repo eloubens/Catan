@@ -1,5 +1,4 @@
 #include <iostream>
-<<<<<<< HEAD
 #include <vector>
 #include <algorithm>
 #include <fstream>
@@ -7,10 +6,6 @@
 #include <chrono>
 #include "string.h"
 
-=======
-#include "controller.h"
-#include <fstream>
->>>>>>> main
 using namespace std;
 
 int main(int argc, char * argv[]) {
