@@ -14,6 +14,9 @@
 
 using namespace std;
 
+// returns true if bad state
+bool Controller::isBadState(int n) { return n!= 0; }
+
 // sets the Model field of the controller. 
 // Loads a board from a file, creates and loads a randomized board, or loads a saved game.
 int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed, vector<string> &arg_vec) {
@@ -80,18 +83,7 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
     return 0;
 }
 
-
-
-// returns true if bad state
-bool isBadState(int n) { return n!= 0; }
-
-/*
-    // just cheking the contents of stringstream 
-    cout << board_oss.str() << endl; 
-*/
-
-// bad states - 2
-// 
+// just cheking the contents of stringstream 
 
 int Controller::createController(vector<string> &arg_vec) {
     bool canRandomize = true; // can you random generate a board
@@ -131,9 +123,6 @@ int Controller::general(vector<string> &arg_vec) {
     if (isBadState(state)) { return state; } // if need to terminate program
     return 0;
 }
-
-// exit for main good is 0
-
 
 void Controller::roll(Color turn) {
     model->roll(turn);
