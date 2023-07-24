@@ -28,6 +28,4 @@ class Controller {
     int createController(std::vector<string> &arg_vec); // reads in command line inputs, creates model and view
 };
 
-
-
 #endif

@@ -34,56 +34,77 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
         } 
         istringstream board_iss{board_oss.str()}; 
         model = make_unique<Model>(board_iss); 
+        // own testing
+        //cout << board_oss.str() << endl;
     } else if (!canRandomize) { // means -board or -load found
         int size = arg_vec.size(); 
         for (int i = 0; i < size; i++) {
             // loading board from speicified file
             if (arg_vec[i] == "-board") { 
                 i++;
-                istringstream board_file{arg_vec[i]};
+                ifstream ifs{arg_vec[i]};
                 //ifstream ifs{arg_vec[i]};
-                if (!board_file) {
+                if (!ifs) {
                     err << "Error: Could not open file" << endl;
                     return 1;
                 }
-                model = make_unique<Model>(board_file);
-                break;
+                board_oss << ifs.rdbuf();
+                istringstream board_iss(board_oss.str());
+                model = make_unique<Model>(board_iss);
+                // own testing
+                //cout << board_oss.str() << endl;
+                return 0;
             } 
             // loading game from specified file 
             else if (arg_vec[i] == "-load") { 
                 i++;
-                istringstream file{arg_vec[i]};
-                if (!file) {
+                ifstream ifs{arg_vec[i]};
+                if (!ifs) {
                     err << "Error: Could not open file" << endl;
                     return 1;
                 }
                 int turnColor, geeseTileNum;
                 string resoc, settlements, board;
-                file >> turnColor;
+                ifs >> turnColor;
                 // setting field variable
                 turn = static_cast<Color>(turnColor); 
                 vector<istringstream> pResocs, pSettlements;
                 for (int i = 0; i < playerAmount; i++) {
                     // read until 'r' character representing road
-                    getline(file, resoc, 'r'); 
-                    getline(file, settlements);
+                    getline(ifs, resoc, 'r'); 
+                    getline(ifs, settlements);
                     pResocs.emplace_back(istringstream{resoc});
                     pSettlements.emplace_back(istringstream{settlements});
                 }
-                getline(file, board);
+                getline(ifs, board);
                 istringstream board_iss{board};
-                file >> geeseTileNum;
+                ifs >> geeseTileNum;
                 model = make_unique<Model>(move(pResocs), move(pSettlements), board_iss, geeseTileNum);
+                return 0;
+                //just for own testing
+                // out << turnColor << endl;
+                // out << "recocs" << endl;
+                // for (auto &n: pResocs) {
+                //     out << n.str() << endl;
+                // }
+                // out << "setlements" << endl;
+                // for (auto &n: pSettlements) {
+                //     out << n.str() << endl;
+                // }
+                // out << board << endl;
+                // out << geeseTileNum << endl;
             }
         }
     } else { // read in from the default layout.txt file
-        istringstream board_file{"layout.txt"};
+        ifstream ifs{"layout.txt"};
+        board_oss << ifs.rdbuf();
+        istringstream board_file{board_oss.str()};
         model = make_unique<Model>(board_file);
+        // for own testing
+        // out << board_file.str() << endl;
     }
     return 0;
 }
-
-// just cheking the contents of stringstream 
 
 int Controller::createController(vector<string> &arg_vec) {
     bool canRandomize = true; // can you random generate a board
