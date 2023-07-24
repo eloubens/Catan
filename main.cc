@@ -9,7 +9,13 @@
 
 using namespace std;
 int main(int argc, char * argv[]) {
-    Controller c{argc, argv}; 
+    Controller c{}; 
+    vector<string> arg_vec;
+    // turning command line arguments into strings
+    for (int i = 1; i < argc; i++) {
+        arg_vec.emplace_back(argv[i]); 
+	}
+    return c.general(arg_vec);
 }
 
 //just doing testing here
