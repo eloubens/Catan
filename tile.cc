@@ -126,6 +126,8 @@ bool Tile::isPlaceValidRes(string vertexNum, Color color, Residence res) {
 }
 
 
+
+
 /*
 
 int tileNum
