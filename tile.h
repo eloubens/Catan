@@ -15,14 +15,16 @@ using namespace std;
 extern const int verticesNum, edgesNum;
 
 class Tile {
-    int tileNum, tileValue = 0;
+ 
     Resource resocType;
-    Vertex *vertices[6]; // vertices at this tile
-    Edge *edges[6]; // edges at this tile
+
     bool isGeese = false; // if a tile has a goose
     
     void removeGoose();
  public:
+    int tileNum, tileValue = 0; // PRIVATE
+    Vertex *vertices[6]; // vertices at this tile // PRIVATE
+    Edge *edges[6]; // edges at this tile // PRIVATE
     //ctor
     string getResource();
     string getTileNum();
