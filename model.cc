@@ -7,8 +7,6 @@ using namespace std;
 Model::Model(istringstream &iss) : players{Player{Color::B}, Player{Color::R}, Player{Color::O}, Player{Color::Y}},
                              board{iss} {}
 
-
-
 Model::Model(vector<istringstream> &&pResocs, vector<istringstream> &&pSettlements, istringstream &board, int geeseTileNum) :
     players{
         Player{pResocs[0], Color::B}, 
