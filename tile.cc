@@ -1,9 +1,44 @@
 #include <utility>
+#include <sstream>
 #include "tile.h"
 
 using namespace std;
  
 const int verticesNum = 6, edgesNum = 6;
+
+string Tile::getResource() {
+    if (this->resocType == Resource::BRICK) {
+        return "BRICK";
+    } else if (this->resocType == Resource::ENERGY) {
+        return "ENERGY";
+    } else if (this->resocType == Resource::GLASS) {
+        return "GLASS";
+    } else if (this->resocType == Resource::HEAT) {
+        return "HEAT";
+    } else if (this->resocType == Resource::WIFI) {
+        return "WIFI";
+    } else if (this->resocType == Resource::PARK) {
+        return "PARK";
+    } else {
+        return "NA";
+    }
+}
+
+string Tile::getTileNum() {
+    int n = this->tileNum; 
+    ostringstream oss;
+    oss << n; 
+    return oss.str(); 
+}
+
+string Tile::getTileValue() {
+    int n = this->tileValue; 
+    ostringstream oss;
+    oss << n; 
+    return oss.str();  
+}
+
+
 
 Tile::Tile(int tileNum, Vertex *v1, Vertex *v2, Vertex *v3, Vertex *v4, Vertex *v5, Vertex *v6, 
             Edge *e1, Edge *e2, Edge *e3, Edge *e4, Edge *e5, Edge *e6) :
