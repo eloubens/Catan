@@ -66,16 +66,16 @@ edges{
     Edge{"70"}, Edge{"71"}
 },
 tiles{
-    Tile(0, &vertices[0], &vertices[1], &vertices[3], &vertices[4], &vertices[8], &vertices[9], &edges[0], &edges[1], &edges[3], &edges[4], &edges[8], &edges[9]),
+    Tile(0, &vertices[0], &vertices[1], &vertices[3], &vertices[4], &vertices[8], &vertices[9], &edges[0], &edges[1], &edges[2], &edges[6], &edges[7], &edges[10]),
     Tile(1, &vertices[2], &vertices[3], &vertices[7], &vertices[8], &vertices[13], &vertices[14], &edges[3], &edges[5], &edges[6], &edges[13], &edges[14], &edges[18]),
     Tile(2, &vertices[4], &vertices[5], &vertices[9], &vertices[10], &vertices[15], &vertices[16], &edges[4], &edges[7], &edges[8], &edges[15], &edges[16], &edges[19]),
     Tile(3, &vertices[6], &vertices[7], &vertices[12], &vertices[13], &vertices[18], &vertices[19], &edges[9], &edges[12], &edges[13], &edges[20], &edges[21], &edges[26]),
-    Tile(4, &vertices[8], &vertices[9], &vertices[14], &vertices[15], &vertices[20], &vertices[21], &edges[10], &edges[14], &edges[15], &edges[22], &edges[23], &edges[27]),
-    Tile(5, &vertices[10], &vertices[11], &vertices[16], &vertices[17], &vertices[22], &vertices[23], &edges[11], &edges[16], &edges[17], &edges[24], &edges[25], &edges[28]),
+    Tile(4, &vertices[8], &vertices[9], &vertices[14], &vertices[15], &vertices[20], &vertices[21], &edges[10], &edges[14], &edges[15], &edges[22], &edges[23], &edges[27]), //4
+    Tile(5, &vertices[10], &vertices[11], &vertices[16], &vertices[17], &vertices[22], &vertices[23], &edges[11], &edges[16], &edges[17], &edges[24], &edges[25], &edges[28]), //5
     Tile(6, &vertices[13], &vertices[14], &vertices[19], &vertices[20], &vertices[25], &vertices[26], &edges[18], &edges[21], &edges[22], &edges[30], &edges[31], &edges[35]),
     Tile(7, &vertices[15], &vertices[16], &vertices[21], &vertices[22], &vertices[27], &vertices[28], &edges[19], &edges[23], &edges[24], &edges[32], &edges[33], &edges[36]),
     Tile(8, &vertices[18], &vertices[19], &vertices[24], &vertices[25], &vertices[30], &vertices[31], &edges[26], &edges[29], &edges[30], &edges[37], &edges[38], &edges[43]),
-    Tile(9, &vertices[20], &vertices[21], &vertices[26], &vertices[27], &vertices[32], &vertices[33], &edges[27], &edges[31], &edges[32], &edges[29], &edges[40], &edges[44]),
+    Tile(9, &vertices[20], &vertices[21], &vertices[26], &vertices[27], &vertices[32], &vertices[33], &edges[27], &edges[31], &edges[32], &edges[39], &edges[40], &edges[44]),
     Tile(10, &vertices[22], &vertices[23], &vertices[28], &vertices[29], &vertices[34], &vertices[35], &edges[28], &edges[33], &edges[34], &edges[41], &edges[42], &edges[45]),
     Tile(11, &vertices[25], &vertices[26], &vertices[31], &vertices[32], &vertices[37], &vertices[38], &edges[35], &edges[38], &edges[39], &edges[47], &edges[48], &edges[52]),
     Tile(12, &vertices[27], &vertices[28], &vertices[33], &vertices[34], &vertices[39], &vertices[40], &edges[36], &edges[40], &edges[41], &edges[49], &edges[50], &edges[53]),
@@ -137,7 +137,7 @@ tiles{
         vector<Vertex*>{tiles[0].getVertexAdr(vertexEnum::TR), tiles[0].getVertexAdr(vertexEnum::MR)});
     // Adjacent Edges: T, BR, TILE 2: T
     tiles[0].placeAdjEdgesE(edgeEnum::TR, 
-        vector<Edge*>{tiles[0].getEdgeAdr(edgeEnum::T), tiles[0].getEdgeAdr(edgeEnum::B), tiles[2].getEdgeAdr(edgeEnum::T)});
+        vector<Edge*>{tiles[0].getEdgeAdr(edgeEnum::T), tiles[0].getEdgeAdr(edgeEnum::BR), tiles[2].getEdgeAdr(edgeEnum::T)});
 
     // Tile 0, Vertex 3
     // Adjacent Vertices: TL, BL, TILE 1: TL
@@ -161,7 +161,7 @@ tiles{
         vector<Vertex*>{tiles[0].getVertexAdr(vertexEnum::ML), tiles[0].getVertexAdr(vertexEnum::BL)});
     // Adjacent Edges: TL, B, TILE 1: T, BR
     tiles[0].placeAdjEdgesE(edgeEnum::BL, 
-        vector<Edge*>{tiles[0].getEdgeAdr(edgeEnum::TL), tiles[0].getEdgeAdr(edgeEnum::BL), tiles[1].getEdgeAdr(edgeEnum::T), tiles[1].getEdgeAdr(edgeEnum::BR)});
+        vector<Edge*>{tiles[0].getEdgeAdr(edgeEnum::TL), tiles[0].getEdgeAdr(edgeEnum::B), tiles[1].getEdgeAdr(edgeEnum::T), tiles[1].getEdgeAdr(edgeEnum::BR)});
 
     // Tile 0, Edge 7
     // Adjacent Vertices: MR, BR
@@ -214,7 +214,7 @@ tiles{
     tiles[1].placeAdjVerticesE(edgeEnum::TL,
         vector<Vertex*>{tiles[1].getVertexAdr(vertexEnum::TL), tiles[1].getVertexAdr(vertexEnum::ML)});
     tiles[1].placeAdjEdgesE(edgeEnum::TL,
-        vector<Edge*>{tiles[1].getEdgeAdr(edgeEnum::T), tiles[0].getEdgeAdr(edgeEnum::BL), tiles[3].getEdgeAdr(edgeEnum::T)});
+        vector<Edge*>{tiles[1].getEdgeAdr(edgeEnum::T), tiles[1].getEdgeAdr(edgeEnum::BL), tiles[3].getEdgeAdr(edgeEnum::T)});
 
     // Tile 1, Vertex 7
     tiles[1].placeAdjVerticesV(vertexEnum::ML, 
@@ -411,27 +411,27 @@ tiles{
 
     // Tile 5, Vertex 11
     tiles[5].placeAdjVerticesV(vertexEnum::TR, 
-        vector<Vertex*>{tiles[5].getVertexAdr(vertexEnum::TL), tiles[5].getVertexAdr(vertexEnum::MR), tiles[0].getVertexAdr(vertexEnum::MR)});
+        vector<Vertex*>{tiles[5].getVertexAdr(vertexEnum::TL), tiles[5].getVertexAdr(vertexEnum::MR)});
     tiles[5].placeAdjEdgesV(vertexEnum::TR, 
-        vector<Edge*>{tiles[5].getEdgeAdr(edgeEnum::T), tiles[5].getEdgeAdr(edgeEnum::TR), tiles[0].getEdgeAdr(edgeEnum::BR)});
+        vector<Edge*>{tiles[5].getEdgeAdr(edgeEnum::T), tiles[5].getEdgeAdr(edgeEnum::TR)});
 
     // Tile 5, Edge 17
     tiles[5].placeAdjVerticesE(edgeEnum::TR, 
         vector<Vertex*>{tiles[5].getVertexAdr(vertexEnum::TR), tiles[5].getVertexAdr(vertexEnum::MR)});
     tiles[5].placeAdjEdgesE(edgeEnum::TR, 
-        vector<Edge*>{tiles[5].getEdgeAdr(edgeEnum::T), tiles[5].getEdgeAdr(edgeEnum::BR), tiles[2].getEdgeAdr(edgeEnum::TL), tiles[2].getEdgeAdr(edgeEnum::B)});
+        vector<Edge*>{tiles[5].getEdgeAdr(edgeEnum::T), tiles[5].getEdgeAdr(edgeEnum::BR)});
 
     // Tile 5, Vertex 17
     tiles[5].placeAdjVerticesV(vertexEnum::MR, 
-        vector<Vertex*>{tiles[5].getVertexAdr(vertexEnum::TR), tiles[5].getVertexAdr(vertexEnum::BR), tiles[7].getVertexAdr(vertexEnum::TR)});
+        vector<Vertex*>{tiles[5].getVertexAdr(vertexEnum::TR), tiles[5].getVertexAdr(vertexEnum::BR)});
     tiles[5].placeAdjEdgesV(vertexEnum::MR, 
-        vector<Edge*>{tiles[5].getEdgeAdr(edgeEnum::TR), tiles[5].getEdgeAdr(edgeEnum::BR), tiles[7].getEdgeAdr(edgeEnum::T)});
+        vector<Edge*>{tiles[5].getEdgeAdr(edgeEnum::TR), tiles[5].getEdgeAdr(edgeEnum::BR)});
 
     // Tile 5, Edge 24
     tiles[5].placeAdjVerticesE(edgeEnum::BL, 
         vector<Vertex*>{tiles[5].getVertexAdr(vertexEnum::ML), tiles[5].getVertexAdr(vertexEnum::BL)});
     tiles[5].placeAdjEdgesE(edgeEnum::BL, 
-        vector<Edge*>{tiles[5].getEdgeAdr(edgeEnum::TL), tiles[5].getEdgeAdr(edgeEnum::BL), tiles[7].getEdgeAdr(edgeEnum::T), tiles[7].getEdgeAdr(edgeEnum::BR)});
+        vector<Edge*>{tiles[5].getEdgeAdr(edgeEnum::TL), tiles[5].getEdgeAdr(edgeEnum::B), tiles[7].getEdgeAdr(edgeEnum::T), tiles[7].getEdgeAdr(edgeEnum::BR)});
 
     // Tile 5, Edge 25
     tiles[5].placeAdjVerticesE(edgeEnum::BR, 
@@ -529,7 +529,7 @@ tiles{
     tiles[8].placeAdjVerticesE(edgeEnum::TL,
         vector<Vertex*>{tiles[8].getVertexAdr(vertexEnum::TL), tiles[8].getVertexAdr(vertexEnum::ML)});
     tiles[8].placeAdjEdgesE(edgeEnum::TL,
-        vector<Edge*>{tiles[8].getEdgeAdr(edgeEnum::T), tiles[8].getEdgeAdr(edgeEnum::BL), tiles[4].getEdgeAdr(edgeEnum::BL), tiles[4].getEdgeAdr(edgeEnum::B)});
+        vector<Edge*>{tiles[8].getEdgeAdr(edgeEnum::T), tiles[8].getEdgeAdr(edgeEnum::BL), tiles[3].getEdgeAdr(edgeEnum::BL)});
 
     // Tile 8, Vertex 24
     tiles[8].placeAdjVerticesV(vertexEnum::ML, 
@@ -595,7 +595,7 @@ tiles{
 
     // Tile 9, Vertex 33
     tiles[9].placeAdjVerticesV(vertexEnum::BR, 
-        vector<Vertex*>{tiles[9].getVertexAdr(vertexEnum::MR), tiles[9].getVertexAdr(vertexEnum::BL), tiles[2].getVertexAdr(vertexEnum::MR)});
+        vector<Vertex*>{tiles[9].getVertexAdr(vertexEnum::MR), tiles[9].getVertexAdr(vertexEnum::BL), tiles[14].getVertexAdr(vertexEnum::MR)});
     tiles[9].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[9].getEdgeAdr(edgeEnum::BR), tiles[9].getEdgeAdr(edgeEnum::B), tiles[14].getEdgeAdr(edgeEnum::TR)});
 
@@ -649,7 +649,7 @@ tiles{
     tiles[11].placeAdjVerticesE(edgeEnum::BL, 
         vector<Vertex*>{tiles[11].getVertexAdr(vertexEnum::ML), tiles[11].getVertexAdr(vertexEnum::BL)});
     tiles[11].placeAdjEdgesE(edgeEnum::BL, 
-        vector<Edge*>{tiles[11].getEdgeAdr(edgeEnum::TL), tiles[11].getEdgeAdr(edgeEnum::B), tiles[13].getEdgeAdr(edgeEnum::TL)});
+        vector<Edge*>{tiles[11].getEdgeAdr(edgeEnum::TL), tiles[11].getEdgeAdr(edgeEnum::B), tiles[13].getEdgeAdr(edgeEnum::T), tiles[13].getEdgeAdr(edgeEnum::BR)});
 
     // Tile 11, Edge 48
     tiles[11].placeAdjVerticesE(edgeEnum::BR, 
@@ -659,7 +659,7 @@ tiles{
 
     // Tile 11, Vertex 37
     tiles[11].placeAdjVerticesV(vertexEnum::BL, 
-        vector<Vertex*>{tiles[11].getVertexAdr(vertexEnum::ML), tiles[11].getVertexAdr(vertexEnum::BR), tiles[13].getVertexAdr(vertexEnum::ML)});
+        vector<Vertex*>{tiles[11].getVertexAdr(vertexEnum::ML), tiles[11].getVertexAdr(vertexEnum::BR), tiles[13].getVertexAdr(vertexEnum::BR)});
     tiles[11].placeAdjEdgesV(vertexEnum::BL, 
         vector<Edge*>{tiles[11].getEdgeAdr(edgeEnum::BL), tiles[11].getEdgeAdr(edgeEnum::B), tiles[13].getEdgeAdr(edgeEnum::BR)});
     
@@ -691,7 +691,7 @@ tiles{
 
     // Tile 12, Vertex 39
     tiles[12].placeAdjVerticesV(vertexEnum::BL, 
-        vector<Vertex*>{tiles[12].getVertexAdr(vertexEnum::ML), tiles[12].getVertexAdr(vertexEnum::BR), tiles[14].getVertexAdr(vertexEnum::ML)});
+        vector<Vertex*>{tiles[12].getVertexAdr(vertexEnum::ML), tiles[12].getVertexAdr(vertexEnum::BR), tiles[17].getVertexAdr(vertexEnum::ML)});
     tiles[12].placeAdjEdgesV(vertexEnum::BL, 
         vector<Edge*>{tiles[12].getEdgeAdr(edgeEnum::BL), tiles[12].getEdgeAdr(edgeEnum::B), tiles[14].getEdgeAdr(edgeEnum::BR)});
     
@@ -703,7 +703,7 @@ tiles{
 
     // Tile 12, Vertex 40
     tiles[12].placeAdjVerticesV(vertexEnum::BR, 
-        vector<Vertex*>{tiles[12].getVertexAdr(vertexEnum::MR), tiles[12].getVertexAdr(vertexEnum::BL), tiles[14].getVertexAdr(vertexEnum::MR)});
+        vector<Vertex*>{tiles[12].getVertexAdr(vertexEnum::MR), tiles[12].getVertexAdr(vertexEnum::BL), tiles[17].getVertexAdr(vertexEnum::MR)});
     tiles[12].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[12].getEdgeAdr(edgeEnum::BR), tiles[12].getEdgeAdr(edgeEnum::B), tiles[17].getEdgeAdr(edgeEnum::TR)});
 
@@ -714,7 +714,7 @@ tiles{
     tiles[13].placeAdjVerticesE(edgeEnum::TL,
         vector<Vertex*>{tiles[13].getVertexAdr(vertexEnum::TL), tiles[13].getVertexAdr(vertexEnum::ML)});
     tiles[13].placeAdjEdgesE(edgeEnum::TL,
-        vector<Edge*>{tiles[1].getEdgeAdr(edgeEnum::T), tiles[13].getEdgeAdr(edgeEnum::BL), tiles[8].getEdgeAdr(edgeEnum::BL)});
+        vector<Edge*>{tiles[13].getEdgeAdr(edgeEnum::T), tiles[13].getEdgeAdr(edgeEnum::BL), tiles[8].getEdgeAdr(edgeEnum::BL)});
 
     // Tile 13, Vertex 36
     tiles[13].placeAdjVerticesV(vertexEnum::ML, 
@@ -882,9 +882,9 @@ tiles{
 
     // Tile 17, Vertex 50
     tiles[17].placeAdjVerticesV(vertexEnum::BL, 
-        vector<Vertex*>{tiles[17].getVertexAdr(vertexEnum::ML), tiles[17].getVertexAdr(vertexEnum::BR)});
+        vector<Vertex*>{tiles[17].getVertexAdr(vertexEnum::ML), tiles[17].getVertexAdr(vertexEnum::BR), tiles[18].getVertexAdr(vertexEnum::BR)});
     tiles[17].placeAdjEdgesV(vertexEnum::BL, 
-        vector<Edge*>{tiles[17].getEdgeAdr(edgeEnum::BL), tiles[17].getEdgeAdr(edgeEnum::B)});
+        vector<Edge*>{tiles[17].getEdgeAdr(edgeEnum::BL), tiles[17].getEdgeAdr(edgeEnum::B), tiles[18].getEdgeAdr(edgeEnum::BR)});
     
     // Tile 17, Edge 68
     tiles[17].placeAdjVerticesE(edgeEnum::B, 
@@ -931,7 +931,39 @@ tiles{
     tiles[18].placeAdjEdgesE(edgeEnum::B, 
         vector<Edge*>{tiles[18].getEdgeAdr(edgeEnum::BL), tiles[18].getEdgeAdr(edgeEnum::BR)});
 
+    cout << tiles[1].vertices[0]->adjEdges[0] << endl;
 
+    /* for (auto n : tiles) {
+        cout << "Tile: " << n.tileNum << endl;
+        for (auto m : n.vertices) {
+            cout << endl << "Vertex: " << m->location << endl;
+            cout << "Adjacent Edges: ";
+            for (auto k : m->adjEdges) {
+                cout << k->location << " ";
+            }
+            cout << endl;
+            cout << "Adjacent Vertices: ";
+            for (auto l : m->adjVertices) {
+                cout << l->location << " ";
+            }
+            cout << endl;
+        }
+        for (auto p : n.edges) {
+            cout << endl << "Edge: " << p->location << endl;
+            cout << "Adjacent Edges: ";
+            for (auto a : p->adjEdges) {
+              cout << a->location << " ";
+            }
+            cout << endl;
+            cout << "Adjacent Vertices: ";
+            for (auto b : p->adjVertices) {
+              cout << b->location << " ";
+            }
+            cout << endl;
+        }
+        cout << endl;
+    }
+    */
 //*/
 }
     /*
@@ -973,6 +1005,9 @@ int Board::placeValidRes(string vertexNum, Color color, Residence res) {
     return -1; // just so compiler doesn't give a warning for no return statement
 }
 
+Tile * Board::getTile() {
+    return this->tiles;
+}
 
 pair<Resource, int> Board::getResoc(int tileNum, int tileValRolled, Color player) const {
     return tiles[tileNum].evalResoc(tileValRolled, player);

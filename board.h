@@ -21,7 +21,6 @@ class Board {
  public:
     Board(std::istringstream &iss, bool isLoadGame = false); 
     Board(std::istringstream &iss, int geeseTileNum);  // when loding game
-
     std::pair<Resource, int> getResoc(int tileNum, int tileValRolled, Color player) const;
 
     // returns tileNum that road is on
@@ -39,6 +38,7 @@ class Board {
     std::string getTileResoc(int num);
     void placeBasement(std::string bVertex, Color c); 
     
+    Tile * getTile(); 
 };
 
 #endif
