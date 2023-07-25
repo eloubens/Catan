@@ -88,7 +88,7 @@ void View::printBoard() {
     int textPad = 2; 
     int spacePad = 21;
 
-    Tile * tiles = model->board.tiles; 
+    Tile * tiles = model->board.getTile(); 
     int i = 0;
     //printTileTop(spacePad + 1, "0", "0", "1");  
     printTileTop(spacePad + 1, tiles[i].getVertexTL(), tiles[i].getVertexTR(), tiles[i].getEdgeT());  
