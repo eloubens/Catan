@@ -13,14 +13,16 @@
 extern const int verticesNum, edgesNum;
 
 class Tile {
-    int tileNum, tileValue = 0;
+ 
     Resource resocType;
-    Vertex *vertices[6]; // vertices at this tile
-    Edge *edges[6]; // edges at this tile
+
     bool isGeese = false; // if a tile has a goose
     
     void removeGoose();
  public:
+    int tileNum, tileValue = 0; // PRIVATE
+    Vertex *vertices[6]; // vertices at this tile // PRIVATE
+    Edge *edges[6]; // edges at this tile // PRIVATE
     //ctor
     Tile(int tileNum, Vertex *v1, Vertex *v2, Vertex *v3, Vertex *v4, Vertex *v5, Vertex *v6, 
                         Edge *e1, Edge *e2, Edge *e3, Edge *e4, Edge *e5, Edge *e6);
