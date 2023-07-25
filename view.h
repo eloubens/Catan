@@ -11,9 +11,7 @@ class View {
 
  public:
     View(Model *model);
-    void printt();
     
-
     void printBoard(); 
     // helpers for printBoard
     string getResource(int n);

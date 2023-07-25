@@ -981,6 +981,9 @@ int Board::placeValidRes(string vertexNum, Color color, Residence res) {
     return -1; // just so compiler doesn't give a warning for no return statement
 }
 
+Tile * Board::getTile() {
+    return this->tiles;
+}
 
 pair<Resource, int> Board::getResoc(int tileNum, int tileValRolled, Color player) const {
     return tiles[tileNum].evalResoc(tileValRolled, player);

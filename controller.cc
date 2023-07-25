@@ -142,7 +142,6 @@ int Controller::createController(vector<string> &arg_vec) {
 int Controller::general(vector<string> &arg_vec) {
     int state = createController(arg_vec);
     if (isBadState(state)) { return state; } // if need to terminate program
-    cout << "printing the board" << endl; 
     view->printBoard(); 
     return 0;
 }

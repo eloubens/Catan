@@ -15,7 +15,6 @@ extern const int tilesNum;
 class Board {
     Vertex vertices[54];
     Edge edges[72];
-    public:
     Tile tiles[19];
     private:
     int geeseTileNum; 
@@ -24,7 +23,6 @@ class Board {
  public:
     Board(std::istringstream &iss, bool isLoadGame = false); 
     Board(std::istringstream &iss, int geeseTileNum);  // when loding game
-
     std::pair<Resource, int> getResoc(int tileNum, int tileValRolled, Color player) const;
 
     // returns tileNum that road is on
@@ -33,6 +31,7 @@ class Board {
     // returns tileNum that res is on
     int placeValidRes(std::string vertexNum, Color color, Residence res);
     
+    Tile * getTile(); 
 };
 
 #endif

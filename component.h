@@ -15,8 +15,8 @@ class Component {
  protected:
  	std::string location; //vertex number or edge number
 	Color player = Color::DNE; //Player that built res/road
-	std::vector<Vertex*> adjVertices;
-	std::vector<Edge*> adjEdges;
+	//std::vector<Vertex*> adjVertices;
+	//std::vector<Edge*> adjEdges;
 	
 
 
@@ -25,7 +25,7 @@ class Component {
 	//bool hasAdjVertices() const;
 	//bool hasAdjEdges() const;
  public:
- 	std::string location; //vertex number or edge number // PRIVATE
+ 	//std::string location; //vertex number or edge number // PRIVATE
  	std::vector<Vertex*> adjVertices; // PRIVATE
 	std::vector<Edge*> adjEdges; // PRIVATE
 	explicit Component(std::string location);
