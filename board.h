@@ -13,8 +13,8 @@ using namespace std;
 extern const int tilesNum;
  
 class Board {
-    Vertex vertices[54];
-    Edge edges[72];
+    Vertex vertices[54]; // only used to store vertex addresses
+    Edge edges[72]; // only used to store edge addresses
     Tile tiles[19];
     int geeseTileNum; 
     
@@ -43,6 +43,12 @@ class Board {
     void printVertex(string i);
     void printEdge(int prevPad, string i);
     void printSingleBar(int prevPad);
+    int getGeeseTile();
+    void addSettlementsLocation(int tileNum, Color c, std::vector<std::string> &roads, std::vector<std::string> &resNum, 
+                                                            std::vector<Residence> &resType);
+    std::string getTileVal(int num); 
+    std::string getTileResoc(int num);
+    void placeBasement(std::string bVertex, Color c); 
 };
 
 #endif

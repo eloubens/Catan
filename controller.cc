@@ -8,11 +8,12 @@
 #include <chrono>
 #include <string>
 #include "controller.h"
- 
 
-// 1 means invalid input 
 
 using namespace std;
+
+const int eof = 2;
+const int invalidInput = 1;
 
 // returns true if bad state
 bool Controller::isBadState(int n) { return n!= 0; }
@@ -46,7 +47,7 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
                 //ifstream ifs{arg_vec[i]};
                 if (!ifs) {
                     err << "Error: Could not open file" << endl;
-                    return 1;
+                    return invalidInput;
                 }
                 board_oss << ifs.rdbuf();
                 istringstream board_iss(board_oss.str());
@@ -61,7 +62,7 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
                 ifstream ifs{arg_vec[i]};
                 if (!ifs) {
                     err << "Error: Could not open file" << endl;
-                    return 1;
+                    return invalidInput;
                 }
                 int turnColor, geeseTileNum;
                 string resoc, settlements, board;
@@ -122,7 +123,7 @@ int Controller::createController(vector<string> &arg_vec) {
                     seed = stoi(arg_vec[i]);
                 } catch (const std::invalid_argument& ex) {
                     err << "Invalid argument: " << ex.what() << endl;
-                    return 1;
+                    return invalidInput;
                 }
             }
         } 
@@ -138,18 +139,79 @@ int Controller::createController(vector<string> &arg_vec) {
     return 0;
 }
 
+int Controller::save() {
+    model->save(turn);
+    return EOF; 
+}
+
+bool Controller::isEOF() { return in.eof(); }
+
+
+int Controller::beginningOfGame() {
+    for (int i = 0; i < playerAmount; i++) {
+        i = buildBasements(i);
+    }
+    for (int i = playerAmount - 1; i >= 0 ; i--) {
+        i = buildBasements(i);
+    }
+    return 0;
+}
+
+int Controller::buildBasements(int i) {
+    int tester;
+    string bVertex; // basement vertex
+    Color c;
+    c = static_cast<Color>(i);
+    out << "Builder " << getColorStr(c) << ", where do you want to build a basement?" << endl << "> ";
+    if (!(in >> tester)) { 
+        if (isEOF()) { return save(); }
+        in.clear();
+        in.ignore();
+        out << "You cannot build here." << endl;
+        i--;
+        return i;
+    } // checks for invalid input and invalid vertex
+    bVertex = to_string(tester);
+    if(!model->placeBasement(bVertex, c)) {
+        out << "You cannot build here." << endl;
+        i--;
+    }
+    return i;
+}
+
 //this acts like the main function essentially 
 int Controller::general(vector<string> &arg_vec) {
     int state = createController(arg_vec);
     if (isBadState(state)) { return state; } // if need to terminate program
+    beginningOfGame();
+    // created board by now
+
+    // beginning of game. 
+    
+
+    // check for case when trying to impove on empty res!!!!!
+
     return 0;
 }
+
+
 
 void Controller::roll(Color turn) {
     model->roll(turn);
 }
 
 /*    
-Color turn = Color::DNE;
-Model *model
+std::ostream &out = std::cout;
+std::istream &in = std::cin;
+std::ostream &err = std::cerr;
+Color turn = Color::B;
+std::unique_ptr<Model> model; 
+std::unique_ptr<View> view; 
 */ 
+
+/*
+    B = 0, // Player 1, Blue
+    R = 1, // Player 2, Red
+    O = 2, // Player 3, Orange
+    Y = 3,  // Player 4, Yellow
+*/

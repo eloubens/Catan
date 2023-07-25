@@ -4,7 +4,7 @@
 
 using namespace std;
  
-const int verticesNum = 6, edgesNum = 6;
+const int verticesAmount = 6, edgesAmount = 6;
 
 string Tile::getResource() {
     if (this->resocType == Resource::BRICK) {
@@ -24,6 +24,30 @@ string Tile::getResource() {
     }
 }
 
+void Tile::placeBasement(string bVertex, Color c) {
+    for (int i = 0; i < verticesAmount; i++)  {
+        try {
+            vertices[i]->placeBasement(bVertex, c);
+        } catch(bool isValid) {
+            throw isValid;
+        }
+        
+    }
+
+}
+
+/*
+
+int tileNum
+int tileValue = 0
+Resource resocType
+Vertex *vertices[6]
+Edge *edges[6]
+bool isGeese = false
+
+*/
+
+
 string Tile::getTileNum() {
     int n = this->tileNum; 
     ostringstream oss;
@@ -37,6 +61,22 @@ string Tile::getTileValue() {
     oss << n; 
     return oss.str();  
 }
+
+void Tile::addSettlementsLocation(Color c, vector<string> &roads, vector<string> &resNum, vector<Residence> &resType) {
+    for (int i = 0; i < verticesAmount; i++) {
+        if (vertices[i]->isPlayer(c)){
+            resNum.emplace_back(vertices[i]->getLocation());
+            resType.emplace_back(vertices[i]->getRes());
+        }
+    }
+    for (int i = 0; i < edgesAmount; i++) {
+        if (edges[i]->isPlayer(c)){
+            roads.emplace_back(edges[i]->getLocation());
+        }
+    }
+
+}
+
 
 
 
@@ -85,14 +125,14 @@ void Tile::setResoc(Resource resocType) {
 pair<Resource, int> Tile::evalResoc(int tileValRolled, Color player) const{
     if ((tileValue != tileValRolled) || (resocType == Resource::PARK)) return {Resource::NA, 0};
     int resocTotal = 0;
-    for (int i = 0; i < verticesNum; i++) {
+    for (int i = 0; i < verticesAmount; i++) {
         resocTotal += vertices[i]->getResidenceAmount(player);
     }
     return {resocType, resocTotal};
 }
 
 bool Tile::isPlaceValidRoad(string edgeNum, Color color) {
-    for (int i = 0; i < edgesNum; i++) {
+    for (int i = 0; i < edgesAmount; i++) {
         if (edges[i]->isNum(edgeNum)) {
             edges[i]->setValidRoad(color);
             return true;
@@ -102,7 +142,7 @@ bool Tile::isPlaceValidRoad(string edgeNum, Color color) {
 }
 
 bool Tile::isPlaceValidRes(string vertexNum, Color color, Residence res) {
-    for (int i = 0; i < verticesNum; i++) {
+    for (int i = 0; i < verticesAmount; i++) {
         if (vertices[i]->isNum(vertexNum)) {
             vertices[i]->setValidRes(color, res);
             return true;
@@ -111,6 +151,7 @@ bool Tile::isPlaceValidRes(string vertexNum, Color color, Residence res) {
     return false;
 }
 
+string Tile::getResocIntFormat() { return to_string(static_cast<int>(resocType)); }
 
 /*
 

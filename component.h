@@ -9,24 +9,25 @@ class Edge;
 class Vertex;
  
 class Component {   
-	std::string location; //vertex number or edge number
  protected:
+ 	std::string location; //vertex number or edge number
 	Color player = Color::DNE; //Player that built res/road
 	std::vector<Vertex*> adjVertices;
 	std::vector<Edge*> adjEdges;
 
 	//bool isOwnedBy(Color color) const;
-	//bool isOccupied() const;
+	bool isOccupied();
 	//bool hasAdjVertices() const;
 	//bool hasAdjEdges() const;
  public:
 	explicit Component(std::string location);
 	//Component(std::string location,  Color playerType);
 	// virtual void print() const = 0;
-
 	void setAdjV(std::vector<Vertex*> &&adjVertices);
 	void setAdjE(std::vector<Edge*> &&adjEdges);
 	bool isNum(std::string location); // returns true if location matches the location of the vertex/edge
+	bool isPlayer(Color c);
+	std::string getLocation();
 };
 
 
@@ -49,7 +50,11 @@ class Vertex final : public Component {
 	Vertex(std::string location);
 	int getResidenceAmount(Color color) const;
 	void setValidRes(Color color, Residence res);
-
+	Residence getRes();
+	/* throws true if vertex found and basement was placed.
+        throws false if vertex found and basement can't be placed.
+        doesn't do anything if vertex not found. */
+	void placeBasement(std::string bVertex, Color c);
 
 	//void printResidences() const;
 	//void print() const override;

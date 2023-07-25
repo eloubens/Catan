@@ -17,6 +17,30 @@ Board::Board(istringstream &iss, int geeseTileNum) : Board{iss, true} {
     tiles[geeseTileNum].setGeese();
 }
 
+int Board::getGeeseTile() { return geeseTileNum; }
+
+void Board::addSettlementsLocation(int tileNum, Color c, vector<string> &roads, vector<string> &resNum, vector<Residence> &resType) {
+    tiles[tileNum].addSettlementsLocation(c, roads, resNum, resType);
+}
+
+string Board::getTileVal(int num) { return tiles[num].getTileValue(); }    
+string Board::getTileResoc(int num) { return tiles[num].getResocIntFormat(); }
+
+void Board::placeBasement(string bVertex, Color c) {
+    for (int i = 0; i < 19; i++) {
+        try {
+            tiles[i].placeBasement(bVertex, c);
+        } catch(bool isValid){
+            if(isValid) {
+                throw i;
+            }
+            return;
+        }
+    }
+
+
+}
+
 Board::Board(istringstream &iss, bool isLoadGame): 
 vertices{
     Vertex{"0"}, Vertex{"1"}, Vertex{"2"}, Vertex{"3"}, Vertex{"4"}, Vertex{"5"}, Vertex{"6"},

@@ -25,6 +25,7 @@ class Player {
     void addBuildingPoints(int num);
 
     void updateResocMap(const std::pair<Resource, int> &gainedResoc);
+    std::map<Resource, int>& getResocMap();
     std::vector<int>& getOccupiedTiles();
 };
 

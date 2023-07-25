@@ -39,11 +39,11 @@ int Player::roll() {
     return dice.roll();
 }
 
-vector<int>& Player::getOccupiedTiles() {
-    return occupiedTiles;
-}
-
 void Player::updateResocMap(const pair<Resource, int> &gainedResoc) {
     resocMap[gainedResoc.first] += gainedResoc.second;
 }
+
+map<Resource, int>& Player::getResocMap() { return resocMap; }
+
+vector<int>& Player::getOccupiedTiles() { return occupiedTiles; }
 

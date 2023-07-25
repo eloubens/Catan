@@ -57,10 +57,11 @@ class Model{
 
     Model(std::vector<std::istringstream> &&pResocs, std::vector<std::istringstream> &&pSettlements, 
                                                     std::istringstream &board ,int geeseTileNum);
-    // Model(std::istringstream &player1, std::istringstream &player2, std::istringstream &player3, 
-    //     std::istringstream &player4, std::istringstream &board, int geeseTileNum); // for loading a full game 
-
+    bool placeBasement(std::string bVertex, Color c);                                               
     void roll(Color turn);
+
+    // saves current state of game
+    void save(Color turn);
 
 
 };
