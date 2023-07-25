@@ -10,6 +10,8 @@
 #include "vertexEnum.h"
 #include "edgeEnum.h"
 
+using namespace std;
+
 extern const int verticesNum, edgesNum;
 
 class Tile {
@@ -22,6 +24,10 @@ class Tile {
     void removeGoose();
  public:
     //ctor
+    string getResource();
+    string getTileNum();
+    string getTileValue();
+
     Tile(int tileNum, Vertex *v1, Vertex *v2, Vertex *v3, Vertex *v4, Vertex *v5, Vertex *v6, 
                         Edge *e1, Edge *e2, Edge *e3, Edge *e4, Edge *e5, Edge *e6);
 
