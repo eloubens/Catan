@@ -155,6 +155,8 @@ int Controller::beginningOfGame() {
         i = buildBasements(i);
     }
     return 0;
+
+    // ADD BUILDINGS POINTS !!!!!
 }
 
 int Controller::buildBasements(int i) {
@@ -191,6 +193,8 @@ int Controller::general(vector<string> &arg_vec) {
 
     // check for case when trying to impove on empty res!!!!!
 
+    cout << "printing the board" << endl; 
+    view->printBoard(); 
     return 0;
 }
 

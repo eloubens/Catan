@@ -1,4 +1,6 @@
 #include "component.h"
+#include <sstream>
+#include <iostream>
 
 using namespace std;
  
@@ -9,11 +11,40 @@ Component::Component(string location) : location{location} {}
 Edge::Edge(string location) : Component{location} {}
 Vertex::Vertex(string location) : Component{location} {}
 
+string Edge::getEdge() {
+    if (isRoad) {
+        ostringstream oss;
+        if (player == Color::R) {oss << "R";}
+        else if (player == Color::B) {oss << "B";}
+        else if (player == Color::O) {oss << "O";}
+        else {oss << "Y";}
+        return oss.str();
+    } else {
+        return location; 
+    }
+}
+
+string Vertex::getVertex() {
+    if (residenceType == Residence::NONE) {
+        return location; 
+    } else {
+        ostringstream oss;
+        if (player == Color::R) {oss << "R";}
+        else if (player == Color::B) {oss << "B";}
+        else if (player == Color::O) {oss << "O";}
+        else {oss << "Y";}
+        
+        if (residenceType == Residence::H) {oss << "H";}
+        else if (residenceType == Residence::B) {oss << "B";}
+        else if (residenceType == Residence::T) {oss << "T";}
+
+        return oss.str();
+    }
+}
 
 int Vertex::getResidenceAmount(Color color) const {
     if (player != color) return 0;
     return static_cast<int>(residenceType);
-
 }
 
 void Vertex::placeBasement(string bVertex, Color c) {

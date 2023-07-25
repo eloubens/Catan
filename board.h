@@ -18,7 +18,6 @@ class Board {
     Tile tiles[19];
     int geeseTileNum; 
     
-
  public:
     Board(std::istringstream &iss, bool isLoadGame = false); 
     Board(std::istringstream &iss, int geeseTileNum);  // when loding game
@@ -32,23 +31,14 @@ class Board {
     int placeValidRes(std::string vertexNum, Color color, Residence res);
 
     void printBoard(); 
-    // helpers for printBoard
-    string getResource(int n);
-    void update(string & text, int &width, int &pad, int &right_pad, int &left_pad);
-    void printTileTop(int prevPad, string v1, string v2, string e);
-    void printBar(int prevPad);
-    void printTileNum(int prevPad, string e1, string e2, int i);
-    void printTileResoc(string text, int prevPad, int i) ;
-    void printTileVal(string text, int prevPad, int i);
-    void printVertex(string i);
-    void printEdge(int prevPad, string i);
-    void printSingleBar(int prevPad);
+    //string getResource(int n);
     int getGeeseTile();
     void addSettlementsLocation(int tileNum, Color c, std::vector<std::string> &roads, std::vector<std::string> &resNum, 
                                                             std::vector<Residence> &resType);
     std::string getTileVal(int num); 
     std::string getTileResoc(int num);
     void placeBasement(std::string bVertex, Color c); 
+    
 };
 
 #endif

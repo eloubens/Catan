@@ -27,6 +27,20 @@ class Tile {
     std::string getTileValue();
     std::string getResocIntFormat();
 
+    string getVertexTR();
+    string getVertexTL();
+    string getVertexMR();
+    string getVertexML();
+    string getVertexBR();
+    string getVertexBL();
+
+    string getEdgeT();
+    string getEdgeTL();
+    string getEdgeTR();
+    string getEdgeBL();
+    string getEdgeBR();
+    string getEdgeB();
+
     Tile(int tileNum, Vertex *v1, Vertex *v2, Vertex *v3, Vertex *v4, Vertex *v5, Vertex *v6, 
                         Edge *e1, Edge *e2, Edge *e3, Edge *e4, Edge *e5, Edge *e6);
 

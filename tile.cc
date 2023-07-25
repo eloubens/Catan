@@ -47,6 +47,19 @@ bool isGeese = false
 
 */
 
+string Tile::getVertexTL() {return vertices[0]->getVertex();}
+string Tile::getVertexTR() {return vertices[1]->getVertex();}
+string Tile::getVertexML() {return vertices[2]->getVertex();}
+string Tile::getVertexMR() {return vertices[3]->getVertex();}
+string Tile::getVertexBL() {return vertices[4]->getVertex();}
+string Tile::getVertexBR() {return vertices[5]->getVertex();}
+
+string Tile::getEdgeT() {return edges[0]->getEdge();}
+string Tile::getEdgeTL() {return edges[1]->getEdge();}
+string Tile::getEdgeTR() {return edges[2]->getEdge();}
+string Tile::getEdgeBL() {return edges[3]->getEdge();}
+string Tile::getEdgeBR() {return edges[4]->getEdge();}
+string Tile::getEdgeB() {return edges[5]->getEdge();}
 
 string Tile::getTileNum() {
     int n = this->tileNum; 

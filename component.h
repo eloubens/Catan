@@ -5,6 +5,8 @@
 #include "residenceEnum.h"
 #include "colorEnum.h"
 
+using namespace std; 
+
 class Edge;
 class Vertex;
  
@@ -14,7 +16,7 @@ class Component {
 	Color player = Color::DNE; //Player that built res/road
 	std::vector<Vertex*> adjVertices;
 	std::vector<Edge*> adjEdges;
-
+	
 	//bool isOwnedBy(Color color) const;
 	bool isOccupied();
 	//bool hasAdjVertices() const;
@@ -36,7 +38,7 @@ class Edge final : public Component {
  public:
 	Edge(std::string location); // ctor
 	void setValidRoad(Color color); // places a road, known to be valid
-	
+	string getEdge();
 	// void print() const override;
 	//void checkRoad(Color color, int edge) const; // ???
 };
@@ -55,6 +57,7 @@ class Vertex final : public Component {
         throws false if vertex found and basement can't be placed.
         doesn't do anything if vertex not found. */
 	void placeBasement(std::string bVertex, Color c);
+	string getVertex(); 
 
 	//void printResidences() const;
 	//void print() const override;
