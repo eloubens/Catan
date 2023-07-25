@@ -5,16 +5,18 @@
 #include "residenceEnum.h"
 #include "colorEnum.h"
 
+using namespace std; 
+
 class Edge;
 class Vertex;
  
 class Component {   
-	std::string location; //vertex number or edge number
  protected:
+ 	std::string location; //vertex number or edge number
 	Color player = Color::DNE; //Player that built res/road
 	std::vector<Vertex*> adjVertices;
 	std::vector<Edge*> adjEdges;
-
+	
 	//bool isOwnedBy(Color color) const;
 	//bool isOccupied() const;
 	//bool hasAdjVertices() const;
@@ -35,7 +37,7 @@ class Edge final : public Component {
  public:
 	Edge(std::string location); // ctor
 	void setValidRoad(Color color); // places a road, known to be valid
-	
+	string getEdge();
 	// void print() const override;
 	//void checkRoad(Color color, int edge) const; // ???
 };
@@ -49,7 +51,7 @@ class Vertex final : public Component {
 	Vertex(std::string location);
 	int getResidenceAmount(Color color) const;
 	void setValidRes(Color color, Residence res);
-
+	string getVertex(); 
 
 	//void printResidences() const;
 	//void print() const override;

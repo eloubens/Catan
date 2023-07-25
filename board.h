@@ -15,7 +15,9 @@ extern const int tilesNum;
 class Board {
     Vertex vertices[54];
     Edge edges[72];
+    public:
     Tile tiles[19];
+    private:
     int geeseTileNum; 
     
 
@@ -30,19 +32,7 @@ class Board {
 
     // returns tileNum that res is on
     int placeValidRes(std::string vertexNum, Color color, Residence res);
-
-    void printBoard(); 
-    // helpers for printBoard
-    string getResource(int n);
-    void update(string & text, int &width, int &pad, int &right_pad, int &left_pad);
-    void printTileTop(int prevPad, string v1, string v2, string e);
-    void printBar(int prevPad);
-    void printTileNum(int prevPad, string e1, string e2, int i);
-    void printTileResoc(string text, int prevPad, int i) ;
-    void printTileVal(string text, int prevPad, int i);
-    void printVertex(string i);
-    void printEdge(int prevPad, string i);
-    void printSingleBar(int prevPad);
+    
 };
 
 #endif

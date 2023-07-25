@@ -51,6 +51,7 @@ class Model{
     };
 
     Player players[4];
+    public: 
     Board board;
  public:
     Model(std::istringstream &iss); // for just loading a board (from file or random generated)
@@ -59,7 +60,6 @@ class Model{
                                                     std::istringstream &board ,int geeseTileNum);
     // Model(std::istringstream &player1, std::istringstream &player2, std::istringstream &player3, 
     //     std::istringstream &player4, std::istringstream &board, int geeseTileNum); // for loading a full game 
-
     void roll(Color turn);
 
 
