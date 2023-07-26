@@ -1,5 +1,6 @@
 #include <utility>
 #include <sstream>
+#include <iostream>
 #include "tile.h"
 
 using namespace std;
@@ -24,6 +25,8 @@ string Tile::getResource() {
     }
 }
 
+
+// Correct. Leave as is. 
 void Tile::placeBasement(string bVertex, Color c) {
     for (int i = 0; i < verticesAmount; i++)  {
         try {

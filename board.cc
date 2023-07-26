@@ -1,6 +1,7 @@
 
 #include <iomanip>
 #include <vector>
+#include <iostream>
 #include "board.h"
 #include "tile.h"
 #include "resourceEnum.h"
@@ -26,6 +27,9 @@ void Board::addSettlementsLocation(int tileNum, Color c, vector<string> &roads, 
 string Board::getTileVal(int num) { return tiles[num].getTileValueReg(); }    
 string Board::getTileResoc(int num) { return tiles[num].getResocIntFormat(); }
 
+
+// EDIT HERE
+// MAKE A VECTOR OF TILES !!! ADD MORE THAN 1 
 void Board::placeBasement(string bVertex, Color c) {
     for (int i = 0; i < 19; i++) {
         try {
@@ -34,7 +38,7 @@ void Board::placeBasement(string bVertex, Color c) {
             if(isValid) {
                 throw i;
             }
-            return;
+            return; // MAKE CHANGE: don't return, keep looping 
         }
     }
     
@@ -1007,6 +1011,7 @@ int Board::placeValidRes(string vertexNum, Color color, Residence res) {
 Tile *Board::getTiles() {
     return this->tiles;
 }
+
 
 pair<Resource, int> Board::getResoc(int tileNum, int tileValRolled, Color player) const {
     return tiles[tileNum].evalResoc(tileValRolled, player);

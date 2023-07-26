@@ -29,6 +29,8 @@ class Controller {
     int beginningOfGame();
     bool isEOF();
     int buildBasements(int i, bool isInc);
+    // NEED TO ADD CODE HERE TO PRINT THE STATUS OF THE PLAYER IN FUNCTIONS LATER
+    int beginningOfTurn(); 
  public: 
     // no ctor
     int general(std::vector<string> &arg_vec);

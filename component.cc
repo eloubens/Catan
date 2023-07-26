@@ -72,8 +72,6 @@ std::vector<Edge*> adjEdges
 Residence residenceType = Residence::NONE
 */
 
-
-
 }
 
 bool Component::isOccupied() {

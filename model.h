@@ -54,15 +54,16 @@ class Model{
  public:
     Tile* getTiles();
     Model(std::istringstream &iss); // for just loading a board (from file or random generated)
+    void setDice(Color c, std::string cmd);
 
     Model(std::vector<std::istringstream> &&pResocs, std::vector<std::istringstream> &&pSettlements, 
                                                     std::istringstream &board ,int geeseTileNum);
     bool placeBasement(std::string bVertex, Color c);                                               
     void roll(Color turn);
-
+    //buildRes(Color c, vertexNum)
     // saves current state of game
     void save(Color turn);
-
+    std::vector<std::map<Resource, int>> diceRolledUpdate(int rollVal);
 
 };
 

@@ -34,7 +34,8 @@ class Tile {
 
     Tile(int tileNum, Vertex *v1, Vertex *v2, Vertex *v3, Vertex *v4, Vertex *v5, Vertex *v6, 
                         Edge *e1, Edge *e2, Edge *e3, Edge *e4, Edge *e5, Edge *e6);
-
+ 
+    // returns {Resource::NA, 0} if no resources for the player or {resocType, resocTotal} for the player on the current tile
     std::pair<Resource, int> evalResoc(int tileValRolled, Color player) const;
 
     Vertex *getVertexAdr(vertexEnum num);

@@ -20,6 +20,8 @@ class Board {
  public:
     Board(std::istringstream &iss, bool isLoadGame = false); 
     Board(std::istringstream &iss, int geeseTileNum);  // when loding game
+
+     // returns {Resource::NA, 0} if no resources for the player or {resocType, resocTotal} for the player on tile tileNum
     std::pair<Resource, int> getResoc(int tileNum, int tileValRolled, Color player) const;
 
     // returns tileNum that road is on

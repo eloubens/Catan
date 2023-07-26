@@ -1,6 +1,7 @@
 #include <string>
 #include "model.h"
 #include <iostream>
+#include <utility>
 
 using namespace std;
 
@@ -61,13 +62,16 @@ void Model::roll(Color turn) {
 }
 
 
+
 // returns if you can place a basement or not
+
+// MAKE A CHANGE HERE, SHOULD TAKE IN A VECTOR OF OCCPIED TILES.
 bool Model::placeBasement(string bVertex, Color c) {
     try {
-        board.placeBasement(bVertex, c);
+        board.placeBasement(bVertex, c); // GET A 
     } catch (const int &placeOnTile) {
         players[static_cast<int>(c)].addOccupiedTiles(placeOnTile);
-        players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(Residence::B));
+        players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(Residence::B)); // leave as is. 
         return true;
     }
     // not adjacent or on it
@@ -118,6 +122,33 @@ void Model::save(Color turn) {
         backup << board.getTileResoc(i) << " " << board.getTileVal(i) << " ";
     }
     backup << to_string((board.getGeeseTile()));
+}
+void Model::setDice(Color c, string cmd) {
+    players[static_cast<int>(c)].setDice(cmd);
+}
+
+vector<map<Resource, int>> Model::diceRolledUpdate(int rollVal) {
+    vector<map<Resource, int>> pResocsGained{4, map<Resource, int>{}};
+    pair<Resource, int> resocGained; // resoc gained of 1 player
+    for (int i = 0; i < playerAmount; i++) {
+        const vector<int>& occupTiles = players[i].getOccupiedTiles();
+        for (auto tileNum : occupTiles) {
+            //cout << tileNum << endl;
+            //{Resource::NA, 0}, {resocType, resocTotal}
+            resocGained = board.getResoc(tileNum, rollVal, static_cast<Color>(i)); // gets resource gained of 1 player for 1 reasource
+            auto [resoc, resocNum] = resocGained;
+            if (resocNum != 0) {
+                //cout << "testing " << resocNum << endl;
+                if (pResocsGained[i].count(resoc) == 0) {
+                    pResocsGained[i][resoc] = resocNum;
+                } else {
+                    pResocsGained[i][resoc] += resocNum;
+                }
+                players[i].updateResocMap(resocGained);
+            }
+        }
+    }
+    return pResocsGained;
 }
 
 /*

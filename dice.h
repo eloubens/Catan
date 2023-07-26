@@ -1,20 +1,15 @@
 #ifndef DICE_H
 #define DICE_h
-
-enum class DiceType {
-    FAIR,
-    LOADED  
-};
+#include <string>
 
 class Dice final {
-    DiceType type = DiceType::LOADED;
-
+    std::string type = "load"; // load or fair 
     int rollLoaded();
     int rollFair();
  public:
     // no ctor needed
     int roll();
-    void updateDiceTYpe(DiceType diceType);
+    void setDice(std::string cmd);
 };
 
 #endif

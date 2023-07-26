@@ -145,13 +145,14 @@ int Controller::createController(vector<string> &arg_vec) {
 
 int Controller::save() {
     model->save(turn);
-    return EOF; 
+    return eof; 
 }
 
 bool Controller::isEOF() { return in.eof(); }
 
 
 int Controller::beginningOfGame() {
+    //for (int i = 0; i < 1; i++) {
     for (int i = 0; i < playerAmount; i++) {
         try {
             i = buildBasements(i, true);
@@ -168,7 +169,6 @@ int Controller::beginningOfGame() {
         } 
         
     }
-    view->printBoard();  //Only if you have to print the board twice
     return 0;
 }
 
@@ -181,7 +181,6 @@ int Controller::buildBasements(int i, bool isInc) {
     out << "Builder " << getColorStr(c) << ", where do you want to build a basement?" << endl << "> ";
     if (!(in >> tester)) { 
         if (isEOF()) { throw save(); }
-        out << "WRONG";
         in.clear();
         in.ignore();
         out << "You cannot build here." << endl;
@@ -204,20 +203,70 @@ int Controller::buildBasements(int i, bool isInc) {
     return i;
 }
 
+int Controller::beginningOfTurn() {
+    view->printBoard();
+    out << "Builder " << getColorStr(turn) << "'s turn." << endl << "> ";
+    // HERE NEED TO ADD CODE TO PRINT OUT THE STATUS OF THE BUILDER WHOS TURN IT IS (in variable turn)!!!!!!!!!
+    string cmd;
+    while(!(in >> cmd) || (cmd != "roll")) {
+        if (isEOF()) { return eof; }
+        if (cmd == "load") {
+            out << "Dice set to load." << endl;
+            model->setDice(turn, cmd);
+        }
+        if (cmd == "fair") {
+            model->setDice(turn, cmd);
+            out << "Dice set to fair." << endl;
+        }
+        out << "> ";
+    } 
+
+    // ANYTIME YOU USE in >>. Must use isEOF() command and return oef if true
+
+    // deal with loading the dice here (fair + loaded)
+
+    int rollVal = 6; // value of the dice rolled. This reperesents the tilevalue
+    
+    // vector (size 4) of a map.
+    vector<map<Resource, int>> resocMap = model->diceRolledUpdate(rollVal);
+    bool didPrint = false;
+    for (int i = 0; i < playerAmount; i++) {
+        if (resocMap[i].size() == 0 ) { continue; }
+        if (didPrint != true ) { didPrint = true; }
+        out << "Builder " << getColorStr(static_cast<Color>(i)) << " gained:" << endl;
+        for (auto [resoc, resocNum] : resocMap[i]) {
+            out << resocNum << " " << getResocStr(resoc) << endl;
+        }
+    }
+    //vector<map<Resource, int>> diceRolledUpdate(rollVal); // updates for everyone
+    // prints color: then go throughr map. If non have any, then "No builders gained resources"
+
+
+
+
+    //int vertexNum; // the vertex number the user wants to build a basement on
+    // Used when build-res command
+    //model->buildRes(turn, vertexNum);
+
+
+
+
+    return 0;
+}
+
 //this acts like the main function essentially 
 int Controller::general(vector<string> &arg_vec) {
-    
     int state = createController(arg_vec);
-    
-    if (isBadState(state)) { return state; } // if need to terminate program
+    if (isBadState(state)) { return state; } // could return invalidInput number or could return eof
     // created board by now
     // beginning of game. 
-    beginningOfGame();
+    if (isBadState(beginningOfGame())) { return eof; }
     // game begins
-    // while(true) {
-    //     //beginningOfTurn();
-    //    // DuringGame();
-    // }
+    while(true) {
+        if (isBadState(beginningOfTurn())) { return eof; }
+        //if (isBadState(DuringGame())) { return eof; }
+       break;
+    }
     
 
     
