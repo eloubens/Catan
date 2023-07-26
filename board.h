@@ -32,6 +32,11 @@ class Board {
     int placeValidRes(std::string vertexNum, Color color, Residence res);
     
     Tile * getTile(); 
+
+
+    int getGeeseTile();
+
+    void setGeese(int tileNum, bool geese);
 };
 
 #endif

@@ -17,14 +17,14 @@ extern const int verticesNum, edgesNum;
 class Tile {
  
     Resource resocType;
-
+    int tileNum, tileValue = 0; // PRIVATE
+    Vertex *vertices[6]; // vertices at this tile // PRIVATE
+    Edge *edges[6]; // edges at this tile // PRIVATE
     bool isGeese = false; // if a tile has a goose
     
     void removeGoose();
  public:
-    int tileNum, tileValue = 0; // PRIVATE
-    Vertex *vertices[6]; // vertices at this tile // PRIVATE
-    Edge *edges[6]; // edges at this tile // PRIVATE
+
     //ctor
     string getResource();
     string getTileNum();
@@ -47,6 +47,7 @@ class Tile {
     // Possibly places a geese on tile as side effect.
     bool setResocSetGeese(Resource resocType);
     void setGeese();
+    void setGeese(bool geese);
     // basic setter method
     void setResoc(Resource resocType);
     void placeAdjVerticesV(vertexEnum vertex, std::vector<Vertex*> &&adjVertices);

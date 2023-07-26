@@ -19,6 +19,7 @@ class Controller {
 
     void roll(Color turn);
     void trade();
+    void geese();
     // sets the Model field of the controller. Loads a board from a file, creates and loads a randomized board, or loads a saved game.
     int setModel(bool canRandomize, bool foundRandomize, unsigned &seed, std::vector<string> &arg_vec);
     bool isBadState(int n);

@@ -7,6 +7,7 @@
 #include "resourceEnum.h"
 #include "colorEnum.h"
 #include "dice.h"
+#include "tile.h"
 
 extern const int numresocType;
 
@@ -25,7 +26,16 @@ class Player {
     void addBuildingPoints(int num);
 
     void updateResocMap(const std::pair<Resource, int> &gainedResoc);
+
+    // accessors
     std::vector<int>& getOccupiedTiles();
+    int getResocTotal();
+    Color getColour();
+
+    // geese functions
+    std::vector<std::pair<std::string, int>> removeHalfResocs();
+
+    bool hasRes(int tileNum);
 };
 
 #endif
