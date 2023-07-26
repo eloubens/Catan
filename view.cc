@@ -43,7 +43,7 @@ void View::printTileNum(int prevPad, string e1, string e2, int i) {
     cout << setw(prevPad + textPad) << e1 << setw(rightPad) << "" << text << setw(leftPad) << "" << setw(textPad)<< e2; 
 }
 
-void View::printTileResoc(string text, int prevPad, int i) {    
+void View::printTileResoc(string text, int prevPad, int i) {  
     int width = 9;
     int pad = (width - text.length()) / 2;
     int leftPad = pad;
@@ -124,13 +124,13 @@ void View::printBoard() {
     printTileResoc(tiles[i + 2].getResource(), fillPad + textPad, i + 2);
     cout << endl; 
     cout << " ";
-    printVertex(tiles[i].getEdge(edgeEnum::TL));
+    printVertex(tiles[i].getVertex(vertexEnum::ML));
     printTileVal(tiles[i].getTileValue(), 0, i);
     printTileTop(0, tiles[i + 3].getVertex(vertexEnum::TL) , tiles[i + 3].getVertex(vertexEnum::TR), tiles[i + 3].getEdge(edgeEnum::T)); 
     printTileVal(tiles[i].getTileValue(), 0, i + 1);
     printTileTop(0, tiles[i + 4].getVertex(vertexEnum::TL) , tiles[i + 4].getVertex(vertexEnum::TR), tiles[i + 4].getEdge(edgeEnum::T));  
     printTileVal(tiles[i].getTileValue(), 0, i + 2);
-    printVertex(tiles[i + 2].getEdge(edgeEnum::TR));
+    printVertex(tiles[i + 2].getVertex(vertexEnum::MR));
     cout << endl; 
     // ROW 4:  |12|      |13|--18--|14|      |15|--19--|16|      |17|
 
