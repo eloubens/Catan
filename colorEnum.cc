@@ -3,12 +3,12 @@
 std::string getColorStr(Color c) {
     switch (c) {
         case Color::B:
-            return "B";
+            return "Blue";
         case Color::R:
-            return "R";
+            return "Red";
         case Color::O:
-            return "O";
+            return "Orange";
         default:
-            return "Y";
+            return "Yellow";
     }
 }
