@@ -1,4 +1,4 @@
-#include <iostream>
+
 #include <iomanip>
 #include <vector>
 #include "board.h"
@@ -37,6 +37,7 @@ void Board::placeBasement(string bVertex, Color c) {
             return;
         }
     }
+    
 
 
 }
@@ -930,8 +931,6 @@ tiles{
         vector<Vertex*>{tiles[18].getVertexAdr(vertexEnum::BL), tiles[18].getVertexAdr(vertexEnum::BR)});
     tiles[18].placeAdjEdgesE(edgeEnum::B, 
         vector<Edge*>{tiles[18].getEdgeAdr(edgeEnum::BL), tiles[18].getEdgeAdr(edgeEnum::BR)});
-
-    cout << tiles[1].vertices[0]->adjEdges[0] << endl;
 
     /* for (auto n : tiles) {
         cout << "Tile: " << n.tileNum << endl;

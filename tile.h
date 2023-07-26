@@ -2,7 +2,6 @@
 #define TILE_H
 #include <utility>
 #include <string>
-#include <iostream>
 #include "resourceEnum.h"
 #include "colorEnum.h"
 #include "residenceEnum.h"

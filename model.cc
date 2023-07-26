@@ -67,6 +67,7 @@ bool Model::placeBasement(string bVertex, Color c) {
         board.placeBasement(bVertex, c);
     } catch (const int &placeOnTile) {
         players[static_cast<int>(c)].addOccupiedTiles(placeOnTile);
+        players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(Residence::B));
         return true;
     }
     // not adjacent or on it

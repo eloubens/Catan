@@ -28,7 +28,7 @@ class Controller {
     int save();
     int beginningOfGame();
     bool isEOF();
-    int buildBasements(int i);
+    int buildBasements(int i, bool isInc);
  public: 
     // no ctor
     int general(std::vector<string> &arg_vec);

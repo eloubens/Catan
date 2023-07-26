@@ -97,12 +97,15 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
             }
         }
     } else { // read in from the default layout.txt file
+        
         ifstream ifs{"layout.txt"};
         board_oss << ifs.rdbuf();
         istringstream board_file{board_oss.str()};
+        
         model = make_unique<Model>(board_file);
         // for own testing
         // out << board_file.str() << endl;
+        
     }
     return 0;
 }
@@ -134,6 +137,7 @@ int Controller::createController(vector<string> &arg_vec) {
             foundRandomize = true; 
         } 
 	}
+    
     setModel(canRandomize, foundRandomize, seed, arg_vec);
     view = make_unique<View>(model.get());
     return 0;
@@ -149,17 +153,16 @@ bool Controller::isEOF() { return in.eof(); }
 
 int Controller::beginningOfGame() {
     for (int i = 0; i < playerAmount; i++) {
-        i = buildBasements(i);
+        i = buildBasements(i, true);
     }
     for (int i = playerAmount - 1; i >= 0 ; i--) {
-        i = buildBasements(i);
+        i = buildBasements(i, false);
     }
     return 0;
-
-    // ADD BUILDINGS POINTS !!!!!
 }
 
-int Controller::buildBasements(int i) {
+// if isInc, means its in the increasing loop
+int Controller::buildBasements(int i, bool isInc) {
     int tester;
     string bVertex; // basement vertex
     Color c;
@@ -170,20 +173,30 @@ int Controller::buildBasements(int i) {
         in.clear();
         in.ignore();
         out << "You cannot build here." << endl;
-        i--;
+        if (isInc) {
+            i--;
+        } else {
+            i++;
+        }
         return i;
     } // checks for invalid input and invalid vertex
     bVertex = to_string(tester);
     if(!model->placeBasement(bVertex, c)) {
         out << "You cannot build here." << endl;
-        i--;
+        if (isInc) {
+            i--;
+        } else {
+            i++;
+        }
     }
     return i;
 }
 
 //this acts like the main function essentially 
 int Controller::general(vector<string> &arg_vec) {
+    
     int state = createController(arg_vec);
+    
     if (isBadState(state)) { return state; } // if need to terminate program
     beginningOfGame();
     // created board by now

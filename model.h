@@ -49,9 +49,8 @@ class Model{
             }
         }
     };
-
-    Player players[4];
     public: 
+    Player players[4];
     Board board;
  public:
     Model(std::istringstream &iss); // for just loading a board (from file or random generated)
