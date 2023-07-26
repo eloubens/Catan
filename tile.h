@@ -24,9 +24,10 @@ class Tile {
     Edge *edges[6]; // edges at this tile // PRIVATE
     //ctor
     std::string getResource();
-    std::string getTileNum();
-    std::string getTileValue();
+    std::string getTileNum(); // for printing only
+    std::string getTileValue(); // for printing only
     std::string getResocIntFormat();
+    std::string getTileValueReg();
 
     string getVertex(vertexEnum v);
     string getEdge(edgeEnum e);

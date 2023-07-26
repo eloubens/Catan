@@ -80,6 +80,10 @@ bool Model::placeBasement(string bVertex, Color c) {
 
 }
 
+Tile* Model::getTiles() {
+    return board.getTiles();
+}
+
 void Model::save(Color turn) {
     ofstream backup{"backup.sv"};
     

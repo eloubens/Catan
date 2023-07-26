@@ -49,10 +49,10 @@ class Model{
             }
         }
     };
-    public: 
     Player players[4];
     Board board;
  public:
+    Tile* getTiles();
     Model(std::istringstream &iss); // for just loading a board (from file or random generated)
 
     Model(std::vector<std::istringstream> &&pResocs, std::vector<std::istringstream> &&pSettlements, 

@@ -153,11 +153,22 @@ bool Controller::isEOF() { return in.eof(); }
 
 int Controller::beginningOfGame() {
     for (int i = 0; i < playerAmount; i++) {
-        i = buildBasements(i, true);
+        try {
+            i = buildBasements(i, true);
+        } catch (int save) {
+            return save;
+        } 
+        
     }
     for (int i = playerAmount - 1; i >= 0 ; i--) {
-        i = buildBasements(i, false);
+        try {
+            i = buildBasements(i, false);
+        } catch (int save) {
+            return save;
+        } 
+        
     }
+    view->printBoard();  //Only if you have to print the board twice
     return 0;
 }
 
@@ -169,7 +180,8 @@ int Controller::buildBasements(int i, bool isInc) {
     c = static_cast<Color>(i);
     out << "Builder " << getColorStr(c) << ", where do you want to build a basement?" << endl << "> ";
     if (!(in >> tester)) { 
-        if (isEOF()) { return save(); }
+        if (isEOF()) { throw save(); }
+        out << "WRONG";
         in.clear();
         in.ignore();
         out << "You cannot build here." << endl;
@@ -198,16 +210,23 @@ int Controller::general(vector<string> &arg_vec) {
     int state = createController(arg_vec);
     
     if (isBadState(state)) { return state; } // if need to terminate program
-    beginningOfGame();
     // created board by now
-
     // beginning of game. 
+    beginningOfGame();
+    // game begins
+    // while(true) {
+    //     //beginningOfTurn();
+    //    // DuringGame();
+    // }
+    
+
+    
     
 
     // check for case when trying to impove on empty res!!!!!
 
-    cout << "printing the board" << endl; 
-    view->printBoard(); 
+    //cout << "printing the board" << endl; 
+    //view->printBoard(); 
     return 0;
 }
 

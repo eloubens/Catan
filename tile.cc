@@ -70,6 +70,15 @@ string Tile::getTileValue() {
     return oss.str();  
 }
 
+string Tile::getTileValueReg() {
+    int n = this->tileValue; 
+    ostringstream oss;
+    oss << n; 
+    return oss.str();  
+}
+
+
+
 void Tile::addSettlementsLocation(Color c, vector<string> &roads, vector<string> &resNum, vector<Residence> &resType) {
     for (int i = 0; i < verticesAmount; i++) {
         if (vertices[i]->isPlayer(c)){

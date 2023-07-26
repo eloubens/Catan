@@ -23,7 +23,7 @@ void Board::addSettlementsLocation(int tileNum, Color c, vector<string> &roads, 
     tiles[tileNum].addSettlementsLocation(c, roads, resNum, resType);
 }
 
-string Board::getTileVal(int num) { return tiles[num].getTileValue(); }    
+string Board::getTileVal(int num) { return tiles[num].getTileValueReg(); }    
 string Board::getTileResoc(int num) { return tiles[num].getResocIntFormat(); }
 
 void Board::placeBasement(string bVertex, Color c) {
@@ -1004,7 +1004,7 @@ int Board::placeValidRes(string vertexNum, Color color, Residence res) {
     return -1; // just so compiler doesn't give a warning for no return statement
 }
 
-Tile * Board::getTile() {
+Tile *Board::getTiles() {
     return this->tiles;
 }
 

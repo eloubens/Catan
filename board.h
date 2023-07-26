@@ -37,7 +37,7 @@ class Board {
     std::string getTileResoc(int num);
     void placeBasement(std::string bVertex, Color c); 
     
-    Tile * getTile(); 
+    Tile* getTiles(); 
 };
 
 #endif
