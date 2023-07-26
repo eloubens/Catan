@@ -107,7 +107,7 @@ void View::printBoard() {
     printTileTop(spacePad + 1, tiles[i + 2].getVertex(vertexEnum::TL) , tiles[i + 2].getVertex(vertexEnum::TR), tiles[i + 2].getEdge(edgeEnum::T));
     printTileVal(tiles[i].getTileValue(), 0, i);
     printTileTop(spacePad , tiles[i + 3].getVertex(vertexEnum::TL) , tiles[i + 3].getVertex(vertexEnum::TR), tiles[i + 3].getEdge(edgeEnum::T)); 
-    printTileVal(tiles[i].getTileValue(), 0, i + 1);
+    printTileVal(tiles[i + 1].getTileValue(), 0, i + 1);
     printTileTop(spacePad , tiles[i + 4].getVertex(vertexEnum::TL) , tiles[i + 4].getVertex(vertexEnum::TR), tiles[i + 4].getEdge(edgeEnum::T));  cout << endl; 
     // ROW 3:  | 6|-- 9--| 7|  10  | 8|--10--| 9|  10  |10|--11--|11|
 
@@ -127,9 +127,9 @@ void View::printBoard() {
     printVertex(tiles[i].getVertex(vertexEnum::ML));
     printTileVal(tiles[i].getTileValue(), 0, i);
     printTileTop(0, tiles[i + 3].getVertex(vertexEnum::TL) , tiles[i + 3].getVertex(vertexEnum::TR), tiles[i + 3].getEdge(edgeEnum::T)); 
-    printTileVal(tiles[i].getTileValue(), 0, i + 1);
+    printTileVal(tiles[i + 1].getTileValue(), 0, i + 1);
     printTileTop(0, tiles[i + 4].getVertex(vertexEnum::TL) , tiles[i + 4].getVertex(vertexEnum::TR), tiles[i + 4].getEdge(edgeEnum::T));  
-    printTileVal(tiles[i].getTileValue(), 0, i + 2);
+    printTileVal(tiles[i + 2].getTileValue(), 0, i + 2);
     printVertex(tiles[i + 2].getVertex(vertexEnum::MR));
     cout << endl; 
     // ROW 4:  |12|      |13|--18--|14|      |15|--19--|16|      |17|
@@ -150,7 +150,7 @@ void View::printBoard() {
     printTileTop(spacePad + 1, tiles[i - 3].getVertex(vertexEnum::BL), tiles[i - 3].getVertex(vertexEnum::BR) , tiles[i - 3].getEdge(edgeEnum::B));  
     printTileVal(tiles[i].getTileValue(), 0, i);
     printTileTop(spacePad, tiles[i - 2].getVertex(vertexEnum::BL), tiles[i - 2].getVertex(vertexEnum::BR) , tiles[i - 2].getEdge(edgeEnum::B));  
-    printTileVal(tiles[i].getTileValue(), 0, i + 1);
+    printTileVal(tiles[i + 1].getTileValue(), 0, i + 1);
     printTileTop(spacePad, tiles[i - 1].getVertex(vertexEnum::BL), tiles[i - 1].getVertex(vertexEnum::BR) , tiles[i - 1].getEdge(edgeEnum::B)); cout << endl; 
     // ROW 5:  |18|--26--|19|  11  |20|--27--|21|  11  |22|--28--|23|
 
@@ -170,9 +170,9 @@ void View::printBoard() {
     printVertex(tiles[i].getVertex(vertexEnum::ML) );
     printTileVal(tiles[i].getTileValue(), 0, i);
     printTileTop(0, tiles[i + 3].getVertex(vertexEnum::TL) , tiles[i + 3].getVertex(vertexEnum::TR), tiles[i + 3].getEdge(edgeEnum::T)); 
-    printTileVal(tiles[i].getTileValue(), 0, i + 1);
+    printTileVal(tiles[i + 1].getTileValue(), 0, i + 1);
     printTileTop(0, tiles[i + 4].getVertex(vertexEnum::TL) , tiles[i + 4].getVertex(vertexEnum::TR), tiles[i + 4].getEdge(edgeEnum::T)); 
-    printTileVal(tiles[i].getTileValue(), 0, i + 2);
+    printTileVal(tiles[i + 2].getTileValue(), 0, i + 2);
     printVertex(tiles[i + 2].getVertex(vertexEnum::MR)); cout << endl; 
     // ROW 6: |24|   8  |25|--35--|26|   8  |27|--36--|28|   8  |29|  
 
@@ -191,7 +191,7 @@ void View::printBoard() {
     printTileTop(spacePad, tiles[i + 2].getVertex(vertexEnum::TL) , tiles[i + 2].getVertex(vertexEnum::TR), tiles[i + 2].getEdge(edgeEnum::T));  
     printTileVal(tiles[i].getTileValue(), 0, i);
     printTileTop(spacePad + 1, tiles[i + 3].getVertex(vertexEnum::TL), tiles[i + 3].getVertex(vertexEnum::TR), tiles[i + 3].getEdge(edgeEnum::T));  
-    printTileVal(tiles[i].getTileValue(), 0, i + 1);
+    printTileVal(tiles[i + 1].getTileValue(), 0, i + 1);
     printTileTop(spacePad - 1, tiles[i + 4].getVertex(vertexEnum::TL), tiles[i + 4].getVertex(vertexEnum::TR), tiles[i + 4].getEdge(edgeEnum::T));  cout << endl;
     // ROW 7: |30|--43--|31|   8   |32|--44--|33|   8  |34|--45--|35|
 
@@ -209,9 +209,9 @@ void View::printBoard() {
     printVertex(tiles[i].getVertex(vertexEnum::ML) );
     printTileVal(tiles[i].getTileValue(), 0, i);
     printTileTop(0, tiles[i - 2].getVertex(vertexEnum::BL), tiles[i - 2].getVertex(vertexEnum::BR) , tiles[i - 2].getEdge(edgeEnum::B));
-    printTileVal(tiles[i].getTileValue(), 0, i + 1);
+    printTileVal(tiles[i + 1].getTileValue(), 0, i + 1);
     printTileTop(0, tiles[i - 1].getVertex(vertexEnum::BL), tiles[i - 1].getVertex(vertexEnum::BR) , tiles[i - 1].getEdge(edgeEnum::B));
-    printTileVal(tiles[i].getTileValue(), 0, i + 2);
+    printTileVal(tiles[i + 2].getTileValue(), 0, i + 2);
     printVertex(tiles[i + 2].getVertex(vertexEnum::MR)); cout << endl;
     // ROW 8:  |36|   5  |37|--52--|38|   5  |39|--53--|40|   5  |41|  
 
@@ -232,7 +232,7 @@ void View::printBoard() {
     printTileTop(spacePad + 1, tiles[i - 3].getVertex(vertexEnum::BL), tiles[i - 3].getVertex(vertexEnum::BR) , tiles[i - 3].getEdge(edgeEnum::B));
     printTileVal(tiles[i].getTileValue(), 0, i);
     printTileTop(spacePad,  tiles[i - 2].getVertex(vertexEnum::BL), tiles[i - 2].getVertex(vertexEnum::BR) , tiles[i - 2].getEdge(edgeEnum::B)); 
-    printTileVal(tiles[i].getTileValue(), 0, i + 1);
+    printTileVal(tiles[i + 1].getTileValue(), 0, i + 1);
     printTileTop(spacePad,  tiles[i - 1].getVertex(vertexEnum::BL), tiles[i - 1].getVertex(vertexEnum::BR) , tiles[i - 1].getEdge(edgeEnum::B)); cout << endl;
     // ROW 9: |42|--60--|43|   6  |44|--61--|45|   6  |46|--62--|47|
 

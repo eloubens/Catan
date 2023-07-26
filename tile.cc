@@ -41,7 +41,7 @@ string Tile::getTileNum() {
 
 string Tile::getTileValue() {
     int n = this->tileValue; 
-    if (n == 4)  {return "  ";}
+    if (this->getResource() == "PARK")  {return "  ";}
     ostringstream oss;
     oss << n; 
     return oss.str();  
