@@ -172,6 +172,18 @@ void Controller::geese() {
 
     // stealing resources
     vector<string> playersSteal = model->getPlayersToStealFrom();
+    string curPlayer; //= enumToStr(turn);
+    out << "Builder " << curPlayer << " can choose to steal from";
+    for (auto n : playersSteal) {
+        out << " " << n << ",";
+    }
+    out << endl;
+    out << "Choose a builder to steal from." << endl;
+    string toSteal;
+    in >> toSteal;
+
+    model->steal(curPlayer, toSteal);
+
 
     // turn var into string
 }

@@ -68,22 +68,22 @@ void Model::roll(Color turn) {
 //auto [resoc, amount] resocGained =
 
 vector<pair<string, vector<pair<string, int>>>> Model::lostResoc() {
-vector<pair<string, vector<pair<string, int>>>> lostResocs;
-for (auto p : players) {
-    if (p.getResocTotal() >= 10) {
-        vector<pair<string, int>> resocs = p.removeHalfResocs();
-        string c;
+    vector<pair<string, vector<pair<string, int>>>> lostResocs;
+    for (auto p : players) {
+        if (p.getResocTotal() >= 10) {
+            vector<pair<string, int>> resocs = p.removeHalfResocs();
+            string c;
 
-        if (p.getColour() == Color::B) c = "Blue";
-        else if (p.getColour() == Color::O) c = "Orange";
-        else if (p.getColour() == Color::R) c = "Red";
-        else if (p.getColour() == Color::Y) c = "Yellow";
+            if (p.getColour() == Color::B) c = "Blue";
+            else if (p.getColour() == Color::O) c = "Orange";
+            else if (p.getColour() == Color::R) c = "Red";
+            else if (p.getColour() == Color::Y) c = "Yellow";
 
-        lostResocs.emplace_back(make_pair(c, resocs));
+            lostResocs.emplace_back(make_pair(c, resocs));
+        }
     }
-}
 
-return lostResocs;
+    return lostResocs;
 }
 
 vector<pair<string, int>> Model::numLostResoc() {
@@ -124,12 +124,24 @@ vector<string> Model::getPlayersToStealFrom() {
     for (auto n : players) {
         if (n.hasRes(geeseTile)) {
             //c = n.getColour();
+            // conv enum Color to string
             p.emplace_back(c);
         }
     }
 
     return p;
 
+}
+
+void Model::steal(string curPlayer, string playerToSteal) {
+    string c;
+    vector<Player> stealing;
+    for (auto p : players) {
+        //c = p.getColour() turn enum into str
+        if (c == curPlayer) {
+
+        }
+    }
 }
 
 
