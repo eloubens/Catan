@@ -2,14 +2,13 @@
 #include "model.h"
 #include "colorEnum.h"
 #include <iostream>
+#include <utility>
 #include <vector>
 
 using namespace std;
 
 Model::Model(istringstream &iss) : players{Player{Color::B}, Player{Color::R}, Player{Color::O}, Player{Color::Y}},
                              board{iss} {}
-
-
 
 Model::Model(vector<istringstream> &&pResocs, vector<istringstream> &&pSettlements, istringstream &board, int geeseTileNum) :
     players{
@@ -41,10 +40,7 @@ Model::Model(vector<istringstream> &&pResocs, vector<istringstream> &&pSettlemen
             }
         }
     }
-/*
-Player players[4];
-Board board;
-*/
+
 
 void Model::roll(Color turn) {
     int tileValRolled = players[static_cast<int>(turn)].roll();
@@ -66,6 +62,102 @@ void Model::roll(Color turn) {
     }
 }
 //auto [resoc, amount] resocGained =
+
+
+
+
+// returns if you can place a basement or not
+
+// MAKE A CHANGE HERE, SHOULD TAKE IN A VECTOR OF OCCPIED TILES.
+bool Model::placeBasement(string bVertex, Color c) {
+    try {
+        board.placeBasement(bVertex, c); // GET A 
+    } catch (const int &placeOnTile) {
+        players[static_cast<int>(c)].addOccupiedTiles(placeOnTile);
+        players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(Residence::B)); // leave as is. 
+        return true;
+    }
+    // not adjacent or on it
+    // update list of occupied tiles
+    return false;
+//maybe update building points 
+
+
+
+
+}
+
+Tile* Model::getTiles() {
+    return board.getTiles();
+}
+
+void Model::save(Color turn) {
+    ofstream backup{"backup.sv"};
+    
+    backup << getColorStr(turn) << endl;
+    for (int i = 0; i < playerAmount; i++) {
+        map<Resource, int> &resocMap = (players[i]).getResocMap();
+        for (int j = 0; j < resocAmount - 1; j++) { // park not included
+            backup << resocMap[static_cast<Resource>(j)] << " ";
+        }
+        backup << "r ";
+        const vector<int> &occupiedTiles = players[i].getOccupiedTiles();
+        vector<string> roads, resNum;
+        vector<Residence> resType;
+        for (auto tileNum : occupiedTiles) {
+            board.addSettlementsLocation(tileNum, static_cast<Color>(i), roads, resNum, resType);
+        }
+        for (auto edgeNum : roads) {
+            backup << edgeNum << " ";
+        }
+        backup << "h";
+        int size = resNum.size();
+        for (int i = 0; i < size; i++) {
+            backup << " " << resNum[i] << " " << getResStr(resType[i]);
+        }
+        backup << endl;
+    }
+    for (int i = 0; i < 19; i++) {
+        if (i == 18) {
+            backup << board.getTileResoc(i) << " " << board.getTileVal(i) << endl;
+            break;
+        }
+        backup << board.getTileResoc(i) << " " << board.getTileVal(i) << " ";
+    }
+    backup << to_string((board.getGeeseTile()));
+}
+void Model::setDice(Color c, string cmd) {
+    players[static_cast<int>(c)].setDice(cmd);
+}
+
+vector<map<Resource, int>> Model::diceRolledUpdate(int rollVal) {
+    vector<map<Resource, int>> pResocsGained{4, map<Resource, int>{}};
+    pair<Resource, int> resocGained; // resoc gained of 1 player
+    for (int i = 0; i < playerAmount; i++) {
+        const vector<int>& occupTiles = players[i].getOccupiedTiles();
+        for (auto tileNum : occupTiles) {
+            //cout << tileNum << endl;
+            //{Resource::NA, 0}, {resocType, resocTotal}
+            resocGained = board.getResoc(tileNum, rollVal, static_cast<Color>(i)); // gets resource gained of 1 player for 1 reasource
+            auto [resoc, resocNum] = resocGained;
+            if (resocNum != 0) {
+                //cout << "testing " << resocNum << endl;
+                if (pResocsGained[i].count(resoc) == 0) {
+                    pResocsGained[i][resoc] = resocNum;
+                } else {
+                    pResocsGained[i][resoc] += resocNum;
+                }
+                players[i].updateResocMap(resocGained);
+            }
+        }
+    }
+    return pResocsGained;
+}
+
+/*
+Player players[4];
+Board board;
+*/
 
 vector<pair<string, vector<pair<string, int>>>> Model::lostResoc() {
     vector<pair<string, vector<pair<string, int>>>> lostResocs;

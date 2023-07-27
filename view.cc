@@ -76,7 +76,7 @@ void View::printBoard() {
     int textPad = 2; 
     int spacePad = 21;
 
-    Tile * tiles = model->board.getTile(); 
+    Tile * tiles = model->getTiles(); 
     int i = 0;
 
     // ROW 1:  | 0|-- 0--| 1| 

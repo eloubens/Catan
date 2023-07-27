@@ -8,10 +8,15 @@ int Dice::rollFair() {
 }
 
 int Dice::roll() {
-    if(type == DiceType::LOADED) {
+    if(type == "load") {
         return rollLoaded();
     }
     return rollFair();
+}
+
+
+void Dice::setDice(std::string cmd) {
+    type = cmd;
 }
 
 

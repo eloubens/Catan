@@ -47,6 +47,44 @@ int Vertex::getResidenceAmount(Color color) const {
     return static_cast<int>(residenceType);
 }
 
+void Vertex::placeBasement(string bVertex, Color c) {
+    if (location != bVertex) { return; } // correct vertex
+    if (player != Color::DNE) { 
+        throw false;
+    } // check that it is totally empty
+    for (auto v : adjVertices) {
+        if (v->isOccupied()) {
+            throw false;
+        }
+    }
+    player = c;
+    residenceType = Residence::B;
+    throw true;
+    // add res here
+
+
+    // check that adjacent vertices are empty (only if arrays are not 0)
+/*
+string location
+Color player = Color::DNE
+std::vector<Vertex*> adjVertices
+std::vector<Edge*> adjEdges
+Residence residenceType = Residence::NONE
+*/
+
+}
+
+bool Component::isOccupied() {
+    if (player != Color::DNE) { return true; }
+    return false;
+}
+
+string Component::getLocation() { return location; }
+
+Residence Vertex::getRes() { return residenceType; }
+
+bool Component::isPlayer(Color c) { return c == player; }
+
 void Component::setAdjV(vector<Vertex*> &&adjVertices) {
     this->adjVertices = adjVertices;
 }

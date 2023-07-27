@@ -11,7 +11,14 @@
 
 using namespace std;
 
-Player::Player(Color color) : color{color} {}
+Player::Player(Color color) : color{color}, 
+    resocMap{
+        {Resource::BRICK, 0},
+        {Resource::ENERGY, 0},
+        {Resource::GLASS, 0},
+        {Resource::HEAT, 0},
+        {Resource::WIFI, 0}
+    }  {}
 
 Player::Player(istringstream &playerData, Color color) : color{color} {
     int num;
@@ -26,6 +33,10 @@ void Player::addOccupiedTiles(int tileNum) {
         if (num == tileNum) { return; }
     }
     occupiedTiles.emplace_back(tileNum);
+}
+
+void Player::setDice(string cmd) {
+    dice.setDice(cmd);
 }
 
 void Player::addBuildingPoints(int num) { buildingPoints += num; }
@@ -146,13 +157,13 @@ int Player::roll() {
     return dice.roll();
 }
 
-vector<int>& Player::getOccupiedTiles() {
-    return occupiedTiles;
-}
-
 void Player::updateResocMap(const pair<Resource, int> &gainedResoc) {
     resocMap[gainedResoc.first] += gainedResoc.second;
 }
+
+map<Resource, int>& Player::getResocMap() { return resocMap; }
+
+vector<int>& Player::getOccupiedTiles() { return occupiedTiles; }
 
 bool Player::hasRes(int tileNum) {
     for (auto n : occupiedTiles) {

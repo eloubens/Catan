@@ -1,1 +1,1 @@
-colorEnum.o: colorEnum.cc
+colorEnum.o: colorEnum.cc colorEnum.h
