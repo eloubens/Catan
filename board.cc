@@ -27,23 +27,40 @@ void Board::addSettlementsLocation(int tileNum, Color c, vector<string> &roads, 
 string Board::getTileVal(int num) { return tiles[num].getTileValueReg(); }    
 string Board::getTileResoc(int num) { return tiles[num].getResocIntFormat(); }
 
+bool Board::SharedVertex(string bVertex) {
+    vector<string> nonSharedV{"0","1","2","5","6","11","12","17","24","29","36","41","42","47","48","51","52","53"};
+    for (auto n : nonSharedV) {
+        if(bVertex == n) { return true; }
+    }
+    return false;
+}
+
 
 // EDIT HERE
 // MAKE A VECTOR OF TILES !!! ADD MORE THAN 1 
 void Board::placeBasement(string bVertex, Color c) {
+    // if the vertex is shared by 2 tiles, need to add the second tile to
+    //      list of occupied tiles.
     for (int i = 0; i < 19; i++) {
         try {
             tiles[i].placeBasement(bVertex, c);
         } catch(bool isValid){
             if(isValid) {
-                throw i;
+                vector<int> occupTiles{i};
+                if (!SharedVertex(bVertex)) { // to prevent unecessary looping through tiles
+                    unsigned long maxSharedTiles = 3; /// magic number
+                    for (int j = i + 1; j < 19; j++) {
+                        if (tiles[j].tileHasVertex(bVertex)) {
+                            occupTiles.emplace_back(j);
+                            if (occupTiles.size() == maxSharedTiles) { break; } // to prevent unecessary looping,
+                        }
+                    }
+                }
+                throw occupTiles;
             }
-            return; // MAKE CHANGE: don't return, keep looping 
+            return;
         }
     }
-    
-
-
 }
 
 Board::Board(istringstream &iss, bool isLoadGame): 

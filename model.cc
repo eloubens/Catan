@@ -42,25 +42,26 @@ Model::Model(vector<istringstream> &&pResocs, vector<istringstream> &&pSettlemen
     }
 
 
-void Model::roll(Color turn) {
-    int tileValRolled = players[static_cast<int>(turn)].roll();
-    if (tileValRolled == 7) {
-        // GEESE STUFF HERE 
-    }
+// OLD CODE
+// void Model::roll(Color turn) {
+//     int tileValRolled = players[static_cast<int>(turn)].roll();
+//     if (tileValRolled == 7) {
+//         // GEESE STUFF HERE 
+//     }
 
-    // gets resources for each player 
-    for (int player = 0; player < playerAmount - 1; player++) {
-        vector<int> occupiedTiles = players[player].getOccupiedTiles();
-        int vecSize = occupiedTiles.size();
-        for (int j = 0; j < vecSize; j++) {
-            // gets the number of resources for 1 tile
-            const pair<Resource, int> gainedResoc = board.getResoc(occupiedTiles[j], tileValRolled, static_cast<Color>(player));
-            if (gainedResoc.second != 0) {
-                players[player].updateResocMap(gainedResoc);
-            }
-        }
-    }
-}
+//     // gets resources for each player 
+//     for (int player = 0; player < playerAmount - 1; player++) {
+//         vector<int> occupiedTiles = players[player].getOccupiedTiles();
+//         int vecSize = occupiedTiles.size();
+//         for (int j = 0; j < vecSize; j++) {
+//             // gets the number of resources for 1 tile
+//             const pair<Resource, int> gainedResoc = board.getResoc(occupiedTiles[j], tileValRolled, static_cast<Color>(player));
+//             if (gainedResoc.second != 0) {
+//                 players[player].updateResocMap(gainedResoc);
+//             }
+//         }
+//     }
+// }
 //auto [resoc, amount] resocGained =
 
 
@@ -72,19 +73,17 @@ void Model::roll(Color turn) {
 bool Model::placeBasement(string bVertex, Color c) {
     try {
         board.placeBasement(bVertex, c); // GET A 
-    } catch (const int &placeOnTile) {
-        players[static_cast<int>(c)].addOccupiedTiles(placeOnTile);
-        players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(Residence::B)); // leave as is. 
+    } catch (const vector<int> &occupTiles) {
+        for (auto n : occupTiles) {
+            players[static_cast<int>(c)].addOccupiedTiles(n);
+            players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(Residence::B));
+        }
         return true;
     }
     // not adjacent or on it
     // update list of occupied tiles
     return false;
 //maybe update building points 
-
-
-
-
 }
 
 Tile* Model::getTiles() {
@@ -94,7 +93,7 @@ Tile* Model::getTiles() {
 void Model::save(Color turn) {
     ofstream backup{"backup.sv"};
     
-    backup << getColorStr(turn) << endl;
+    backup << static_cast<int>(turn) << endl;
     for (int i = 0; i < playerAmount; i++) {
         map<Resource, int> &resocMap = (players[i]).getResocMap();
         for (int j = 0; j < resocAmount - 1; j++) { // park not included
@@ -136,12 +135,10 @@ vector<map<Resource, int>> Model::diceRolledUpdate(int rollVal) {
     for (int i = 0; i < playerAmount; i++) {
         const vector<int>& occupTiles = players[i].getOccupiedTiles();
         for (auto tileNum : occupTiles) {
-            //cout << tileNum << endl;
             //{Resource::NA, 0}, {resocType, resocTotal}
             resocGained = board.getResoc(tileNum, rollVal, static_cast<Color>(i)); // gets resource gained of 1 player for 1 reasource
             auto [resoc, resocNum] = resocGained;
             if (resocNum != 0) {
-                //cout << "testing " << resocNum << endl;
                 if (pResocsGained[i].count(resoc) == 0) {
                     pResocsGained[i][resoc] = resocNum;
                 } else {

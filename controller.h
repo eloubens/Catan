@@ -20,7 +20,7 @@ class Controller {
     std::unique_ptr<Model> model; // default ctor initializes to nullptr
     std::unique_ptr<View> view; // default ctor initializes to nullptr
 
-    void roll(Color turn);
+    //void roll(Color turn);
     void trade();
     void geese();
     // sets the Model field of the controller. Loads a board from a file, creates and loads a randomized board, or loads a saved game.

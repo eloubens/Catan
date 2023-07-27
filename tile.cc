@@ -8,23 +8,18 @@ using namespace std;
 const int verticesAmount = 6, edgesAmount = 6;
 
 string Tile::getResource() {
-    if (this->resocType == Resource::BRICK) {
-        return "BRICK";
-    } else if (this->resocType == Resource::ENERGY) {
-        return "ENERGY";
-    } else if (this->resocType == Resource::GLASS) {
-        return "GLASS";
-    } else if (this->resocType == Resource::HEAT) {
-        return "HEAT";
-    } else if (this->resocType == Resource::WIFI) {
-        return "WIFI";
-    } else if (this->resocType == Resource::PARK) {
-        return "PARK";
-    } else {
-        return "NA";
-    }
+    return getResocStr(resocType);
 }
 
+
+bool Tile::tileHasVertex(string bVertex) {
+    for (int i = 0; i < verticesAmount; i++) {
+        if (vertices[i]->isNum(bVertex)) {
+            return true;
+        }
+    }
+    return false;
+}
 
 // Correct. Leave as is. 
 void Tile::placeBasement(string bVertex, Color c) {
