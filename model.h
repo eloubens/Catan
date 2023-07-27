@@ -50,10 +50,14 @@ class Model{
             }
         }
     };
+    //Player players[4];
+    
+
+ public:
     Player players[4];
     Board board;
 
- public:
+
     Tile* getTiles();
     Model(std::istringstream &iss); // for just loading a board (from file or random generated)
     void setDice(Color c, std::string cmd);
@@ -61,7 +65,7 @@ class Model{
     Model(std::vector<std::istringstream> &&pResocs, std::vector<std::istringstream> &&pSettlements, 
                                                     std::istringstream &board ,int geeseTileNum);
     bool placeBasement(std::string bVertex, Color c);                                               
-    void roll(Color turn);
+    //void roll(Color turn);, no longer needed
     //buildRes(Color c, vertexNum)
     // saves current state of game
     void save(Color turn);

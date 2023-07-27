@@ -11,7 +11,7 @@ std::string getResocStr(Resource r) {
         case Resource::HEAT:
             return "HEAT";
         case Resource::WIFI:
-            return "HEAT";
+            return "WIFI";
         case Resource::PARK:
             return "PARK";
         default:

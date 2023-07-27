@@ -16,9 +16,14 @@ class Player {
     //int buildingPoints = 0, resocTotal = 0;
     Dice dice;
     std::map<Resource, int> resocMap;
-    std::vector<int> occupiedTiles;
+    //std::vector<int> occupiedTiles;
  public:
+    std::vector<int> occupiedTiles;
     int buildingPoints = 0, resocTotal = 0;
+
+
+
+    
     void setDice(std::string cmd);
     explicit Player(Color color);
     Player(std::istringstream &playerData, Color color);

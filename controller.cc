@@ -16,7 +16,7 @@ const int eof = 2;
 const int invalidInput = 1;
 
 // returns true if bad state
-bool Controller::isBadState(int n) { return n!= 0; }
+bool Controller::isBadState(int n) { return n != 0; }
 
 // sets the Model field of the controller. 
 // Loads a board from a file, creates and loads a randomized board, or loads a saved game.
@@ -69,6 +69,7 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
                 ifs >> turnColor;
                 // setting field variable
                 turn = static_cast<Color>(turnColor); 
+                out << turnColor;
                 vector<istringstream> pResocs, pSettlements;
                 for (int i = 0; i < playerAmount; i++) {
                     // read until 'r' character representing road
@@ -82,30 +83,13 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
                 ifs >> geeseTileNum;
                 model = make_unique<Model>(move(pResocs), move(pSettlements), board_iss, geeseTileNum);
                 return 0;
-                //just for own testing
-                // out << turnColor << endl;
-                // out << "recocs" << endl;
-                // for (auto &n: pResocs) {
-                //     out << n.str() << endl;
-                // }
-                // out << "setlements" << endl;
-                // for (auto &n: pSettlements) {
-                //     out << n.str() << endl;
-                // }
-                // out << board << endl;
-                // out << geeseTileNum << endl;
             }
         }
     } else { // read in from the default layout.txt file
-        
         ifstream ifs{"layout.txt"};
         board_oss << ifs.rdbuf();
         istringstream board_file{board_oss.str()};
-        
-        model = make_unique<Model>(board_file);
-        // for own testing
-        // out << board_file.str() << endl;
-        
+        model = make_unique<Model>(board_file); 
     }
     return 0;
 }
@@ -137,8 +121,8 @@ int Controller::createController(vector<string> &arg_vec) {
             foundRandomize = true; 
         } 
 	}
-    
-    setModel(canRandomize, foundRandomize, seed, arg_vec);
+    int state = setModel(canRandomize, foundRandomize, seed, arg_vec);
+    if (isBadState(state)) { return state; }
     view = make_unique<View>(model.get());
     return 0;
 }
@@ -152,7 +136,7 @@ bool Controller::isEOF() { return in.eof(); }
 
 
 int Controller::beginningOfGame() {
-    //for (int i = 0; i < 1; i++) {
+    //for (int i = 0; i < 3; i++) {
     for (int i = 0; i < playerAmount; i++) {
         try {
             i = buildBasements(i, true);
@@ -165,9 +149,8 @@ int Controller::beginningOfGame() {
         try {
             i = buildBasements(i, false);
         } catch (int save) {
-            return save;
-        } 
-        
+            return save; 
+        }
     }
     return 0;
 }
@@ -220,12 +203,12 @@ int Controller::beginningOfTurn() {
         }
         out << "> ";
     } 
-
+    
     // ANYTIME YOU USE in >>. Must use isEOF() command and return oef if true
 
     // deal with loading the dice here (fair + loaded)
 
-    int rollVal = 6; // value of the dice rolled. This reperesents the tilevalue
+    int rollVal = 7; // value of the dice rolled. This reperesents the tilevalue
     
     // vector (size 4) of a map.
     vector<map<Resource, int>> resocMap = model->diceRolledUpdate(rollVal);
@@ -281,9 +264,9 @@ int Controller::general(vector<string> &arg_vec) {
 
 
 
-void Controller::roll(Color turn) {
-    model->roll(turn);
-}
+// void Controller::roll(Color turn) {
+//     model->roll(turn);
+// }
 
 void Controller::geese() {
     // removing half of anyone who has 10+ resources
