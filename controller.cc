@@ -317,7 +317,7 @@ void Controller::geese() {
     string toSteal;
     in >> toSteal;
 
-    model->steal(curPlayer, toSteal);
+    string stolenResoc = model->steal(curPlayer, toSteal);
 
 
     // turn var into string

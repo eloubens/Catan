@@ -39,6 +39,8 @@ class Player {
     std::vector<std::pair<std::string, int>> removeHalfResocs();
 
     bool hasRes(int tileNum);
+
+    std::string stealResoc();
 };
 
 #endif
