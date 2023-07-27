@@ -1,6 +1,8 @@
 #include <string>
 #include "model.h"
+#include "colorEnum.h"
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -62,8 +64,85 @@ void Model::roll(Color turn) {
             }
         }
     }
+}
 //auto [resoc, amount] resocGained =
-                    
+
+vector<pair<string, vector<pair<string, int>>>> Model::lostResoc() {
+    vector<pair<string, vector<pair<string, int>>>> lostResocs;
+    for (auto p : players) {
+        if (p.getResocTotal() >= 10) {
+            vector<pair<string, int>> resocs = p.removeHalfResocs();
+            string c;
+
+            if (p.getColour() == Color::B) c = "Blue";
+            else if (p.getColour() == Color::O) c = "Orange";
+            else if (p.getColour() == Color::R) c = "Red";
+            else if (p.getColour() == Color::Y) c = "Yellow";
+
+            lostResocs.emplace_back(make_pair(c, resocs));
+        }
+    }
+
+    return lostResocs;
+}
+
+vector<pair<string, int>> Model::numLostResoc() {
+    vector<pair<string, int>> nLost;
+    for (auto p : players) {
+        if (p.getResocTotal() >= 10) {
+            int numLost = p.getResocTotal() / 2;
+            string c;
+
+            if (p.getColour() == Color::B) c = "Blue";
+            else if (p.getColour() == Color::O) c = "Orange";
+            else if (p.getColour() == Color::R) c = "Red";
+            else if (p.getColour() == Color::Y) c = "Yellow";
+
+            nLost.emplace_back(make_pair(c, numLost));
+        }
+    }
+
+    return nLost;
 
 }
+
+void Model::placeGeese(int tile) {
+    int geeseCurrentTile = board.getGeeseTile();
+
+    if (tile != geeseCurrentTile) {
+        board.setGeese(geeseCurrentTile, false);
+        board.setGeese(tile, true);
+    }
+
+}
+
+vector<string> Model::getPlayersToStealFrom() {
+    vector<string> p;
+    int geeseTile = board.getGeeseTile();
+    string c;
+
+    for (auto n : players) {
+        if (n.hasRes(geeseTile)) {
+            //c = n.getColour();
+            // conv enum Color to string
+            p.emplace_back(c);
+        }
+    }
+
+    return p;
+
+}
+
+void Model::steal(string curPlayer, string playerToSteal) {
+    string c;
+    vector<Player> stealing;
+    for (auto p : players) {
+        //c = p.getColour() turn enum into str
+        if (c == curPlayer) {
+
+        }
+    }
+}
+
+
 

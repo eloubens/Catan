@@ -907,7 +907,7 @@ tiles{
     tiles[18].placeAdjEdgesE(edgeEnum::B, 
         vector<Edge*>{tiles[18].getEdgeAdr(edgeEnum::BL), tiles[18].getEdgeAdr(edgeEnum::BR)});
 
-    cout << tiles[1].vertices[0]->adjEdges[0] << endl;
+    //cout << tiles[1].vertices[0]->adjEdges[0] << endl;
 
     /* for (auto n : tiles) {
         cout << "Tile: " << n.tileNum << endl;
@@ -988,3 +988,9 @@ Tile * Board::getTile() {
 pair<Resource, int> Board::getResoc(int tileNum, int tileValRolled, Color player) const {
     return tiles[tileNum].evalResoc(tileValRolled, player);
 }
+
+void Board::setGeese(int tileNum, bool geese) {
+    tiles[tileNum].setGeese(geese);
+}
+
+int Board::getGeeseTile() { return geeseTileNum; }

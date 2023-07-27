@@ -3,6 +3,7 @@
 #include <utility>
 #include <fstream>
 #include <sstream>
+#include <vector>
 #include <map>
 #include "player.h"
 #include "board.h"
@@ -53,6 +54,7 @@ class Model{
     Player players[4];
     public: 
     Board board;
+
  public:
     Model(std::istringstream &iss); // for just loading a board (from file or random generated)
 
@@ -61,6 +63,17 @@ class Model{
     // Model(std::istringstream &player1, std::istringstream &player2, std::istringstream &player3, 
     //     std::istringstream &player4, std::istringstream &board, int geeseTileNum); // for loading a full game 
     void roll(Color turn);
+
+    std::vector<std::pair<std::string, std::vector<std::pair<std::string, int>>>> lostResoc();
+    std::vector<std::pair<std::string, int>> numLostResoc();
+
+    void placeGeese(int tile);
+
+    std::vector<std::string> getPlayersToStealFrom();
+
+    void steal(std::string curPlayer, std::string playertoSteal);
+
+
 
 
 };
