@@ -1,4 +1,5 @@
 #include "component.h"
+#include "colorEnum.h"
 #include <sstream>
 #include <iostream>
 
@@ -13,12 +14,14 @@ Vertex::Vertex(string location) : Component{location} {}
 
 string Edge::getEdge() {
     if (isRoad) {
-        ostringstream oss;
-        if (player == Color::R) {oss << "R";}
-        else if (player == Color::B) {oss << "B";}
-        else if (player == Color::O) {oss << "O";}
-        else {oss << "Y";}
-        return oss.str();
+        string s = getColorChar(player);
+        return s; 
+        // ostringstream oss;
+        // if (player == Color::R) {oss << "R";}
+        // else if (player == Color::B) {oss << "B";}
+        // else if (player == Color::O) {oss << "O";}
+        //else {oss << "Y";}
+        //return oss.str(); 
     } else {
         return location; 
     }
@@ -29,15 +32,15 @@ string Vertex::getVertex() {
         return location; 
     } else {
         ostringstream oss;
-        if (player == Color::R) {oss << "R";}
-        else if (player == Color::B) {oss << "B";}
-        else if (player == Color::O) {oss << "O";}
-        else {oss << "Y";}
-        
-        if (residenceType == Residence::H) {oss << "H";}
-        else if (residenceType == Residence::B) {oss << "B";}
-        else if (residenceType == Residence::T) {oss << "T";}
-
+        // if (player == Color::R) {oss << "R";}
+        // else if (player == Color::B) {oss << "B";}
+        // else if (player == Color::O) {oss << "O";}
+        // else {oss << "Y";}
+        // if (residenceType == Residence::H) {oss << "H";}
+        // else if (residenceType == Residence::B) {oss << "B";}
+        // else if (residenceType == Residence::T) {oss << "T";}
+        oss << getColorChar(player); 
+        oss << getResStr(residenceType);
         return oss.str();
     }
 }
