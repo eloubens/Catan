@@ -96,7 +96,7 @@ void Component::setAdjE(std::vector<Edge*> &&adjEdges) {
     this->adjEdges = adjEdges;
 }
 
-bool Component::isNum(std::string num) { return this->location == location; }
+bool Component::isNum(std::string num) { return location == num; }
 
 
 

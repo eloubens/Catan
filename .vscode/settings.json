@@ -16,8 +16,6 @@
         "compare": "cpp",
         "concepts": "cpp",
         "cstdint": "cpp",
-        "list": "cpp",
-        "map": "cpp",
         "unordered_map": "cpp",
         "vector": "cpp",
         "exception": "cpp",
@@ -26,6 +24,7 @@
         "iterator": "cpp",
         "memory": "cpp",
         "memory_resource": "cpp",
+        "numeric": "cpp",
         "optional": "cpp",
         "random": "cpp",
         "string": "cpp",
@@ -34,7 +33,6 @@
         "tuple": "cpp",
         "type_traits": "cpp",
         "utility": "cpp",
-        "fstream": "cpp",
         "initializer_list": "cpp",
         "iosfwd": "cpp",
         "iostream": "cpp",
@@ -49,6 +47,12 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "cinttypes": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "deque": "cpp",
+        "chrono": "cpp",
+        "ctime": "cpp",
+        "map": "cpp",
+        "fstream": "cpp",
+        "ratio": "cpp"
     }
 }
