@@ -214,6 +214,14 @@ int Controller::beginningOfTurn() {
             out << "Dice set to load." << endl;
             model->setDice(turn, cmd);
         }
+        if (cmd == "status") {
+            out << "***print status***" << endl;
+            // this->model->players[0].getStatus(out); 
+            for (int i = 0; i < 4; i++) {
+                model->players[i].getStatus(out);
+                out << endl; 
+            }
+        }
         if (cmd == "fair") {
             model->setDice(turn, cmd);
             out << "Dice set to fair." << endl;

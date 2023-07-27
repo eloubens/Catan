@@ -181,3 +181,19 @@ string Player::stealResoc() {
 
     return stolenResoc;
 }
+
+
+void Player::getStatus(std::ostream &out) {
+    out << getColorStr(color) << " has " << buildingPoints << " building points,"; 
+
+    for (const auto& entry : resocMap) {
+        if (entry.first == Resource::WIFI) {
+            out << " and " << entry.second << " " << getResocLowerCaseStr(entry.first) << "." << endl;; 
+        } else {
+            out << " " << entry.second << " " << getResocLowerCaseStr(entry.first) << ","; 
+        }
+    }
+
+    out << getColorStr(color) << " has built:" ;
+    for (int i : occupiedTiles) { cout << i << endl; }
+}
