@@ -8,11 +8,12 @@
 #include <chrono>
 #include <string>
 #include "controller.h"
- 
 
-// 1 means invalid input 
 
 using namespace std;
+
+const int eof = 2;
+const int invalidInput = 1;
 
 // returns true if bad state
 bool Controller::isBadState(int n) { return n!= 0; }
@@ -46,7 +47,7 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
                 //ifstream ifs{arg_vec[i]};
                 if (!ifs) {
                     err << "Error: Could not open file" << endl;
-                    return 1;
+                    return invalidInput;
                 }
                 board_oss << ifs.rdbuf();
                 istringstream board_iss(board_oss.str());
@@ -61,7 +62,7 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
                 ifstream ifs{arg_vec[i]};
                 if (!ifs) {
                     err << "Error: Could not open file" << endl;
-                    return 1;
+                    return invalidInput;
                 }
                 int turnColor, geeseTileNum;
                 string resoc, settlements, board;
@@ -96,12 +97,15 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
             }
         }
     } else { // read in from the default layout.txt file
+        
         ifstream ifs{"layout.txt"};
         board_oss << ifs.rdbuf();
         istringstream board_file{board_oss.str()};
+        
         model = make_unique<Model>(board_file);
         // for own testing
         // out << board_file.str() << endl;
+        
     }
     return 0;
 }
@@ -122,7 +126,7 @@ int Controller::createController(vector<string> &arg_vec) {
                     seed = stoi(arg_vec[i]);
                 } catch (const std::invalid_argument& ex) {
                     err << "Invalid argument: " << ex.what() << endl;
-                    return 1;
+                    return invalidInput;
                 }
             }
         } 
@@ -133,24 +137,203 @@ int Controller::createController(vector<string> &arg_vec) {
             foundRandomize = true; 
         } 
 	}
+    
     setModel(canRandomize, foundRandomize, seed, arg_vec);
     view = make_unique<View>(model.get());
+    return 0;
+}
+
+int Controller::save() {
+    model->save(turn);
+    return eof; 
+}
+
+bool Controller::isEOF() { return in.eof(); }
+
+
+int Controller::beginningOfGame() {
+    //for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < playerAmount; i++) {
+        try {
+            i = buildBasements(i, true);
+        } catch (int save) {
+            return save;
+        } 
+        
+    }
+    for (int i = playerAmount - 1; i >= 0 ; i--) {
+        try {
+            i = buildBasements(i, false);
+        } catch (int save) {
+            return save;
+        } 
+        
+    }
+    return 0;
+}
+
+// if isInc, means its in the increasing loop
+int Controller::buildBasements(int i, bool isInc) {
+    int tester;
+    string bVertex; // basement vertex
+    Color c;
+    c = static_cast<Color>(i);
+    out << "Builder " << getColorStr(c) << ", where do you want to build a basement?" << endl << "> ";
+    if (!(in >> tester)) { 
+        if (isEOF()) { throw save(); }
+        in.clear();
+        in.ignore();
+        out << "You cannot build here." << endl;
+        if (isInc) {
+            i--;
+        } else {
+            i++;
+        }
+        return i;
+    } // checks for invalid input and invalid vertex
+    bVertex = to_string(tester);
+    if(!model->placeBasement(bVertex, c)) {
+        out << "You cannot build here." << endl;
+        if (isInc) {
+            i--;
+        } else {
+            i++;
+        }
+    }
+    return i;
+}
+
+int Controller::beginningOfTurn() {
+    view->printBoard();
+    out << "Builder " << getColorStr(turn) << "'s turn." << endl << "> ";
+    // HERE NEED TO ADD CODE TO PRINT OUT THE STATUS OF THE BUILDER WHOS TURN IT IS (in variable turn)!!!!!!!!!
+    string cmd;
+    while(!(in >> cmd) || (cmd != "roll")) {
+        if (isEOF()) { return eof; }
+        if (cmd == "load") {
+            out << "Dice set to load." << endl;
+            model->setDice(turn, cmd);
+        }
+        if (cmd == "fair") {
+            model->setDice(turn, cmd);
+            out << "Dice set to fair." << endl;
+        }
+        out << "> ";
+    } 
+
+    // ANYTIME YOU USE in >>. Must use isEOF() command and return oef if true
+
+    // deal with loading the dice here (fair + loaded)
+
+    int rollVal = 6; // value of the dice rolled. This reperesents the tilevalue
+    
+    // vector (size 4) of a map.
+    vector<map<Resource, int>> resocMap = model->diceRolledUpdate(rollVal);
+    bool didPrint = false;
+    for (int i = 0; i < playerAmount; i++) {
+        if (resocMap[i].size() == 0 ) { continue; }
+        if (didPrint != true ) { didPrint = true; }
+        out << "Builder " << getColorStr(static_cast<Color>(i)) << " gained:" << endl;
+        for (auto [resoc, resocNum] : resocMap[i]) {
+            out << resocNum << " " << getResocStr(resoc) << endl;
+        }
+    }
+    //vector<map<Resource, int>> diceRolledUpdate(rollVal); // updates for everyone
+    // prints color: then go throughr map. If non have any, then "No builders gained resources"
+
+
+
+
+    //int vertexNum; // the vertex number the user wants to build a basement on
+    // Used when build-res command
+    //model->buildRes(turn, vertexNum);
+
+
+
+
     return 0;
 }
 
 //this acts like the main function essentially 
 int Controller::general(vector<string> &arg_vec) {
     int state = createController(arg_vec);
-    if (isBadState(state)) { return state; } // if need to terminate program
-    view->printBoard(); 
+    if (isBadState(state)) { return state; } // could return invalidInput number or could return eof
+    // created board by now
+    // beginning of game. 
+    if (isBadState(beginningOfGame())) { return eof; }
+    // game begins
+    while(true) {
+        if (isBadState(beginningOfTurn())) { return eof; }
+        //if (isBadState(DuringGame())) { return eof; }
+       break;
+    }
+    
+
+    
+    
+
+    // check for case when trying to impove on empty res!!!!!
+
+    //cout << "printing the board" << endl; 
+    //view->printBoard(); 
     return 0;
 }
+
+
 
 void Controller::roll(Color turn) {
     model->roll(turn);
 }
 
+void Controller::geese() {
+    // removing half of anyone who has 10+ resources
+    vector<pair<string, vector<pair<string, int>>>> v = model->lostResoc();
+    vector<pair<string, int>> numLost = model->numLostResoc();
+    int i = 0;
+    
+    for (const auto& p : v) {
+        out << "Builder " << p.first << "loses " << numLost[i].second << "resources to the geese. They lose:" << endl;
+
+         for (const auto& resourcePair : p.second) {
+            out << resourcePair.second << " " << resourcePair.first << std::endl;
+        }
+    }
+
+    // placing geese on different tile now
+    int tileNum;
+    out << "Choose where to place the GEESE" << endl;
+    in >> tileNum;
+    model->placeGeese(tileNum);
+
+    // stealing resources
+    vector<string> playersSteal = model->getPlayersToStealFrom();
+    string curPlayer; //= enumToStr(turn);
+    out << "Builder " << curPlayer << " can choose to steal from";
+    for (auto n : playersSteal) {
+        out << " " << n << ",";
+    }
+    out << endl;
+    out << "Choose a builder to steal from." << endl;
+    string toSteal;
+    in >> toSteal;
+
+    model->steal(curPlayer, toSteal);
+
+
+    // turn var into string
+}
 /*    
-Color turn = Color::DNE;
-Model *model
+std::ostream &out = std::cout;
+std::istream &in = std::cin;
+std::ostream &err = std::cerr;
+Color turn = Color::B;
+std::unique_ptr<Model> model; 
+std::unique_ptr<View> view; 
 */ 
+
+/*
+    B = 0, // Player 1, Blue
+    R = 1, // Player 2, Red
+    O = 2, // Player 3, Orange
+    Y = 3,  // Player 4, Yellow
+*/

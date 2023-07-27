@@ -1,1 +1,1 @@
-residenceEnum.o: residenceEnum.cc
+residenceEnum.o: residenceEnum.cc residenceEnum.h

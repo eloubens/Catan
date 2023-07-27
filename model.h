@@ -3,6 +3,7 @@
 #include <utility>
 #include <fstream>
 #include <sstream>
+#include <vector>
 #include <map>
 #include "player.h"
 #include "board.h"
@@ -49,18 +50,33 @@ class Model{
             }
         }
     };
-
     Player players[4];
-    public: 
     Board board;
+
  public:
+    Tile* getTiles();
     Model(std::istringstream &iss); // for just loading a board (from file or random generated)
+    void setDice(Color c, std::string cmd);
 
     Model(std::vector<std::istringstream> &&pResocs, std::vector<std::istringstream> &&pSettlements, 
                                                     std::istringstream &board ,int geeseTileNum);
-    // Model(std::istringstream &player1, std::istringstream &player2, std::istringstream &player3, 
-    //     std::istringstream &player4, std::istringstream &board, int geeseTileNum); // for loading a full game 
+    bool placeBasement(std::string bVertex, Color c);                                               
     void roll(Color turn);
+    //buildRes(Color c, vertexNum)
+    // saves current state of game
+    void save(Color turn);
+    std::vector<std::map<Resource, int>> diceRolledUpdate(int rollVal);
+
+    std::vector<std::pair<std::string, std::vector<std::pair<std::string, int>>>> lostResoc();
+    std::vector<std::pair<std::string, int>> numLostResoc();
+
+    void placeGeese(int tile);
+
+    std::vector<std::string> getPlayersToStealFrom();
+
+    void steal(std::string curPlayer, std::string playertoSteal);
+
+
 
 
 };

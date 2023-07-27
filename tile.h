@@ -2,7 +2,6 @@
 #define TILE_H
 #include <utility>
 #include <string>
-#include <iostream>
 #include "resourceEnum.h"
 #include "colorEnum.h"
 #include "residenceEnum.h"
@@ -10,32 +9,33 @@
 #include "vertexEnum.h"
 #include "edgeEnum.h"
 
-using namespace std;
-
-extern const int verticesNum, edgesNum;
+extern const int verticesAmount, edgesAmount;
 
 class Tile {
  
     Resource resocType;
-
+    int tileNum, tileValue = 0; // PRIVATE
+    Vertex *vertices[6]; // vertices at this tile // PRIVATE
+    Edge *edges[6]; // edges at this tile // PRIVATE
     bool isGeese = false; // if a tile has a goose
     
     void removeGoose();
  public:
-    int tileNum, tileValue = 0; // PRIVATE
-    Vertex *vertices[6]; // vertices at this tile // PRIVATE
-    Edge *edges[6]; // edges at this tile // PRIVATE
+
     //ctor
-    string getResource();
-    string getTileNum();
-    string getTileValue();
+    std::string getResource();
+    std::string getTileNum(); // for printing only
+    std::string getTileValue(); // for printing only
+    std::string getResocIntFormat();
+    std::string getTileValueReg();
 
     string getVertex(vertexEnum v);
     string getEdge(edgeEnum e);
 
     Tile(int tileNum, Vertex *v1, Vertex *v2, Vertex *v3, Vertex *v4, Vertex *v5, Vertex *v6, 
                         Edge *e1, Edge *e2, Edge *e3, Edge *e4, Edge *e5, Edge *e6);
-
+ 
+    // returns {Resource::NA, 0} if no resources for the player or {resocType, resocTotal} for the player on the current tile
     std::pair<Resource, int> evalResoc(int tileValRolled, Color player) const;
 
     Vertex *getVertexAdr(vertexEnum num);
@@ -47,6 +47,7 @@ class Tile {
     // Possibly places a geese on tile as side effect.
     bool setResocSetGeese(Resource resocType);
     void setGeese();
+    void setGeese(bool geese);
     bool getGeese();
     // basic setter method
     void setResoc(Resource resocType);
@@ -54,14 +55,17 @@ class Tile {
     void placeAdjEdgesV(vertexEnum vertex, std::vector<Edge*> &&adjEdges);
     void placeAdjVerticesE(edgeEnum edge, std::vector<Vertex*> &&adjVertices);
     void placeAdjEdgesE(edgeEnum edge,std::vector<Edge*> &&adjEdges);
-
-    // returns true if edgeNum is an edge in the tile. 
-    // Also places a road on the edge if found.
+    void addSettlementsLocation(Color c, std::vector<std::string> &roads, std::vector<std::string> &resNum, std::vector<Residence> &resType);
+    /* returns true if edgeNum is an edge in the tile. 
+        Also places a road on the edge if found.*/
     bool isPlaceValidRoad(std::string edgeNum, Color color); 
-
-    // returns true if vertexNum is an vertex in the tile. 
-    // Also places a res on the vertex if found.
+    /* returns true if vertexNum is an vertex in the tile. 
+        Also places a res on the vertex if found.*/
     bool isPlaceValidRes(std::string vertexNum, Color color, Residence res);
+    /* throws true if vertex found and basement was placed.
+        throws false if vertex found and basement can't be placed.
+        doesn't do anything if vertex not found. */
+    void placeBasement(std::string bVertex, Color c); 
 
     
 };

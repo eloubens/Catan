@@ -1,6 +1,7 @@
-#include <iostream>
+
 #include <iomanip>
 #include <vector>
+#include <iostream>
 #include "board.h"
 #include "tile.h"
 #include "resourceEnum.h"
@@ -15,6 +16,34 @@ const int tilesNum = 19;
 Board::Board(istringstream &iss, int geeseTileNum) : Board{iss, true} { 
     this->geeseTileNum = geeseTileNum; 
     tiles[geeseTileNum].setGeese();
+}
+
+int Board::getGeeseTile() { return geeseTileNum; }
+
+void Board::addSettlementsLocation(int tileNum, Color c, vector<string> &roads, vector<string> &resNum, vector<Residence> &resType) {
+    tiles[tileNum].addSettlementsLocation(c, roads, resNum, resType);
+}
+
+string Board::getTileVal(int num) { return tiles[num].getTileValueReg(); }    
+string Board::getTileResoc(int num) { return tiles[num].getResocIntFormat(); }
+
+
+// EDIT HERE
+// MAKE A VECTOR OF TILES !!! ADD MORE THAN 1 
+void Board::placeBasement(string bVertex, Color c) {
+    for (int i = 0; i < 19; i++) {
+        try {
+            tiles[i].placeBasement(bVertex, c);
+        } catch(bool isValid){
+            if(isValid) {
+                throw i;
+            }
+            return; // MAKE CHANGE: don't return, keep looping 
+        }
+    }
+    
+
+
 }
 
 Board::Board(istringstream &iss, bool isLoadGame): 
@@ -907,7 +936,7 @@ tiles{
     tiles[18].placeAdjEdgesE(edgeEnum::B, 
         vector<Edge*>{tiles[18].getEdgeAdr(edgeEnum::BL), tiles[18].getEdgeAdr(edgeEnum::BR)});
 
-    cout << tiles[1].vertices[0]->adjEdges[0] << endl;
+    //cout << tiles[1].vertices[0]->adjEdges[0] << endl;
 
     /* for (auto n : tiles) {
         cout << "Tile: " << n.tileNum << endl;
@@ -981,10 +1010,15 @@ int Board::placeValidRes(string vertexNum, Color color, Residence res) {
     return -1; // just so compiler doesn't give a warning for no return statement
 }
 
-Tile * Board::getTile() {
+Tile *Board::getTiles() {
     return this->tiles;
 }
 
+
 pair<Resource, int> Board::getResoc(int tileNum, int tileValRolled, Color player) const {
     return tiles[tileNum].evalResoc(tileValRolled, player);
+}
+
+void Board::setGeese(int tileNum, bool geese) {
+    tiles[tileNum].setGeese(geese);
 }

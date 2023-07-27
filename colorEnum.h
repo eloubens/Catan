@@ -1,5 +1,6 @@
 #ifndef COLORENUM_H
 #define COLORENUM_H
+#include <string>
  
 const int playerAmount = 4;
 
@@ -11,5 +12,7 @@ enum class Color {
     Y = 3,  // Player 4, Yellow
     DNE = -1
 };
+
+std::string getColorStr(Color c);
 
 #endif
