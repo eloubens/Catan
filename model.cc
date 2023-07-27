@@ -93,7 +93,7 @@ Tile* Model::getTiles() {
 void Model::save(Color turn) {
     ofstream backup{"backup.sv"};
     
-    backup << getColorStr(turn) << endl;
+    backup << static_cast<int>(turn) << endl;
     for (int i = 0; i < playerAmount; i++) {
         map<Resource, int> &resocMap = (players[i]).getResocMap();
         for (int j = 0; j < resocAmount - 1; j++) { // park not included
@@ -135,12 +135,10 @@ vector<map<Resource, int>> Model::diceRolledUpdate(int rollVal) {
     for (int i = 0; i < playerAmount; i++) {
         const vector<int>& occupTiles = players[i].getOccupiedTiles();
         for (auto tileNum : occupTiles) {
-            //cout << tileNum << endl;
             //{Resource::NA, 0}, {resocType, resocTotal}
             resocGained = board.getResoc(tileNum, rollVal, static_cast<Color>(i)); // gets resource gained of 1 player for 1 reasource
             auto [resoc, resocNum] = resocGained;
             if (resocNum != 0) {
-                //cout << "testing " << resocNum << endl;
                 if (pResocsGained[i].count(resoc) == 0) {
                     pResocsGained[i][resoc] = resocNum;
                 } else {

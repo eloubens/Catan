@@ -15,8 +15,6 @@ const int tilesNum = 19;
 
 Board::Board(istringstream &iss, int geeseTileNum) : Board{iss, true} { 
     this->geeseTileNum = geeseTileNum; 
-    //cout << geeseTileNum << endl;
-    //tiles[1];
     tiles[geeseTileNum].setGeese();
 }
 
@@ -116,7 +114,6 @@ tiles{
         iss >> resoc >> tileVal;
         tiles[i].setTileVal(tileVal);
         if (isLoadGame) { 
-            cout << resoc << endl;
             tiles[i].setResoc(static_cast<Resource>(resoc));
         } else if (tiles[i].setResocSetGeese(static_cast<Resource>(resoc))) { // isLoadGame = false here
             geeseTileNum = i;

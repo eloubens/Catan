@@ -69,7 +69,6 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
                 ifs >> turnColor;
                 // setting field variable
                 turn = static_cast<Color>(turnColor); 
-                out << turnColor;
                 vector<istringstream> pResocs, pSettlements;
                 for (int i = 0; i < playerAmount; i++) {
                     // read until 'r' character representing road
