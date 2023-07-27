@@ -285,6 +285,43 @@ void Controller::roll(Color turn) {
     model->roll(turn);
 }
 
+void Controller::geese() {
+    // removing half of anyone who has 10+ resources
+    vector<pair<string, vector<pair<string, int>>>> v = model->lostResoc();
+    vector<pair<string, int>> numLost = model->numLostResoc();
+    int i = 0;
+    
+    for (const auto& p : v) {
+        out << "Builder " << p.first << "loses " << numLost[i].second << "resources to the geese. They lose:" << endl;
+
+         for (const auto& resourcePair : p.second) {
+            out << resourcePair.second << " " << resourcePair.first << std::endl;
+        }
+    }
+
+    // placing geese on different tile now
+    int tileNum;
+    out << "Choose where to place the GEESE" << endl;
+    in >> tileNum;
+    model->placeGeese(tileNum);
+
+    // stealing resources
+    vector<string> playersSteal = model->getPlayersToStealFrom();
+    string curPlayer; //= enumToStr(turn);
+    out << "Builder " << curPlayer << " can choose to steal from";
+    for (auto n : playersSteal) {
+        out << " " << n << ",";
+    }
+    out << endl;
+    out << "Choose a builder to steal from." << endl;
+    string toSteal;
+    in >> toSteal;
+
+    model->steal(curPlayer, toSteal);
+
+
+    // turn var into string
+}
 /*    
 std::ostream &out = std::cout;
 std::istream &in = std::cin;

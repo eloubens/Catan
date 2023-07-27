@@ -3,6 +3,7 @@
 #include <utility>
 #include <fstream>
 #include <sstream>
+#include <vector>
 #include <map>
 #include "player.h"
 #include "board.h"
@@ -51,6 +52,7 @@ class Model{
     };
     Player players[4];
     Board board;
+
  public:
     Tile* getTiles();
     Model(std::istringstream &iss); // for just loading a board (from file or random generated)
@@ -64,6 +66,18 @@ class Model{
     // saves current state of game
     void save(Color turn);
     std::vector<std::map<Resource, int>> diceRolledUpdate(int rollVal);
+
+    std::vector<std::pair<std::string, std::vector<std::pair<std::string, int>>>> lostResoc();
+    std::vector<std::pair<std::string, int>> numLostResoc();
+
+    void placeGeese(int tile);
+
+    std::vector<std::string> getPlayersToStealFrom();
+
+    void steal(std::string curPlayer, std::string playertoSteal);
+
+
+
 
 };
 

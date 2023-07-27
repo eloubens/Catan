@@ -32,7 +32,6 @@ class Board {
 
     void printBoard(); 
     //string getResource(int n);
-    int getGeeseTile();
     void addSettlementsLocation(int tileNum, Color c, std::vector<std::string> &roads, std::vector<std::string> &resNum, 
                                                             std::vector<Residence> &resType);
     std::string getTileVal(int num); 
@@ -40,6 +39,11 @@ class Board {
     void placeBasement(std::string bVertex, Color c); 
     
     Tile* getTiles(); 
+
+
+    int getGeeseTile();
+
+    void setGeese(int tileNum, bool geese);
 };
 
 #endif

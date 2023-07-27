@@ -128,6 +128,8 @@ void Tile::setTileVal(int tileVal) { this->tileValue = tileVal; }
 
 void Tile::setGeese() { isGeese = true; }
 
+void Tile::setGeese(bool geese) { isGeese = geese; }
+
 // function used in ctor of board (only used when reading in a board)
 // Only 1 park is going to be in the board 
 bool Tile::setResocSetGeese(Resource resocType) {
