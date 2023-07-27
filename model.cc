@@ -122,7 +122,7 @@ vector<string> Model::getPlayersToStealFrom() {
     string c;
 
     for (auto n : players) {
-        if (n.hasRes(geeseTile)) {
+        if ((n.hasRes(geeseTile)) && (n.getResocTotal() >= 1)) {
             //c = n.getColour();
             // conv enum Color to string
             p.emplace_back(c);
@@ -133,15 +133,18 @@ vector<string> Model::getPlayersToStealFrom() {
 
 }
 
-void Model::steal(string curPlayer, string playerToSteal) {
-    string c;
-    vector<Player> stealing;
+string Model::steal(string curPlayer, string playerToSteal) {
+    string c, r;
     for (auto p : players) {
         //c = p.getColour() turn enum into str
-        if (c == curPlayer) {
-
+        if (c == playerToSteal){
+            r = p.stealResoc();
         }
     }
+
+
+
+
 }
 
 

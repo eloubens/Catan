@@ -164,3 +164,9 @@ bool Player::hasRes(int tileNum) {
 
     return false;
 }
+
+string Player::stealResoc() {
+    string stolenResoc;
+
+    return stolenResoc;
+}
