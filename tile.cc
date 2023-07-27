@@ -122,6 +122,7 @@ void Tile::placeAdjEdgesE(edgeEnum edge,std::vector<Edge*> &&adjEdges) {
 void Tile::setTileVal(int tileVal) { this->tileValue = tileVal; }
 
 void Tile::setGeese() { isGeese = true; }
+bool Tile::getGeese() {return isGeese;}
 
 void Tile::setGeese(bool geese) { isGeese = geese; }
 

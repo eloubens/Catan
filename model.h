@@ -75,7 +75,7 @@ class Model{
 
     std::vector<std::string> getPlayersToStealFrom();
 
-    void steal(std::string curPlayer, std::string playertoSteal);
+    std::string steal(std::string curPlayer, std::string playertoSteal);
 
 
 

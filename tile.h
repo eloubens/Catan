@@ -50,6 +50,7 @@ class Tile {
     bool setResocSetGeese(Resource resocType);
     void setGeese();
     void setGeese(bool geese);
+    bool getGeese();
     // basic setter method
     void setResoc(Resource resocType);
     void placeAdjVerticesV(vertexEnum vertex, std::vector<Vertex*> &&adjVertices);
