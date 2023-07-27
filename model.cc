@@ -7,6 +7,8 @@
 
 using namespace std;
 
+const int winningGamePoints = 10;
+
 Model::Model(istringstream &iss) : players{Player{Color::B}, Player{Color::R}, Player{Color::O}, Player{Color::Y}},
                              board{iss} {}
 
@@ -232,9 +234,12 @@ string Model::steal(string curPlayer, string playerToSteal) {
     }
 
 
-
-
+    return "";
 }
 
+
+bool Model::hasWon(Color turn) {
+    return players[static_cast<int>(turn)].getBuildingPoints() >= winningGamePoints;
+}
 
 

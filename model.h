@@ -16,6 +16,8 @@ enum class Settlement {
     R  // Road
 };
 
+extern const int winningGamePoints; // 10
+
 class Model{
     // stores how many resorces each settlement costs
     // SET MAP HERE (not in ctor)
@@ -77,9 +79,7 @@ class Model{
 
     std::string steal(std::string curPlayer, std::string playertoSteal);
 
-
-
-
+    bool hasWon(Color turn);
 };
 
 

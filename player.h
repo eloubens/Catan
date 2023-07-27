@@ -25,6 +25,7 @@ class Player {
     // adds tileNum to vector of occupiedTiles, doesn't add it if it already exists
     void addOccupiedTiles(int tileNum);
     void addBuildingPoints(int num);
+    int getBuildingPoints();
 
     void updateResocMap(const std::pair<Resource, int> &gainedResoc);
     std::map<Resource, int>& getResocMap();

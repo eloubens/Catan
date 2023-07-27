@@ -28,6 +28,8 @@ Player::Player(istringstream &playerData, Color color) : color{color} {
     }
 }
 
+int Player::getBuildingPoints() { return buildingPoints; }
+
 void Player::addOccupiedTiles(int tileNum) {
     for (auto num : occupiedTiles) {
         if (num == tileNum) { return; }
