@@ -76,6 +76,7 @@ void Tile::placeAdjEdgesE(edgeEnum edge,std::vector<Edge*> &&adjEdges) {
 void Tile::setTileVal(int tileVal) { this->tileValue = tileVal; }
 
 void Tile::setGeese() { isGeese = true; }
+bool Tile::getGeese() {return isGeese;}
 
 // function used in ctor of board (only used when reading in a board)
 // Only 1 park is going to be in the board 

@@ -47,6 +47,7 @@ class Tile {
     // Possibly places a geese on tile as side effect.
     bool setResocSetGeese(Resource resocType);
     void setGeese();
+    bool getGeese();
     // basic setter method
     void setResoc(Resource resocType);
     void placeAdjVerticesV(vertexEnum vertex, std::vector<Vertex*> &&adjVertices);
