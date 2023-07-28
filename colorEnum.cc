@@ -21,7 +21,9 @@ std::string getColorChar(Color c) {
             return "R";
         case Color::O:
             return "O";
-        default:
+        case Color::Y:
             return "Y";
+        default:
+            return "N";
     }
 }

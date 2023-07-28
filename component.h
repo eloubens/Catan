@@ -36,6 +36,7 @@ class Component {
 	bool isNum(std::string num); // returns true if location matches the location of the vertex/edge
 	bool isPlayer(Color c);
 	std::string getLocation();
+	std::string getPlayer();
 };
 
 

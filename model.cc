@@ -230,10 +230,7 @@ string Model::steal(string curPlayer, string playerToSteal) {
             r = p.stealResoc();
         }
     }
-
-
-
-
+    return "";
 }
 
 

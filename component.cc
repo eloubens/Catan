@@ -84,6 +84,8 @@ bool Component::isOccupied() {
 
 string Component::getLocation() { return location; }
 
+string Component::getPlayer() { return getColorChar(player); }
+
 Residence Vertex::getRes() { return residenceType; }
 
 bool Component::isPlayer(Color c) { return c == player; }

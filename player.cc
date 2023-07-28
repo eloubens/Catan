@@ -195,5 +195,5 @@ void Player::getStatus(std::ostream &out) {
     }
 
     out << getColorStr(color) << " has built:" ;
-    for (int i : occupiedTiles) { cout << i << endl; }
+    
 }
