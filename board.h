@@ -39,8 +39,8 @@ class Board {
                                                             std::vector<Residence> &resType);
     std::string getTileVal(int num); 
     std::string getTileResoc(int num);
-    void placeBasement(std::string bVertex, Color c); 
-    
+    void placeBasement(std::string bVertex, Color c, bool isDuringTurn); 
+    void addTilesHavingVertex(vector<int> &occupTiles, int startingTile, string bVertex);
     Tile* getTiles(); 
 
 

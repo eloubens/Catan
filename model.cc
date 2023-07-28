@@ -70,15 +70,11 @@ bool Model::hasEnoughResoc(Color c, variant<Residence, Road> type) {
 // }
 //auto [resoc, amount] resocGained =
 
-
-
-
 // returns if you can place a basement or not
-
-// MAKE A CHANGE HERE, SHOULD TAKE IN A VECTOR OF OCCPIED TILES.
-bool Model::placeBasement(string bVertex, Color c) {
+// in add OccupiedTiles, you would check for duplicates there
+bool Model::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     try {
-        board.placeBasement(bVertex, c); // will only catch a vector of occupiedTiles if can build on the tile
+        board.placeBasement(bVertex, c, isDuringTurn); // will only catch a vector of occupiedTiles if can build on the tile
     } catch (const vector<int> &occupTiles) {
         for (auto n : occupTiles) {
             players[static_cast<int>(c)].addOccupiedTiles(n);

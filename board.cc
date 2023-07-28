@@ -40,7 +40,7 @@ bool Board::isSharedVertex(string bVertex) {
 // Used to find all tiles sharing bVertex and add them to occupTiles.
 // This excludes the first tile in the board that contains bVertex and assumes it has
 // already been added to occupTiles.
-void addTilesHavingVertex(vector<int> &occupTiles, int startingTile, string bVertex) {
+void Board::addTilesHavingVertex(vector<int> &occupTiles, int startingTile, string bVertex) {
      if (isSharedVertex(bVertex)) { // means bVertex is shared by many tiles
         for (int j = startingTile; j < tilesNum; j++) {
             if (tiles[j].tileHasVertex(bVertex)) {
@@ -51,14 +51,14 @@ void addTilesHavingVertex(vector<int> &occupTiles, int startingTile, string bVer
     }
 }
 
-// EDIT HERE
-// MAKE A VECTOR OF TILES !!! ADD MORE THAN 1 
-void Board::placeBasement(string bVertex, Color c) {
+// only throws if it knows you can place a res
+// then throws a vector of all tiles having the vertex that you are building on.
+void Board::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     // if the vertex is shared by 2 tiles, need to add the second tile to
     //      list of occupied tiles.
     for (int i = 0; i < tilesNum; i++) {
         try {
-            tiles[i].placeBasement(bVertex, c);
+            tiles[i].placeBasement(bVertex, c, isDuringTurn);
         } catch(bool isValid){
             if(isValid) {
                 vector<int> occupTiles{i}; // adding tile i to vector

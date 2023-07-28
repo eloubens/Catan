@@ -47,7 +47,7 @@ int Vertex::getResidenceAmount(Color color) const {
     return static_cast<int>(residenceType);
 }
 
-void Vertex::placeBasement(string bVertex, Color c) {
+void Vertex::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     if (location != bVertex) { return; } // correct vertex
     if (player != Color::DNE) { 
         throw false;
@@ -56,6 +56,16 @@ void Vertex::placeBasement(string bVertex, Color c) {
         if (v->isOccupied()) {
             throw false;
         }
+    }
+    if (isDuringTurn) {
+        bool ownsAdjEdge = false;
+        for (auto e : adjEdges) {
+            if (e->isOwnedBy(c)) {
+                ownsAdjEdge = true;
+                break;
+            }
+        }
+        if (ownsAdjEdge == false) { throw false; }
     }
     player = c;
     residenceType = Residence::B;
@@ -77,6 +87,10 @@ Residence residenceType = Residence::NONE
 bool Component::isOccupied() {
     if (player != Color::DNE) { return true; }
     return false;
+}
+
+bool Component::isOwnedBy(Color color) {
+    return player == color;
 }
 
 string Component::getLocation() { return location; }

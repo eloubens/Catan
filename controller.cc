@@ -177,7 +177,7 @@ int Controller::buildBasements(int i, bool isInc) {
         return i;
     } // checks for invalid input and invalid vertex
     bVertex = to_string(tester);
-    if(!model->placeBasement(bVertex, c)) {
+    if(!model->placeBasement(bVertex, c, false)) {
         out << "You cannot build here." << endl;
         if (isInc) {
             i--;
@@ -234,25 +234,25 @@ int Controller::buildRes(string vertexNum){
         cout << "You do not have enough resources." << endl;
         return 0;
     }
-    // if (!model->buildRes(turn, vertexNum)) {
-    //     cout << "You cannot build here." << endl;
-    //     return 0;
-    // }
+    if (!model->placeBasement(vertexNum, turn, true)) {
+        cout << "You cannot build here." << endl;
+        return 0;
+    }
     if (hasWon()) {
         return gameWon;
     }
     return 0;
 }
 
-int Controller::improveRes(string vertexNum){ 
-    // first check if can build
-    // then check if has resoc 
-    //model->buildRes(turn, vertexNum);
-    if (hasWon()) {
-        return gameWon;
-    } 
-    return 0;
-}
+// int Controller::improveRes(string vertexNum){ 
+//     // first check if can build
+//     // then check if has resoc 
+//     //model->buildRes(turn, vertexNum);
+//     if (hasWon()) {
+//         return gameWon;
+//     } 
+//     return 0;
+// }
 
 bool Controller::hasWon() {
     return model->hasWon(turn);

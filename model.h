@@ -59,14 +59,14 @@ class Model{
 
     Model(std::vector<std::istringstream> &&pResocs, std::vector<std::istringstream> &&pSettlements, 
                                                     std::istringstream &board ,int geeseTileNum);
-    bool placeBasement(std::string bVertex, Color c);                                               
+    bool placeBasement(std::string bVertex, Color c, bool isDuringTurn);                                               
     //void roll(Color turn);, no longer needed
     //buildRes(Color c, vertexNum)
     // saves current state of game
     void save(Color turn);
     bool hasEnoughResoc(Color C, std::variant<Residence, Road> type);
     std::vector<std::map<Resource, int>> diceRolledUpdate(int rollVal);
-
+    bool buildRes(Color turn, std::string vertexNum, bool isDuringTurn);
     std::vector<std::pair<std::string, std::vector<std::pair<std::string, int>>>> lostResoc();
     std::vector<std::pair<std::string, int>> numLostResoc();
 
