@@ -16,6 +16,8 @@ class Board {
     Edge edges[72]; // only used to store edge addresses
     Tile tiles[19];
     int geeseTileNum; 
+
+    bool SharedVertex(std::string bVertex);
     
  public:
     Board(std::istringstream &iss, bool isLoadGame = false); 

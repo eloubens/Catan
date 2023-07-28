@@ -8,23 +8,18 @@ using namespace std;
 const int verticesAmount = 6, edgesAmount = 6;
 
 string Tile::getResource() {
-    if (this->resocType == Resource::BRICK) {
-        return "BRICK";
-    } else if (this->resocType == Resource::ENERGY) {
-        return "ENERGY";
-    } else if (this->resocType == Resource::GLASS) {
-        return "GLASS";
-    } else if (this->resocType == Resource::HEAT) {
-        return "HEAT";
-    } else if (this->resocType == Resource::WIFI) {
-        return "WIFI";
-    } else if (this->resocType == Resource::PARK) {
-        return "PARK";
-    } else {
-        return "NA";
-    }
+    return getResocStr(resocType);
 }
 
+
+bool Tile::tileHasVertex(string bVertex) {
+    for (int i = 0; i < verticesAmount; i++) {
+        if (vertices[i]->isNum(bVertex)) {
+            return true;
+        }
+    }
+    return false;
+}
 
 // Correct. Leave as is. 
 void Tile::placeBasement(string bVertex, Color c) {
@@ -59,24 +54,21 @@ string Tile::getEdge(edgeEnum e) {
 }
 
 string Tile::getTileNum() {
-    int n = this->tileNum; 
     ostringstream oss;
-    oss << n; 
+    oss << tileNum; 
     return oss.str(); 
 }
 
 string Tile::getTileValue() {
-    int n = this->tileValue; 
-    if (this->getResource() == "PARK")  {return "  ";}
+    if (getResource() == "PARK")  {return "  ";}
     ostringstream oss;
-    oss << n; 
+    oss << tileValue; 
     return oss.str();  
 }
 
 string Tile::getTileValueReg() {
-    int n = this->tileValue; 
     ostringstream oss;
-    oss << n; 
+    oss << tileValue; 
     return oss.str();  
 }
 
@@ -127,6 +119,7 @@ void Tile::placeAdjEdgesE(edgeEnum edge,std::vector<Edge*> &&adjEdges) {
 void Tile::setTileVal(int tileVal) { this->tileValue = tileVal; }
 
 void Tile::setGeese() { isGeese = true; }
+bool Tile::getGeese() {return isGeese;}
 
 void Tile::setGeese(bool geese) { isGeese = geese; }
 

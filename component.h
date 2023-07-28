@@ -33,9 +33,10 @@ class Component {
 	// virtual void print() const = 0;
 	void setAdjV(std::vector<Vertex*> &&adjVertices);
 	void setAdjE(std::vector<Edge*> &&adjEdges);
-	bool isNum(std::string location); // returns true if location matches the location of the vertex/edge
+	bool isNum(std::string num); // returns true if location matches the location of the vertex/edge
 	bool isPlayer(Color c);
 	std::string getLocation();
+	std::string getPlayer();
 };
 
 

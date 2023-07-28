@@ -15,4 +15,6 @@ enum class Color {
 
 std::string getColorStr(Color c);
 
+std::string getColorChar(Color c);
+
 #endif

@@ -1,4 +1,4 @@
- #include "resourceEnum.h"
+#include "resourceEnum.h"
 
 std::string getResocStr(Resource r) {
     switch (r) {
@@ -11,9 +11,28 @@ std::string getResocStr(Resource r) {
         case Resource::HEAT:
             return "HEAT";
         case Resource::WIFI:
-            return "HEAT";
+            return "WIFI";
         case Resource::PARK:
             return "PARK";
+        default:
+            return "NA";
+    }
+}
+
+std::string getResocLowerCaseStr(Resource r) {
+    switch (r) {
+        case Resource::BRICK:
+            return "brick";
+        case Resource::ENERGY:
+            return "energy";
+        case Resource::GLASS:
+            return "glass";
+        case Resource::HEAT:
+            return "heat";
+        case Resource::WIFI:
+            return "Wifi";
+        case Resource::PARK:
+            return "park";
         default:
             return "NA";
     }

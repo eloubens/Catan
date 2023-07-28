@@ -23,20 +23,22 @@ class Tile {
  public:
 
     //ctor
-    std::string getResource();
-    std::string getTileNum(); // for printing only
+    std::string getResource(); // used for printing
+    std::string getTileNum(); // for printing only, has extra conditions
     std::string getTileValue(); // for printing only
     std::string getResocIntFormat();
     std::string getTileValueReg();
 
-    string getVertex(vertexEnum v);
-    string getEdge(edgeEnum e);
+    std::string getVertex(vertexEnum v);
+    std::string getEdge(edgeEnum e);
 
     Tile(int tileNum, Vertex *v1, Vertex *v2, Vertex *v3, Vertex *v4, Vertex *v5, Vertex *v6, 
                         Edge *e1, Edge *e2, Edge *e3, Edge *e4, Edge *e5, Edge *e6);
  
     // returns {Resource::NA, 0} if no resources for the player or {resocType, resocTotal} for the player on the current tile
     std::pair<Resource, int> evalResoc(int tileValRolled, Color player) const;
+
+    bool tileHasVertex(std::string bVertex);
 
     Vertex *getVertexAdr(vertexEnum num);
     Edge *getEdgeAdr(edgeEnum num);
@@ -48,6 +50,7 @@ class Tile {
     bool setResocSetGeese(Resource resocType);
     void setGeese();
     void setGeese(bool geese);
+    bool getGeese();
     // basic setter method
     void setResoc(Resource resocType);
     void placeAdjVerticesV(vertexEnum vertex, std::vector<Vertex*> &&adjVertices);
