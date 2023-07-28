@@ -144,8 +144,7 @@ int Controller::beginningOfGame() {
             i = buildBasements(i, true);
         } catch (int save) {
             return eof;
-        } 
-        
+        }
     }
     for (int i = playerAmount - 1; i >= 0 ; i--) {
         try {
@@ -190,11 +189,20 @@ int Controller::buildBasements(int i, bool isInc) {
 
 int Controller::beginningOfTurn() {
     view->printBoard();
-    out << "Builder " << getColorStr(turn) << "'s turn." << endl << "> ";
+    out << "Builder " << getColorStr(turn) << "'s turn." << endl;
     // HERE NEED TO ADD CODE TO PRINT OUT THE STATUS OF THE BUILDER WHOS TURN IT IS (in variable turn)!!!!!!!!!
+    // printing status of player
+    int currTurn = static_cast<int>(turn);
+    string playerCol = getColorChar(model->players[currTurn].getColour()); 
+    model->players[currTurn].getStatus(out);
+    map <string, Residence> vertexResidenceMap = model->getVertexResMap(currTurn); 
+    for (const auto& entry : vertexResidenceMap) {
+        out << " " << entry.first << " " << getResStr(entry.second);
+    }
+    out << endl <<  "> "; 
     string cmd;
     while(!(in >> cmd) || (cmd != "roll")) {
-        if (isEOF()) { return eof; }
+        if (isEOF()) { exit(0) ; return eof; }  /// ASK ABT THIS PART 
         if (cmd == "load") {
             out << "Dice set to load." << endl;
             model->setDice(turn, cmd);
@@ -202,6 +210,41 @@ int Controller::beginningOfTurn() {
         if (cmd == "fair") {
             model->setDice(turn, cmd);
             out << "Dice set to fair." << endl;
+        }
+        if (cmd == "next") {
+            currTurn++; 
+            if (currTurn > 3) {
+                turn = Color::B;
+            } else {
+                turn = static_cast<Color>(currTurn);
+            }
+            in.ignore(); 
+            in.clear(); 
+            beginningOfTurn();
+        } if (cmd == "board") {
+            view->printBoard();
+        } if (cmd == "help") {
+            out << "Valid commands:" << endl << "board" << endl << "status" << endl << "residences" << endl 
+            << "build-road <edge#>" << endl << "build-res <housing#>" << endl << "improve <housing#>" << endl 
+            << "trade <colour> <give> <take>" << endl << "next" << endl << "save <file>" << endl;
+        } if (cmd == "status") {
+            for (int i = 0; i < 4; i++) {
+                string playerCol = getColorChar(model->players[i].getColour()); 
+                model->players[i].getStatus(out);
+                vertexResidenceMap = model->getVertexResMap(i); 
+                for (const auto& entry : vertexResidenceMap) {
+                    out << " " << entry.first << " " << getResStr(entry.second);
+                }
+                out << endl;
+            }
+        } if (cmd == "residences") {
+            string playerCol = getColorChar(model->players[currTurn].getColour()); 
+            model->players[currTurn].getStatus(out);
+            vertexResidenceMap = model->getVertexResMap(currTurn); 
+            for (const auto& entry : vertexResidenceMap) {
+                out << " " << getResStr(entry.second);
+            }
+            out << endl;
         }
         out << "> ";
     } 
@@ -225,6 +268,12 @@ int Controller::beginningOfTurn() {
     if (!didPrint) {
         out << "No builders gained resources." << endl;
     }
+    //vector<map<Resource, int>> diceRolledUpdate(rollVal); // updates for everyone
+    // prints color: then go throughr map. If non have any, then "No builders gained resources"
+
+    //int vertexNum; // the vertex number the user wants to build a basement on
+    // Used when build-res command
+    //model->buildRes(turn, vertexNum);
     return 0;
 }
 
@@ -326,6 +375,12 @@ int Controller::general(vector<string> &arg_vec) {
         }
         break; // REMOVE THIS LINE AT THE END OF THE PROJECT
     }
+    
+
+    // check for case when trying to impove on empty res!!!!!
+
+    //cout << "printing the board" << endl; 
+    //view->printBoard(); 
     return 0;
 }
 

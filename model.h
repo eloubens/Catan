@@ -48,11 +48,13 @@ class Model{
             }
         }
     };
+    public: // CHANGE
     Player players[4];
+    private: // CHANGE 
     Board board;
 
  public:
-
+    std::map<string, Residence> getVertexResMap(int player);
     Tile* getTiles();
     Model(std::istringstream &iss); // for just loading a board (from file or random generated)
     void setDice(Color c, std::string cmd);
