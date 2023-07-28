@@ -53,6 +53,8 @@
         "ctime": "cpp",
         "map": "cpp",
         "fstream": "cpp",
-        "ratio": "cpp"
+        "ratio": "cpp",
+        "cstring": "cpp",
+        "list": "cpp"
     }
 }

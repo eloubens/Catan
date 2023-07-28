@@ -54,24 +54,21 @@ string Tile::getEdge(edgeEnum e) {
 }
 
 string Tile::getTileNum() {
-    int n = this->tileNum; 
     ostringstream oss;
-    oss << n; 
+    oss << tileNum; 
     return oss.str(); 
 }
 
 string Tile::getTileValue() {
-    int n = this->tileValue; 
-    if (this->getResource() == "PARK")  {return "  ";}
+    if (getResource() == "PARK")  {return "  ";}
     ostringstream oss;
-    oss << n; 
+    oss << tileValue; 
     return oss.str();  
 }
 
 string Tile::getTileValueReg() {
-    int n = this->tileValue; 
     ostringstream oss;
-    oss << n; 
+    oss << tileValue; 
     return oss.str();  
 }
 
