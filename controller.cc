@@ -263,7 +263,7 @@ int Controller::DuringTurn() {
     int vNumInt, state;
     string cmd,vertexNum;
     while(true) {
-        out << "> " << endl;
+        out << "> ";
         if (!(cin >> cmd)) { return eof; } // would only fail at eof since cmd is a string
         if (cmd == "next") { break; }
         else if (cmd == "board") { view->printBoard(); }

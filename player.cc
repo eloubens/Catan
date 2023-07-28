@@ -43,9 +43,9 @@ void Player::setDice(string cmd) {
 
 void Player::addBuildingPoints(int num) { buildingPoints += num; }
 
-bool Player::hasEnoughResoc(map<Resource,int> rMap) {
-    for (auto [resoc, amount] : rMap) {
-        if (resocMap[resoc] > amount ) { return false; }
+bool Player::hasEnoughResoc(const map<Resource,int> &rMapNeed) {
+    for (auto [resoc, amount] : rMapNeed) {
+        if (resocMap[resoc] < amount ) { return false; }
     }
     return true;
 }
