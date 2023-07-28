@@ -10,6 +10,7 @@ class Dice final {
     // no ctor needed
     int roll();
     void setDice(std::string cmd);
+    std::string getDiceType();
 };
 
 #endif

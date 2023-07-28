@@ -221,11 +221,21 @@ int Controller::beginningOfTurn() {
         out << "> ";
     } 
 
+
     // ANYTIME YOU USE in >>. Must use isEOF() command and return oef if true
 
     // deal with loading the dice here (fair + loaded)
 
-    int rollVal = 6; // value of the dice rolled. This reperesents the tilevalue
+    roll(turn);
+
+    int rollVal = 7; // value of the dice rolled. This reperesents the tilevalue
+    if (rollVal == 7) {
+        int s = geese();
+        if (s == eof) {
+            return eof;
+            save();
+        }
+    }
     
     // vector (size 4) of a map.
     vector<map<Resource, int>> resocMap = model->diceRolledUpdate(rollVal);
@@ -281,11 +291,24 @@ int Controller::general(vector<string> &arg_vec) {
 
 
 
-void Controller::roll(Color turn) {
-    model->roll(turn);
+int Controller::roll(Color turn) {
+    string diceType = model->getDiceType(turn);
+
+    if (diceType == "load") {
+        int loadedRoll;
+        out << "Input a roll between 2 and 12: " << endl;
+        in >> loadedRoll;
+        if (isEOF()) return 1;
+
+        model->diceRolledUpdate(loadedRoll);
+    } else if (diceType == "fair") {
+        //model->fairRoll();
+    }
+
+    return 0;
 }
 
-void Controller::geese() {
+int Controller::geese() {
     // removing half of anyone who has 10+ resources
     vector<pair<string, vector<pair<string, int>>>> v = model->lostResoc();
     vector<pair<string, int>> numLost = model->numLostResoc();
@@ -301,27 +324,61 @@ void Controller::geese() {
 
     // placing geese on different tile now
     int tileNum;
-    out << "Choose where to place the GEESE" << endl;
+    out << "Choose where to place the GEESE." << endl;
     in >> tileNum;
+    if (isEOF()) return eof;;
+   
     model->placeGeese(tileNum);
 
     // stealing resources
-    vector<string> playersSteal = model->getPlayersToStealFrom();
-    string curPlayer; //= enumToStr(turn);
-    out << "Builder " << curPlayer << " can choose to steal from";
-    for (auto n : playersSteal) {
-        out << " " << n << ",";
+    vector<string> playersSteal = model->getPlayersToStealFrom(turn);
+    string curPlayer = getColorStr(turn);
+    if (playersSteal.empty()) {
+        out << "Builder " << curPlayer << " has no builders to steal from." << endl;
+    } else {
+        out << "Builder " << curPlayer << " can choose to steal from";
+        for (auto n : playersSteal) {
+            out << " " << n << ",";
+        }
+        out << endl;
+        out << "Choose a builder to steal from." << endl;
+        string toSteal;
+        in >> toSteal;
+        if (isEOF()) return eof;;
+        // check from eof and valid input
+
+        string stolenResoc = model->steal(curPlayer, toSteal);
+
+        out << "Builder " << curPlayer << " steals " << stolenResoc << " from Builder" << toSteal << "." << endl;
+
+        return 0;
     }
-    out << endl;
-    out << "Choose a builder to steal from." << endl;
-    string toSteal;
-    in >> toSteal;
-
-    string stolenResoc = model->steal(curPlayer, toSteal);
-
-
-    // turn var into string
 }
+
+int Controller::trade() {
+    string curPlayer = getColorStr(turn);
+    string toTradeWith;
+    string give;
+    string take;
+    string answer;
+
+    in >> toTradeWith >> give >> take;
+    if (isEOF()) return eof; // DOUBLE CHECK
+
+    out << curPlayer << " offers " << toTradeWith << " one " << give << " for one " << take << "." << endl;
+    out << "Does " <<  toTradeWith << " accept this offer?" << endl;
+
+    in >> answer;
+    if (isEOF()) return eof; // DOUBLE CHECK
+
+    if (answer == "yes") model->trade(curPlayer, toTradeWith, give, take);
+
+
+    return 0;
+
+}
+
+
 /*    
 std::ostream &out = std::cout;
 std::istream &in = std::cin;

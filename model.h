@@ -8,6 +8,7 @@
 #include "player.h"
 #include "board.h"
 #include "resourceEnum.h"
+#include "colorEnum.h"
 
 enum class Settlement {
     B, // Basement
@@ -72,9 +73,13 @@ class Model{
 
     void placeGeese(int tile);
 
-    std::vector<std::string> getPlayersToStealFrom();
+    std::vector<std::string> getPlayersToStealFrom(Color turn);
 
     std::string steal(std::string curPlayer, std::string playertoSteal);
+
+    std::string getDiceType(Color c);
+
+    void trade(string curPlayer, string tradePlayer, string give, string take);
 
 
 

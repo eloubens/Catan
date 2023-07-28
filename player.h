@@ -13,12 +13,12 @@ extern const int numresocType;
 
 class Player {
     Color color;
-    //int buildingPoints = 0, resocTotal = 0;
+    int buildingPoints = 0, resocTotal = 0;
     Dice dice;
     std::map<Resource, int> resocMap;
     std::vector<int> occupiedTiles;
  public:
-    int buildingPoints = 0, resocTotal = 0;
+ 
     void setDice(std::string cmd);
     explicit Player(Color color);
     Player(std::istringstream &playerData, Color color);
@@ -41,6 +41,11 @@ class Player {
     bool hasRes(int tileNum);
 
     std::string stealResoc();
+    void addResoc(std::string resoc);
+
+    std::string getDiceType();
+
+    void removeResoc(std::string resoc);
 };
 
 #endif

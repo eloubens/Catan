@@ -44,9 +44,11 @@ Model::Model(vector<istringstream> &&pResocs, vector<istringstream> &&pSettlemen
 
 void Model::roll(Color turn) {
     int tileValRolled = players[static_cast<int>(turn)].roll();
-    if (tileValRolled == 7) {
+    
+    /*if (tileValRolled == 7) {
         // GEESE STUFF HERE 
     }
+    */
 
     // gets resources for each player 
     for (int player = 0; player < playerAmount - 1; player++) {
@@ -208,14 +210,14 @@ void Model::placeGeese(int tile) {
 
 }
 
-vector<string> Model::getPlayersToStealFrom() {
+vector<string> Model::getPlayersToStealFrom(Color turn) {
     vector<string> p;
     int geeseTile = board.getGeeseTile();
     string c;
 
     for (auto n : players) {
-        if ((n.hasRes(geeseTile)) && (n.getResocTotal() >= 1)) {
-            //c = n.getColour();
+        if ((n.hasRes(geeseTile)) && (n.getResocTotal() >= 1) && (n.getColour() != turn)) {
+            c = getColorStr(n.getColour());
             // conv enum Color to string
             p.emplace_back(c);
         }
@@ -228,16 +230,42 @@ vector<string> Model::getPlayersToStealFrom() {
 string Model::steal(string curPlayer, string playerToSteal) {
     string c, r;
     for (auto p : players) {
-        //c = p.getColour() turn enum into str
+        c = getColorStr(p.getColour()); // enum to str
         if (c == playerToSteal){
             r = p.stealResoc();
         }
     }
 
+    for (auto n : players) {
+        c = getColorStr(n.getColour());
+        if (c == curPlayer) {
+            n.addResoc(r);
+        }
+    }
 
-
-
+    return r;
 }
 
+string Model::getDiceType(Color c) {
+    string diceType;
+    for (auto p : players) {
+        if (p.getColour() == c) diceType = p.getDiceType();
+    }
 
+    return diceType;
+}
+
+void Model::trade(string curPlayer, string tradePlayer, string give, string take) {
+    for (auto p : players) {
+        if(getColorStr(p.getColour()) == curPlayer) {
+            p.addResoc(take);
+            p.removeResoc(give);
+        }
+        
+        if(getColorStr(p.getColour()) == tradePlayer) {
+            p.addResoc(give);
+            p.removeResoc(take);
+        }
+    }
+}
 
