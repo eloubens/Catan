@@ -208,7 +208,7 @@ int Controller::beginningOfTurn() {
     // roll the dice
     // check of 7 if yes do geese, else do code below
     // ANYTIME YOU USE in >>. Must use isEOF() command and return oef if true
-    int rollVal = 7; // value of the dice rolled. This reperesents the tilevalue
+    int rollVal = 6; // value of the dice rolled. This reperesents the tilevalue
     
     // vector (size 4) of a map.
     // stores all the resources aquired for each player. index 0,..,3 has player 1,..,4.
@@ -263,8 +263,8 @@ int Controller::DuringTurn() {
     int vNumInt, state;
     string cmd,vertexNum;
     while(true) {
+        out << "> " << endl;
         if (!(cin >> cmd)) { return eof; } // would only fail at eof since cmd is a string
-        
         if (cmd == "next") { break; }
         else if (cmd == "board") { view->printBoard(); }
         else if (cmd == "build-res") {
