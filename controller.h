@@ -25,9 +25,9 @@ class Controller {
     std::unique_ptr<Model> model; // default ctor initializes to nullptr
     std::unique_ptr<View> view; // default ctor initializes to nullptr
 
-    //void roll(Color turn);
-    void trade();
-    void geese();
+    int roll(Color turn);
+    int trade();
+    int geese();
     // sets the Model field of the controller. Loads a board from a file, creates and loads a randomized board, or loads a saved game.
     int setModel(bool canRandomize, bool foundRandomize, unsigned &seed, std::vector<string> &arg_vec);
     bool isSpecialState(int n);
@@ -42,6 +42,7 @@ class Controller {
     int improveRes(std::string vertexNum);
     int buildRoad(std::string edgeNum);
     bool hasWon();
+
  public: 
     // no ctor
     int general(std::vector<string> &arg_vec);

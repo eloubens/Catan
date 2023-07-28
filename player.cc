@@ -187,6 +187,34 @@ bool Player::hasRes(int tileNum) {
 
 string Player::stealResoc() {
     string stolenResoc;
+    int numToLose = 1;
+    vector<Resource> allResocs;
+
+    // put all currently owned resources from resocMap into a new vector
+    for (const auto& pair : resocMap) {
+        const Resource& r = pair.first;
+        int count = pair.second;
+
+        for (int i = 0; i < count; ++i) {
+            allResocs.emplace_back(r);
+        }
+    }
+
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine rng{seed};
+
+    // Generate a random index to remove from the allResocs vector
+    std::uniform_int_distribution<size_t> dist(0, allResocs.size() - 1);
+    size_t indexToRemove = dist(rng);
+
+    // Add the lost resource
+    Resource lost = allResocs[indexToRemove];
+    
+    stolenResoc = getResocStr(lost);
+
+    // update Player info
+    resocTotal -= numToLose;
+    resocMap[lost] -= numToLose;
 
     return stolenResoc;
 }
@@ -205,4 +233,32 @@ void Player::getStatus(std::ostream &out) {
 
     out << getColorStr(color) << " has built:" ;
     
+}
+
+void Player::addResoc(string resoc) {
+    if (resoc == "Brick") resocMap[Resource::BRICK] += 1;
+    else if (resoc == "Energy") resocMap[Resource::ENERGY] += 1;
+    else if (resoc == "Glass") resocMap[Resource::GLASS] += 1;
+    else if (resoc == "Heat") resocMap[Resource::HEAT] += 1;
+    else if (resoc == "Wifi") resocMap[Resource::WIFI] += 1;
+    else if (resoc == "Park") resocMap[Resource::PARK] += 1;
+}
+
+string Player::getDiceType() {
+    return dice.getDiceType();
+}
+
+void Player::removeResoc(string resoc) {
+    if (resoc == "Brick") resocMap[Resource::BRICK] -= 1;
+    else if (resoc == "Energy") resocMap[Resource::ENERGY] -= 1;
+    else if (resoc == "Glass") resocMap[Resource::GLASS] -= 1;
+    else if (resoc == "Heat") resocMap[Resource::HEAT] -= 1;
+    else if (resoc == "Wifi") resocMap[Resource::WIFI] -= 1;
+    else if (resoc == "Park") resocMap[Resource::PARK] -= 1;
+}
+
+int Player::fairRoll() {
+    int rollVal = dice.rollFair();
+    return rollVal;
+
 }

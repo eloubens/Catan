@@ -10,6 +10,7 @@
 #include "board.h"
 #include "resourceEnum.h"
 #include "roadEnum.h"
+#include "colorEnum.h"
 
 
 extern const int winningGamePoints; // 10
@@ -74,11 +75,20 @@ class Model{
 
     void placeGeese(int tile);
 
-    std::vector<std::string> getPlayersToStealFrom();
+    std::vector<std::string> getPlayersToStealFrom(Color turn);
 
     std::string steal(std::string curPlayer, std::string playertoSteal);
 
     bool hasWon(Color turn);
+    std::string getDiceType(Color c);
+
+    void trade(string curPlayer, string tradePlayer, string give, string take);
+
+    int fairRoll(Color turn);
+
+
+
+
 };
 
 
