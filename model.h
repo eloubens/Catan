@@ -5,23 +5,21 @@
 #include <sstream>
 #include <vector>
 #include <map>
+#include <variant>
 #include "player.h"
 #include "board.h"
 #include "resourceEnum.h"
+#include "roadEnum.h"
 #include "colorEnum.h"
 
-enum class Settlement {
-    B, // Basement
-    H, // House
-    T, // Tower
-    R  // Road
-};
+
+extern const int winningGamePoints; // 10
 
 class Model{
     // stores how many resorces each settlement costs
     // SET MAP HERE (not in ctor)
-    std::map<Settlement, std::map<Resource,int>> settlementCost = {
-        { Settlement::B, 
+    std::map<variant<Residence, Road>, std::map<Resource,int>> settlementCost = {
+        { Residence::B, 
             {
                 {Resource::BRICK, 1},
                 {Resource::GLASS, 1},
@@ -29,13 +27,13 @@ class Model{
                 {Resource::WIFI, 1}
             }
         }, 
-        { Settlement::H, 
+        { Residence::H, 
             {
                 {Resource::GLASS, 2},
                 {Resource::HEAT, 3}
             }
         },
-        { Settlement::T, 
+        { Residence::T, 
             {
                 {Resource::BRICK, 3},
                 {Resource::ENERGY, 2},
@@ -44,7 +42,7 @@ class Model{
                 {Resource::HEAT, 2}
             }
         }, 
-        { Settlement::R, 
+        { Road::R, 
             {
                 {Resource::HEAT, 1},
                 {Resource::WIFI, 1}
@@ -64,13 +62,14 @@ class Model{
 
     Model(std::vector<std::istringstream> &&pResocs, std::vector<std::istringstream> &&pSettlements, 
                                                     std::istringstream &board ,int geeseTileNum);
-    bool placeBasement(std::string bVertex, Color c);                                               
+    bool placeBasement(std::string bVertex, Color c, bool isDuringTurn);                                               
     //void roll(Color turn);, no longer needed
     //buildRes(Color c, vertexNum)
     // saves current state of game
     void save(Color turn);
+    bool hasEnoughResoc(Color C, std::variant<Residence, Road> type);
     std::vector<std::map<Resource, int>> diceRolledUpdate(int rollVal);
-
+    bool buildRes(Color turn, std::string vertexNum, bool isDuringTurn);
     std::vector<std::pair<std::string, std::vector<std::pair<std::string, int>>>> lostResoc();
     std::vector<std::pair<std::string, int>> numLostResoc();
 
@@ -80,6 +79,7 @@ class Model{
 
     std::string steal(std::string curPlayer, std::string playertoSteal);
 
+    bool hasWon(Color turn);
     std::string getDiceType(Color c);
 
     void trade(string curPlayer, string tradePlayer, string give, string take);

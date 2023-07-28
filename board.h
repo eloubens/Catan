@@ -9,15 +9,16 @@
 
 using namespace std;
 
-extern const int tilesNum;
- 
+extern const int tilesNum; // 19
+extern const unsigned long maxSharedTiles; // 3
+
 class Board {
     Vertex vertices[54]; // only used to store vertex addresses
     Edge edges[72]; // only used to store edge addresses
     Tile tiles[19];
     int geeseTileNum; 
 
-    bool SharedVertex(std::string bVertex);
+    bool isSharedVertex(std::string bVertex);
     
  public:
     Board(std::istringstream &iss, bool isLoadGame = false); 
@@ -38,8 +39,8 @@ class Board {
                                                             std::vector<Residence> &resType);
     std::string getTileVal(int num); 
     std::string getTileResoc(int num);
-    void placeBasement(std::string bVertex, Color c); 
-    
+    void placeBasement(std::string bVertex, Color c, bool isDuringTurn); 
+    void addTilesHavingVertex(vector<int> &occupTiles, int startingTile, string bVertex);
     Tile* getTiles(); 
 
 

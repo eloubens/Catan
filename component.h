@@ -20,11 +20,12 @@ class Component {
 	
 
 
-	//bool isOwnedBy(Color color) const;
+	
 	bool isOccupied();
 	//bool hasAdjVertices() const;
 	//bool hasAdjEdges() const;
  public:
+ 	bool isOwnedBy(Color color);
  	//std::string location; //vertex number or edge number // PRIVATE
  	std::vector<Vertex*> adjVertices; // PRIVATE
 	std::vector<Edge*> adjEdges; // PRIVATE
@@ -63,7 +64,7 @@ class Vertex final : public Component {
 	/* throws true if vertex found and basement was placed.
         throws false if vertex found and basement can't be placed.
         doesn't do anything if vertex not found. */
-	void placeBasement(std::string bVertex, Color c);
+	void placeBasement(std::string bVertex, Color c, bool isDuringTurn);
 	string getVertex(); 
 
 	//void printResidences() const;

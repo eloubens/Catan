@@ -22,10 +22,10 @@ bool Tile::tileHasVertex(string bVertex) {
 }
 
 // Correct. Leave as is. 
-void Tile::placeBasement(string bVertex, Color c) {
+void Tile::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     for (int i = 0; i < verticesAmount; i++)  {
         try {
-            vertices[i]->placeBasement(bVertex, c);
+            vertices[i]->placeBasement(bVertex, c, isDuringTurn);
         } catch(bool isValid) {
             throw isValid;
         }

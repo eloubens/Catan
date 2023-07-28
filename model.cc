@@ -7,6 +7,8 @@
 
 using namespace std;
 
+const int winningGamePoints = 10;
+
 Model::Model(istringstream &iss) : players{Player{Color::B}, Player{Color::R}, Player{Color::O}, Player{Color::Y}},
                              board{iss} {}
 
@@ -42,6 +44,16 @@ Model::Model(vector<istringstream> &&pResocs, vector<istringstream> &&pSettlemen
     }
 
 
+bool Model::hasEnoughResoc(Color c, variant<Residence, Road> type) {
+    return players[static_cast<int>(c)].hasEnoughResoc(settlementCost[type]);
+}
+
+// OLD CODE
+// void Model::roll(Color turn) {
+//     int tileValRolled = players[static_cast<int>(turn)].roll();
+//     if (tileValRolled == 7) {
+//         // GEESE STUFF HERE 
+//     }
 /* void Model::roll(Color turn) {
     int tileValRolled = players[static_cast<int>(turn)].roll();
     
@@ -66,15 +78,11 @@ Model::Model(vector<istringstream> &&pResocs, vector<istringstream> &&pSettlemen
 // }
 //auto [resoc, amount] resocGained =
 
-
-
-
 // returns if you can place a basement or not
-
-// MAKE A CHANGE HERE, SHOULD TAKE IN A VECTOR OF OCCPIED TILES.
-bool Model::placeBasement(string bVertex, Color c) {
+// in add OccupiedTiles, you would check for duplicates there
+bool Model::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     try {
-        board.placeBasement(bVertex, c); // GET A 
+        board.placeBasement(bVertex, c, isDuringTurn); // will only catch a vector of occupiedTiles if can build on the tile
     } catch (const vector<int> &occupTiles) {
         for (auto n : occupTiles) {
             players[static_cast<int>(c)].addOccupiedTiles(n);
@@ -82,10 +90,7 @@ bool Model::placeBasement(string bVertex, Color c) {
         }
         return true;
     }
-    // not adjacent or on it
-    // update list of occupied tiles
-    return false;
-//maybe update building points 
+    return false; // if nothing gets thrown, means that residence was not able to be built on
 }
 
 Tile* Model::getTiles() {
@@ -263,9 +268,13 @@ string Model::getDiceType(Color c) {
     for (auto p : players) {
         if (p.getColour() == c) diceType = p.getDiceType();
     }
-
     return diceType;
 }
+
+bool Model::hasWon(Color turn) {
+    return players[static_cast<int>(turn)].getBuildingPoints() >= winningGamePoints;
+}
+
 
 void Model::trade(string curPlayer, string tradePlayer, string give, string take) {
     for (auto p : players) {

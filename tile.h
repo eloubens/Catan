@@ -67,7 +67,7 @@ class Tile {
     /* throws true if vertex found and basement was placed.
         throws false if vertex found and basement can't be placed.
         doesn't do anything if vertex not found. */
-    void placeBasement(std::string bVertex, Color c); 
+    void placeBasement(std::string bVertex, Color c, bool isDuringTurn); 
 
     
 };

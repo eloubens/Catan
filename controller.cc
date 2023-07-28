@@ -12,16 +12,19 @@
 
 using namespace std;
 
-const int eof = 2;
-const int invalidInput = 1;
+const int gameWon = 1;
+const int invalidInput = 2;
+const int eof = 3;
+const int tilesAmount = 19;
+const int vertexMax = 53;
+const int edgeMax = 71;
 
 // returns true if bad state
-bool Controller::isBadState(int n) { return n != 0; }
+bool Controller::isSpecialState(int n) { return n != 0; }
 
 // sets the Model field of the controller. 
 // Loads a board from a file, creates and loads a randomized board, or loads a saved game.
 int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed, vector<string> &arg_vec) {
-    const int numOfTiles = 19;
     ostringstream board_oss; 
     if (canRandomize && foundRandomize) {  // means -boardload found and  no -board or -load found
         vector<int> tileVal = {2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12}; // die roll
@@ -30,7 +33,7 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
         default_random_engine rng{seed};
         shuffle(tileResource.begin(), tileResource.end(), rng);
         shuffle(tileVal.begin(), tileVal.end(), rng);
-        for (int i = 0; i < numOfTiles; i++) {
+        for (int i = 0; i < tilesAmount; i++) {
             board_oss << " " << tileResource[i] << " " << tileVal[i]; 
         } 
         istringstream board_iss{board_oss.str()}; 
@@ -72,7 +75,7 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
                 vector<istringstream> pResocs, pSettlements;
                 for (int i = 0; i < playerAmount; i++) {
                     // read until 'r' character representing road
-                    getline(ifs, resoc, 'r'); 
+                    getline(ifs, resoc, 'r');
                     getline(ifs, settlements);
                     pResocs.emplace_back(istringstream{resoc});
                     pSettlements.emplace_back(istringstream{settlements});
@@ -121,7 +124,7 @@ int Controller::createController(vector<string> &arg_vec) {
         } 
 	}
     int state = setModel(canRandomize, foundRandomize, seed, arg_vec);
-    if (isBadState(state)) { return state; }
+    if (isSpecialState(state)) { return state; }
     view = make_unique<View>(model.get());
     return 0;
 }
@@ -140,14 +143,14 @@ int Controller::beginningOfGame() {
         try {
             i = buildBasements(i, true);
         } catch (int save) {
-            return save;
+            return eof;
         }
     }
     for (int i = playerAmount - 1; i >= 0 ; i--) {
         try {
             i = buildBasements(i, false);
         } catch (int save) {
-            return save; 
+            return eof; 
         }
     }
     return 0;
@@ -173,7 +176,7 @@ int Controller::buildBasements(int i, bool isInc) {
         return i;
     } // checks for invalid input and invalid vertex
     bVertex = to_string(tester);
-    if(!model->placeBasement(bVertex, c)) {
+    if(!model->placeBasement(bVertex, c, false)) {
         out << "You cannot build here." << endl;
         if (isInc) {
             i--;
@@ -245,6 +248,10 @@ int Controller::beginningOfTurn() {
         }
         out << "> ";
     } 
+    // roll the dice
+    // check of 7 if yes do geese, else do code below
+    // ANYTIME YOU USE in >>. Must use isEOF() command and return oef if true
+    //int rollVal = 6; // value of the dice rolled. This reperesents the tilevalue
 
 
     // ANYTIME YOU USE in >>. Must use isEOF() command and return oef if true
@@ -262,6 +269,7 @@ int Controller::beginningOfTurn() {
     }
     
     // vector (size 4) of a map.
+    // stores all the resources aquired for each player. index 0,..,3 has player 1,..,4.
     vector<map<Resource, int>> resocMap = model->diceRolledUpdate(rollVal);
     bool didPrint = false;
     for (int i = 0; i < playerAmount; i++) {
@@ -272,6 +280,9 @@ int Controller::beginningOfTurn() {
             out << resocNum << " " << getResocStr(resoc) << endl;
         }
     }
+    if (!didPrint) {
+        out << "No builders gained resources." << endl;
+    }
     //vector<map<Resource, int>> diceRolledUpdate(rollVal); // updates for everyone
     // prints color: then go throughr map. If non have any, then "No builders gained resources"
 
@@ -281,18 +292,103 @@ int Controller::beginningOfTurn() {
     return 0;
 }
 
+
+int Controller::buildRes(string vertexNum){
+    if (!model->hasEnoughResoc(turn, Residence::B)) {
+        cout << "You do not have enough resources." << endl;
+        return 0;
+    }
+    if (!model->placeBasement(vertexNum, turn, true)) {
+        cout << "You cannot build here." << endl;
+        return 0;
+    }
+    if (hasWon()) {
+        return gameWon;
+    }
+    return 0;
+}
+
+// int Controller::improveRes(string vertexNum){ 
+//     // first check if can build
+//     // then check if has resoc 
+//     //model->buildRes(turn, vertexNum);
+//     if (hasWon()) {
+//         return gameWon;
+//     } 
+//     return 0;
+// }
+
+bool Controller::hasWon() {
+    return model->hasWon(turn);
+}
+
+
+int Controller::DuringTurn() {
+    int vNumInt, state;
+    string cmd,vertexNum;
+    while(true) {
+        out << "> ";
+        if (!(cin >> cmd)) { return eof; } // would only fail at eof since cmd is a string
+        if (cmd == "next") { break; }
+        else if (cmd == "board") { view->printBoard(); }
+        else if (cmd == "build-res") {
+            if (!(cin >> vertexNum)) { return eof; }
+            istringstream iss{vertexNum};
+            iss >> vNumInt;
+            if (vNumInt < 0 || vNumInt > vertexMax) {
+                out << "Invalid command." << endl;
+                continue;
+            }
+            state = buildRes(vertexNum);
+            if(isSpecialState(state)) { return state;}
+        } else {
+            out << "Invalid command." << endl;
+        }
+        // can't improve from a tower to more , can't improve if nothing on vertex
+        // check building points for imrpove res and make road commands
+        // cannot build road through a vertex of a different residence
+
+
+
+        //return gameWon; if building points more than 10
+    }
+    if (turn == Color::Y) {
+        turn = Color::B;
+    } else {
+        turn = static_cast<Color>(static_cast<int>(turn) + 1);
+    }
+    return 0;
+}
+
+
 //this acts like the main function essentially 
 int Controller::general(vector<string> &arg_vec) {
-    int state = createController(arg_vec);
-    if (isBadState(state)) { return state; } // could return invalidInput number or could return eof
-    // created board by now
-    // beginning of game. 
-    if (isBadState(beginningOfGame())) { return eof; }
-    // game begins
+    if (isSpecialState(createController(arg_vec))) { return invalidInput; } // could only return invalidInput here
     while(true) {
-        if (isBadState(beginningOfTurn())) { return eof; }
-        //if (isBadState(DuringGame())) { return eof; }
-       break;
+        // beginning of game. 
+        if (isSpecialState(beginningOfGame())) { return save(); }
+        // game begins
+        while(true) {
+            if (isSpecialState(beginningOfTurn())) { return save(); }
+            int state = DuringTurn();
+            if (state == eof) { return save(); }
+            if (state == gameWon) { break; }
+            break; // REMOVE THIS LINE AT THE END OF THE PROJECT
+        }
+        string input;
+        // state will always be gameWon here??? if not check that it is
+        do {
+            out << "Would you like to play again? " << endl << "< ";
+            if (!(cin >> input)) { return eof; } // MAYBE NEED SAVE HERE, NOT SURE (aka return save();)
+        } while(input != "yes" && input != "no");
+        if (input == "yes") {
+            //resetGame(); WRITE THIS FUNCTION
+            continue;
+        }
+        if (input == "no") {
+            break;
+        }
+        break; // REMOVE THIS LINE AT THE END OF THE PROJECT
     }
     
 

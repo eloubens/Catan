@@ -28,6 +28,8 @@ Player::Player(istringstream &playerData, Color color) : color{color} {
     }
 }
 
+int Player::getBuildingPoints() { return buildingPoints; }
+
 void Player::addOccupiedTiles(int tileNum) {
     for (auto num : occupiedTiles) {
         if (num == tileNum) { return; }
@@ -40,6 +42,13 @@ void Player::setDice(string cmd) {
 }
 
 void Player::addBuildingPoints(int num) { buildingPoints += num; }
+
+bool Player::hasEnoughResoc(const map<Resource,int> &rMapNeed) {
+    for (auto [resoc, amount] : rMapNeed) {
+        if (resocMap[resoc] < amount ) { return false; }
+    }
+    return true;
+}
 
 int Player::getResocTotal() { return resocTotal; }
 
