@@ -84,6 +84,8 @@ class Model{
 
     void trade(string curPlayer, string tradePlayer, string give, string take);
 
+    int fairRoll(Color turn);
+
 
 
 

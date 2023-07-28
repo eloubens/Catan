@@ -42,13 +42,14 @@ Model::Model(vector<istringstream> &&pResocs, vector<istringstream> &&pSettlemen
     }
 
 
-void Model::roll(Color turn) {
+/* void Model::roll(Color turn) {
     int tileValRolled = players[static_cast<int>(turn)].roll();
     
-    /*if (tileValRolled == 7) {
+    if (tileValRolled == 7) {
         // GEESE STUFF HERE 
     }
-    */
+ */
+
 
 //     // gets resources for each player 
 //     for (int player = 0; player < playerAmount - 1; player++) {
@@ -280,3 +281,13 @@ void Model::trade(string curPlayer, string tradePlayer, string give, string take
     }
 }
 
+int Model::fairRoll(Color turn) {
+    int rollVal;
+    for (auto p : players) {
+        if (p.getColour() == turn) {
+            rollVal = p.fairRoll();
+        }
+    }
+
+    return rollVal;
+}

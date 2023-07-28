@@ -45,6 +45,8 @@ class Player {
     std::string getDiceType();
 
     void removeResoc(std::string resoc);
+
+    int fairRoll();
 };
 
 #endif

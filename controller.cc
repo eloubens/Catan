@@ -257,7 +257,7 @@ int Controller::beginningOfTurn() {
         int s = geese();
         if (s == eof) {
             return eof;
-            save();
+            //save();
         }
     }
     
@@ -316,7 +316,9 @@ int Controller::roll(Color turn) {
 
         model->diceRolledUpdate(loadedRoll);
     } else if (diceType == "fair") {
-        //model->fairRoll();
+        int fairRoll;
+        fairRoll = model->fairRoll(turn);
+        model->diceRolledUpdate(fairRoll);
     }
 
     return 0;
