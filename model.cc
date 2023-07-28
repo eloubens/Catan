@@ -90,6 +90,21 @@ Tile* Model::getTiles() {
     return board.getTiles();
 }
 
+map<string, Residence> Model::getVertexResMap(int player) {
+    string playerCol = getColorChar(this->players[player].getColour()); 
+    map <string, Residence> m;
+    for (int j : this->players[player].getOccupiedTiles()) { // all the tiles
+        for (int k = 0; k < 6; k++) { // all the vertices
+            Vertex * vertex = this->getTiles()[j].getVertexAdr(static_cast<vertexEnum>(k)); 
+            if (vertex->getPlayer() == playerCol) {
+                m[vertex->getLocation()] = vertex->getRes(); 
+            }
+        }
+    }
+    return m; 
+}
+
+
 void Model::save(Color turn) {
     ofstream backup{"backup.sv"};
     

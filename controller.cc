@@ -192,16 +192,8 @@ int Controller::beginningOfTurn() {
     int currTurn = static_cast<int>(turn);
     string playerCol = getColorChar(model->players[currTurn].getColour()); 
     model->players[currTurn].getStatus(out);
-    map <string, Residence> m;
-    for (int j : model->players[currTurn].getOccupiedTiles()) { // all the tiles
-        for (int k = 0; k < 6; k++) { // all the vertices
-            Vertex * vertex = model->getTiles()[j].getVertexAdr(static_cast<vertexEnum>(k)); 
-            if (vertex->getPlayer() == playerCol) {
-                m[vertex->getLocation()] = vertex->getRes(); 
-            }
-        }
-    }
-    for (const auto& entry : m) {
+    map <string, Residence> vertexResidenceMap = model->getVertexResMap(currTurn); 
+    for (const auto& entry : vertexResidenceMap) {
         out << " " << entry.first << " " << getResStr(entry.second);
     }
     out << endl <<  "> "; 
@@ -236,35 +228,17 @@ int Controller::beginningOfTurn() {
             for (int i = 0; i < 4; i++) {
                 string playerCol = getColorChar(model->players[i].getColour()); 
                 model->players[i].getStatus(out);
-
-                map <string, Residence> m;
-                for (int j : model->players[i].getOccupiedTiles()) { // all the tiles
-                    for (int k = 0; k < 6; k++) { // all the vertices
-                        Vertex * vertex = model->getTiles()[j].getVertexAdr(static_cast<vertexEnum>(k)); 
-                        if (vertex->getPlayer() == playerCol) {
-                            m[vertex->getLocation()] = vertex->getRes(); 
-                        }
-                    }
-                }
-                for (const auto& entry : m) {
+                vertexResidenceMap = model->getVertexResMap(i); 
+                for (const auto& entry : vertexResidenceMap) {
                     out << " " << entry.first << " " << getResStr(entry.second);
                 }
                 out << endl;
             }
-            
         } if (cmd == "residences") {
             string playerCol = getColorChar(model->players[currTurn].getColour()); 
             model->players[currTurn].getStatus(out);
-            map <string, Residence> m;
-            for (int j : model->players[currTurn].getOccupiedTiles()) { // all the tiles
-                for (int k = 0; k < 6; k++) { // all the vertices
-                    Vertex * vertex = model->getTiles()[j].getVertexAdr(static_cast<vertexEnum>(k)); 
-                    if (vertex->getPlayer() == playerCol) {
-                        m[vertex->getLocation()] = vertex->getRes(); 
-                    }
-                }
-            }
-            for (const auto& entry : m) {
+            vertexResidenceMap = model->getVertexResMap(currTurn); 
+            for (const auto& entry : vertexResidenceMap) {
                 out << " " << getResStr(entry.second);
             }
             out << endl;
@@ -310,9 +284,6 @@ int Controller::general(vector<string> &arg_vec) {
         //if (isBadState(DuringGame())) { return eof; }
        break;
     }
-    
-
-    
     
 
     // check for case when trying to impove on empty res!!!!!
