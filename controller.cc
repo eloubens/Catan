@@ -230,12 +230,17 @@ int Controller::beginningOfTurn() {
 
 
 int Controller::buildRes(string vertexNum){
-    // first check resoc
-    // then check if can build
-    //model->buildRes(turn, vertexNum);
+    if (!model->hasEnoughResoc(turn, Residence::B)) {
+        cout << "You do not have enough resources." << endl;
+        return 0;
+    }
+    // if (!model->buildRes(turn, vertexNum)) {
+    //     cout << "You cannot build here." << endl;
+    //     return 0;
+    // }
     if (hasWon()) {
         return gameWon;
-    } 
+    }
     return 0;
 }
 

@@ -5,24 +5,20 @@
 #include <sstream>
 #include <vector>
 #include <map>
+#include <variant>
 #include "player.h"
 #include "board.h"
 #include "resourceEnum.h"
+#include "roadEnum.h"
 
-enum class Settlement {
-    B, // Basement
-    H, // House
-    T, // Tower
-    R  // Road
-};
 
 extern const int winningGamePoints; // 10
 
 class Model{
     // stores how many resorces each settlement costs
     // SET MAP HERE (not in ctor)
-    std::map<Settlement, std::map<Resource,int>> settlementCost = {
-        { Settlement::B, 
+    std::map<variant<Residence, Road>, std::map<Resource,int>> settlementCost = {
+        { Residence::B, 
             {
                 {Resource::BRICK, 1},
                 {Resource::GLASS, 1},
@@ -30,13 +26,13 @@ class Model{
                 {Resource::WIFI, 1}
             }
         }, 
-        { Settlement::H, 
+        { Residence::H, 
             {
                 {Resource::GLASS, 2},
                 {Resource::HEAT, 3}
             }
         },
-        { Settlement::T, 
+        { Residence::T, 
             {
                 {Resource::BRICK, 3},
                 {Resource::ENERGY, 2},
@@ -45,7 +41,7 @@ class Model{
                 {Resource::HEAT, 2}
             }
         }, 
-        { Settlement::R, 
+        { Road::R, 
             {
                 {Resource::HEAT, 1},
                 {Resource::WIFI, 1}
@@ -68,6 +64,7 @@ class Model{
     //buildRes(Color c, vertexNum)
     // saves current state of game
     void save(Color turn);
+    bool hasEnoughResoc(Color C, std::variant<Residence, Road> type);
     std::vector<std::map<Resource, int>> diceRolledUpdate(int rollVal);
 
     std::vector<std::pair<std::string, std::vector<std::pair<std::string, int>>>> lostResoc();

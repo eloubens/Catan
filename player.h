@@ -26,6 +26,7 @@ class Player {
     void addOccupiedTiles(int tileNum);
     void addBuildingPoints(int num);
     int getBuildingPoints();
+    bool hasEnoughResoc(std::map<Resource,int> rMap);
 
     void updateResocMap(const std::pair<Resource, int> &gainedResoc);
     std::map<Resource, int>& getResocMap();
