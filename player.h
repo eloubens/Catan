@@ -40,6 +40,11 @@ class Player {
     bool hasRes(int tileNum);
 
     std::string stealResoc();
+    void addResoc(std::string resoc);
+
+    std::string getDiceType();
+
+    void removeResoc(std::string resoc);
 };
 
 #endif
