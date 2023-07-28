@@ -247,3 +247,9 @@ void Player::removeResoc(string resoc) {
     else if (resoc == "Wifi") resocMap[Resource::WIFI] -= 1;
     else if (resoc == "Park") resocMap[Resource::PARK] -= 1;
 }
+
+int Player::fairRoll() {
+    int rollVal = dice.rollFair();
+    return rollVal;
+
+}
