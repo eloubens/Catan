@@ -161,11 +161,6 @@ std::vector<int> occupiedTiles
 */
 
 
-
-int Player::roll() {
-    return dice.roll();
-}
-
 void Player::updateResocMap(const pair<Resource, int> &gainedResoc) {
     resocMap[gainedResoc.first] += gainedResoc.second;
 }
@@ -246,4 +241,16 @@ int Player::fairRoll() {
     int rollVal = dice.rollFair();
     return rollVal;
 
+}
+
+bool Player::enoughResoc(string give) {
+    Resource r = getResocR(give);
+    if(resocMap[r] <= 0) return false;
+    else return true;
+}
+
+bool Player::validSteal(string take) {
+    Resource r = getResocR(take);
+    if(resocMap[r] <= 0) return false;
+    else return true;
 }

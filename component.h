@@ -17,7 +17,8 @@ class Component {
 	Color player = Color::DNE; //Player that built res/road
 	//std::vector<Vertex*> adjVertices;
 	//std::vector<Edge*> adjEdges;
-	
+	std::vector<Vertex*> adjVertices; // PRIVATE
+	std::vector<Edge*> adjEdges; // PRIVATE
 
 
 	
@@ -27,8 +28,7 @@ class Component {
  public:
  	bool isOwnedBy(Color color);
  	//std::string location; //vertex number or edge number // PRIVATE
- 	std::vector<Vertex*> adjVertices; // PRIVATE
-	std::vector<Edge*> adjEdges; // PRIVATE
+ 
 	explicit Component(std::string location);
 	//Component(std::string location,  Color playerType);
 	// virtual void print() const = 0;

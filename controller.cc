@@ -13,13 +13,13 @@
 using namespace std;
 
 const int gameWon = 1;
-const int invalidInput = 2;
-const int eof = 3;
+const int invalidInput = -2;
+const int eof = -1;
 const int tilesAmount = 19;
 const int vertexMax = 53;
 const int edgeMax = 71;
 
-// returns true if bad state
+// returns true if non-normal state
 bool Controller::isSpecialState(int n) { return n != 0; }
 
 void Controller::getStatus(int i) {
@@ -145,8 +145,8 @@ int Controller::createController(vector<string> &arg_vec) {
     return 0;
 }
 
-int Controller::save() {
-    model->save(turn);
+int Controller::save(string fileName) {
+    model->save(turn, fileName);
     return eof; 
 }
 
@@ -224,81 +224,38 @@ int Controller::beginningOfTurn() {
             model->setDice(turn, cmd);
             out << "Dice set to fair." << endl;
         }
-        if (cmd == "next") {
-            currTurn++; 
-            if (currTurn > 3) {
-                turn = Color::B;
-            } else {
-                turn = static_cast<Color>(currTurn);
-            }
-            in.ignore(); 
-            in.clear(); 
-            beginningOfTurn();
-        } if (cmd == "board") {
-            view->printBoard();
-        } if (cmd == "help") {
-            out << "Valid commands:" << endl << "board" << endl << "status" << endl << "residences" << endl 
-            << "build-road <edge#>" << endl << "build-res <housing#>" << endl << "improve <housing#>" << endl 
-            << "trade <colour> <give> <take>" << endl << "next" << endl << "save <file>" << endl;
-        } if (cmd == "status") {
-            for (int i = 0; i < 4; i++) {
-                getStatus(currTurn); 
-                vertexResidenceMap = model->getVertexResMap(i); 
-                for (const auto& entry : vertexResidenceMap) {
-                    out << " " << entry.first << " " << getResStr(entry.second);
-                }
-                out << endl;
-            }
-        } if (cmd == "residences") {
-            vertexResidenceMap = model->getVertexResMap(currTurn); 
-            for (const auto& entry : vertexResidenceMap) {
-                out << " " << getResStr(entry.second);
-            }
-            out << endl;
-        }
         out << "> ";
     } 
-    // roll the dice
-    // check of 7 if yes do geese, else do code below
-    // ANYTIME YOU USE in >>. Must use isEOF() command and return oef if true
-    //int rollVal = 6; // value of the dice rolled. This reperesents the tilevalue
-
-
     // ANYTIME YOU USE in >>. Must use isEOF() command and return oef if true
     // deal with loading the dice here (fair + loaded)
 
-    roll(turn);
-
-    int rollVal = 7; // value of the dice rolled. This reperesents the tilevalue
+    // dice is rolled
+    int rollVal = roll(turn); 
+    out << rollVal << endl;
     if (rollVal == 7) {
         int s = geese();
         if (s == eof) {
             return eof;
             //save();
         }
-    }
-    
-    // vector (size 4) of a map.
-    // stores all the resources aquired for each player. index 0,..,3 has player 1,..,4.
-    vector<map<Resource, int>> resocMap = model->diceRolledUpdate(rollVal);
-    bool didPrint = false;
-    for (int i = 0; i < playerAmount; i++) {
-        if (resocMap[i].size() == 0 ) { continue; }
-        if (didPrint != true ) { didPrint = true; }
-        out << "Builder " << getColorStr(static_cast<Color>(i)) << " gained:" << endl;
-        for (auto [resoc, resocNum] : resocMap[i]) {
-            out << resocNum << " " << getResocStr(resoc) << endl;
+    } else {
+        vector<map<Resource, int>> resocMap = model->diceRolledUpdate(rollVal);
+        bool didPrint = false;
+        for (int i = 0; i < playerAmount; i++) {
+            if (resocMap[i].size() == 0 ) { continue; }
+            if (didPrint != true ) { didPrint = true; }
+            out << "Builder " << getColorStr(static_cast<Color>(i)) << " gained:" << endl;
+            for (auto [resoc, resocNum] : resocMap[i]) {
+                out << resocNum << " " << getResocStr(resoc) << endl;
+            }
+        }
+        if (!didPrint) {
+            out << "No builders gained resources." << endl;
         }
     }
-    if (!didPrint) {
-        out << "No builders gained resources." << endl;
-    }
-    //vector<map<Resource, int>> diceRolledUpdate(rollVal); // updates for everyone
-    // prints color: then go throughr map. If non have any, then "No builders gained resources"
-
-    //int vertexNum; // the vertex number the user wants to build a basement on
-    // Used when build-res command
-    //model->buildRes(turn, vertexNum);
+    // updates resocs for each player
+    // vector (size 4) of a map.
+    // stores all the resources aquired for each player. index 0,..,3 has player 1,..,4.
     return 0;
 }
 
@@ -351,15 +308,39 @@ int Controller::DuringTurn() {
             }
             state = buildRes(vertexNum);
             if(isSpecialState(state)) { return state;}
+        } else if (cmd == "help") {
+            out << "Valid commands:" << endl << "board" << endl << "status" << endl << "residences" << endl 
+            << "build-road <edge#>" << endl << "build-res <housing#>" << endl << "improve <housing#>" << endl 
+            << "trade <colour> <give> <take>" << endl << "next" << endl << "save <file>" << endl;
+        } else if (cmd == "status") {
+            // for (int i = 0; i < 4; i++) {
+            //     //string playerCol = getColorChar(model->players[i].getColour()); 
+            //     model->players[i].getStatus(out);
+            //     map <string, Residence> vertexResidenceMap = model->getVertexResMap(i); 
+            //     for (const auto& entry : vertexResidenceMap) {
+            //         out << " " << entry.first << " " << getResStr(entry.second);
+            //     }
+            //     out << endl;
+            // }
+        } else if (cmd == "save") {
+            if (!(cin >> cmd)) { return save(); }
+            return save(cmd);
+        } else if (cmd == "trade") {
+            if (isSpecialState(trade())) { return eof; }
+        } else if (cmd == "residences") {
+           // string playerCol = getColorChar(model->players[currTurn].getColour()); 
+            // model->players[currTurn].getStatus(out);
+            // vertexResidenceMap = model->getVertexResMap(currTurn); 
+            // for (const auto& entry : vertexResidenceMap) {
+            //     out << " " << getResStr(entry.second);
+            // }
+            // out << endl;
         } else {
             out << "Invalid command." << endl;
         }
         // can't improve from a tower to more , can't improve if nothing on vertex
         // check building points for imrpove res and make road commands
         // cannot build road through a vertex of a different residence
-
-
-
         //return gameWon; if building points more than 10
     }
     if (turn == Color::Y) {
@@ -383,12 +364,12 @@ int Controller::general(vector<string> &arg_vec) {
             int state = DuringTurn();
             if (state == eof) { return save(); }
             if (state == gameWon) { break; }
-            break; // REMOVE THIS LINE AT THE END OF THE PROJECT
+             // REMOVE THIS LINE AT THE END OF THE PROJECT
         }
         string input;
         // state will always be gameWon here??? if not check that it is
         do {
-            out << "Would you like to play again? " << endl << "< ";
+            out << "Would you like to play again? " << endl << "> ";
             if (!(cin >> input)) { return eof; } // MAYBE NEED SAVE HERE, NOT SURE (aka return save();)
         } while(input != "yes" && input != "no");
         if (input == "yes") {
@@ -411,23 +392,30 @@ int Controller::general(vector<string> &arg_vec) {
 
 
 
+
 int Controller::roll(Color turn) {
     string diceType = model->getDiceType(turn);
+    int rollVal;
 
     if (diceType == "load") {
-        int loadedRoll;
         out << "Input a roll between 2 and 12: " << endl;
-        in >> loadedRoll;
-        if (isEOF()) return 1;
+        in >> rollVal;
+        if (isEOF()) return eof;
 
-        model->diceRolledUpdate(loadedRoll);
+        while ((rollVal < 2) || (rollVal > 12)) {
+            out << "Invalid roll." << endl;
+            out << "Input a roll between 2 and 12: " << endl;
+            in >> rollVal;
+            if (isEOF()) return eof;
+        }
+        model->diceRolledUpdate(rollVal);
+
     } else if (diceType == "fair") {
-        int fairRoll;
-        fairRoll = model->fairRoll(turn);
-        model->diceRolledUpdate(fairRoll);
+        rollVal = model->fairRoll(turn);
+        model->diceRolledUpdate(rollVal);
     }
 
-    return 0;
+    return rollVal;
 }
 
 int Controller::geese() {
@@ -472,9 +460,8 @@ int Controller::geese() {
         string stolenResoc = model->steal(curPlayer, toSteal);
 
         out << "Builder " << curPlayer << " steals " << stolenResoc << " from Builder" << toSteal << "." << endl;
-
-        return 0;
     }
+    return 0;
 }
 
 int Controller::trade() {
@@ -485,16 +472,31 @@ int Controller::trade() {
     string answer;
 
     in >> toTradeWith >> give >> take;
-    if (isEOF()) return eof; // DOUBLE CHECK
+    if (isEOF()) return eof; 
 
     out << curPlayer << " offers " << toTradeWith << " one " << give << " for one " << take << "." << endl;
     out << "Does " <<  toTradeWith << " accept this offer?" << endl;
-
     in >> answer;
-    if (isEOF()) return eof; // DOUBLE CHECK
+    if (isEOF()) return eof;
 
-    if (answer == "yes") model->trade(curPlayer, toTradeWith, give, take);
+    while ((answer != "yes") || (answer != "no")) {
+        out << "Does " <<  toTradeWith << " accept this offer?" << endl;
+        in >> answer;
+        if (isEOF()) return eof;
+    }
 
+    if (answer == "yes") {
+        if (model->enoughResoc(curPlayer, give)) {
+            if (model->validSteal(toTradeWith, take)) {
+                model->trade(curPlayer, toTradeWith, give, take);
+            } else {
+                out << toTradeWith << " does not have enough resources." << endl;
+            }
+        } else {
+            out << "You do not have enough resources." << endl;
+        }
+    
+    }
 
     return 0;
 
