@@ -31,7 +31,7 @@ class Controller {
     // sets the Model field of the controller. Loads a board from a file, creates and loads a randomized board, or loads a saved game.
     int setModel(bool canRandomize, bool foundRandomize, unsigned &seed, std::vector<string> &arg_vec);
     bool isSpecialState(int n);
-    int save();
+    int save(std::string fileName = "backup.sv");
     int beginningOfGame();
     bool isEOF();
     int buildBasements(int i, bool isInc);
