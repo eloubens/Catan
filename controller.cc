@@ -351,12 +351,12 @@ int Controller::general(vector<string> &arg_vec) {
             int state = DuringTurn();
             if (state == eof) { return save(); }
             if (state == gameWon) { break; }
-            break; // REMOVE THIS LINE AT THE END OF THE PROJECT
+             // REMOVE THIS LINE AT THE END OF THE PROJECT
         }
         string input;
         // state will always be gameWon here??? if not check that it is
         do {
-            out << "Would you like to play again? " << endl << "< ";
+            out << "Would you like to play again? " << endl << "> ";
             if (!(cin >> input)) { return eof; } // MAYBE NEED SAVE HERE, NOT SURE (aka return save();)
         } while(input != "yes" && input != "no");
         if (input == "yes") {
