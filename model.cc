@@ -71,7 +71,17 @@ void Model::updatePlayerSettlements(int tileNum, string componentNum, Color c, b
         players[static_cast<int>(c)].addOccupiedTiles(n);
         //cout << n << endl;
     }
-    players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(Residence::B));
+}
+
+bool Model::placeRoad(string edgeNum, Color c) {
+    try {
+        board.placeRoad(edgeNum, c); // will only catch a vector of occupiedTiles if can build on the tile
+    } catch (int tileNum) {
+        updatePlayerSettlements(tileNum, edgeNum, c, false); // adds buidling points and occupied tiles
+        return true;
+    }
+   // cout << "Model did not place" << endl;
+    return false; // if nothing gets thrown, means that residence was not able to be built on
 }
 
 pair<Residence, bool> Model::placeNonBasement(string bVertex, Color c) {
@@ -89,22 +99,12 @@ pair<Residence, bool> Model::placeNonBasement(string bVertex, Color c) {
     return {res, wasPlaced}; // putting this outside so compiler doesn't say warning
 }
 
-bool Model::placeRoad(string edgeNum, Color c) {
-    try {
-        board.placeRoad(edgeNum, c); // will only catch a vector of occupiedTiles if can build on the tile
-    } catch (int tileNum) {
-        updatePlayerSettlements(tileNum, edgeNum, c, false); // adds buidling points and occupied tiles
-        return true;
-    }
-   // cout << "Model did not place" << endl;
-    return false; // if nothing gets thrown, means that residence was not able to be built on
-}
-
 bool Model::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     try {
         board.placeBasement(bVertex, c, isDuringTurn); // will only catch a vector of occupiedTiles if can build on the tile
     } catch (int tileNum) {
         updatePlayerSettlements(tileNum, bVertex, c); // adds buidling points and occupied tiles
+        players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(Residence::B));
         return true;
     }
    // cout << "Model did not place" << endl;

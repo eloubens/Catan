@@ -21,9 +21,6 @@ const int edgeMax = 71;
 // returns true if non-normal state
 bool Controller::isSpecialState(int n) { return n != 0; }
 
-
-
-
 // sets the Model field of the controller. 
 // Loads a board from a file, creates and loads a randomized board, or loads a saved game.
 int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed, vector<string> &arg_vec) {
@@ -202,29 +199,28 @@ int Controller::beginningOfTurn() {
     out << "> "; 
     string cmd;
     
-    // while(!(in >> cmd) || (cmd != "roll")) {
-    //     if (isEOF()) { return eof; }
-    //     if (cmd == "load") {
-    //         out << "Dice set to load." << endl;
-    //         model->setDice(turn, cmd);
-    //     }
-    //     if (cmd == "fair") {
-    //         model->setDice(turn, cmd);
-    //         out << "Dice set to fair." << endl;
-    //     }
-    //     out << "> ";
-    // }  
+    while(!(in >> cmd) || (cmd != "roll")) {
+        if (isEOF()) { return eof; }
+        if (cmd == "load") {
+            out << "Dice set to load." << endl;
+            model->setDice(turn, cmd);
+        }
+        if (cmd == "fair") {
+            model->setDice(turn, cmd);
+            out << "Dice set to fair." << endl;
+        }
+        out << "> ";
+    }  
+
+
     // ANYTIME YOU USE in >>. Must use isEOF() command and return oef if true
-    // deal with loading the dice here (fair + loaded)
 
     // dice is rolled
     int rollVal = roll(turn); 
-    //out << rollVal << endl;
     if (rollVal == 7) {
         int s = geese();
         if (s == eof) {
             return eof;
-            //save();
         }
     } else {
         vector<map<Resource, int>> resocMap = model->diceRolledUpdate(rollVal);
@@ -246,18 +242,6 @@ int Controller::beginningOfTurn() {
 }
 
 
-// void Controller::improveRes(string vertexNum) {
-//     model->findGetRes(vertexNum);
-// // first check if can build
-// // then check if has resoc 
-// //model->buildRes(turn, vertexNum);
-//     if (hasWon()) {
-//         return gameWon;
-//     } 
-
-// }
-
-
 bool Controller::hasWon() {
     return model->hasWon(turn);
 }
@@ -265,9 +249,9 @@ bool Controller::hasWon() {
 int Controller::DuringTurn() {
     int numInt;
     string cmd, num;
-    turn = Color::B;
     while(true) {
-        out << "BEGINNING OF LOOP OF COMMANDS. Type Next To Move On." << endl;
+        out << "BEGINNING OF LOOP OF COMMANDS. Type Next To Move On." << endl; // just for testing
+
         out << "> ";
         
         if (!(in >> cmd)) { return eof; } // would only fail at eof since cmd is a string
@@ -287,26 +271,6 @@ int Controller::DuringTurn() {
             //     }
             //     out << endl;
             // }
-        // } else if (cmd == "improve") {
-        //     cout << "in" << endl;
-        //     in >> num;
-        //     cout << num << endl;
-        //     if (!(in >> num)) { 
-        //         out << "wrongplace" << endl;
-        //         return eof; 
-        //     }
-        //     istringstream iss{num};
-        //     iss >> numInt;
-        //     cout << numInt << endl;
-            
-        //     if (numInt < 0 || numInt > vertexMax) {
-        //         out << "Invalid command." << endl;
-        //         continue;
-        //     }
-        //     out << "before command to imporve res" << endl;
-        //     improveRes(num);
-        //     out << "after cmd to improve res" << endl;
-        // } 
         else if (cmd == "save") {
             if (!(cin >> cmd)) { return save(); }
             return save(cmd);
@@ -325,14 +289,12 @@ int Controller::DuringTurn() {
                 return eof; 
             }
             istringstream iss{num};
-            if (!(iss >> numInt) || numInt < 0 || (cmd == "build-road" && numInt > edgeMax) || ( numInt > vertexMax)) {
+            if (!(iss >> numInt) || numInt < 0 || (cmd == "build-road" && numInt > edgeMax) || ( cmd != "build-road" && numInt > vertexMax)) {
                 out << "Invalid command." << endl;
                 continue;
             }
             if (cmd == "build-res") {
-                //out << "iNNNTop" << endl;
                 buildRes(num);
-                //out << "iNNN" << endl;
             } else if (cmd == "improve") {
                 improveRes(num);
             } else if (cmd == "build-road") {
@@ -369,7 +331,6 @@ void Controller::buildRoad(string edgeNum) {
         return;
     }
     out << "Road Placed." << endl;
-    // check for adjacent road + vertex in between this road and adjcent one or residencde
 }
 
 // To improve a res old today
@@ -399,25 +360,6 @@ void Controller::buildRes(string vertexNum){
     out << "Basement Placed." << endl;
 }
 
-// else if (cmd == "improve-res") {
-//             cout << "in" << endl;
-//             if (!(in >> num)) { 
-//                 out << "wrongplace" << endl;
-//                 return eof; 
-//             }
-//             istringstream iss{num};
-//             iss >> numInt;
-//             if (numInt < 0 || numInt > vertexMax) {
-//                 out << "Invalid command." << endl;
-//                 continue;
-//             }
-//             out << "madeit" << endl;
-//             //improveRes(num);
-//             out << "madeit" << endl;
-    
-       
-
-
 //this acts like the main function essentially 
 int Controller::general(vector<string> &arg_vec) {
     if (isSpecialState(createController(arg_vec))) { return invalidInput; } // could only return invalidInput here
@@ -444,28 +386,29 @@ int Controller::general(vector<string> &arg_vec) {
         if (input == "no") {
             break;
         }
-        break; // REMOVE THIS LINE AT THE END OF THE PROJECT
+        //break; // REMOVE THIS LINE AT THE END OF THE PROJECT
     }
     return 0;
 }
-
-
-
 
 int Controller::roll(Color turn) {
     string diceType = model->getDiceType(turn);
     int rollVal;
 
     if (diceType == "load") {
-        out << "Input a roll between 2 and 12: " << endl <<  "> ";
-        in >> rollVal;
-        if (isEOF()) return eof;
+        while (true) {
+            out << "Input a roll between 2 and 12: " << endl <<  "> ";
+            if (!(in >> rollVal)) {
+                if (in.eof()) return eof;
+                in.clear();
+                in.ignore();
+            }
+            if ((rollVal < 2) || (rollVal > 12)) {
+                out << "Invalid roll." << endl;
+            } else {
+                break;
+            }
 
-        while ((rollVal < 2) || (rollVal > 12)) {
-            out << "Invalid roll." << endl;
-            out << "Input a roll between 2 and 12: " << endl << "> ";
-            in >> rollVal;
-            if (isEOF()) return eof;
         }
         //model->diceRolledUpdate(rollVal); (should not call from here)
     } else if (diceType == "fair") {
