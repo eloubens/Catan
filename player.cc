@@ -220,21 +220,6 @@ string Player::stealResoc() {
 }
 
 
-void Player::getStatus(std::ostream &out) {
-    out << getColorStr(color) << " has " << buildingPoints << " building points,"; 
-
-    for (const auto& entry : resocMap) {
-        if (entry.first == Resource::WIFI) {
-            out << " and " << entry.second << " " << getResocLowerCaseStr(entry.first) << "." << endl;; 
-        } else {
-            out << " " << entry.second << " " << getResocLowerCaseStr(entry.first) << ","; 
-        }
-    }
-
-    out << getColorStr(color) << " has built:" ;
-    
-}
-
 void Player::addResoc(string resoc) {
     if (resoc == "Brick") resocMap[Resource::BRICK] += 1;
     else if (resoc == "Energy") resocMap[Resource::ENERGY] += 1;
