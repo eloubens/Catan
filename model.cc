@@ -61,7 +61,8 @@ bool Model::hasEnoughResoc(Color c, variant<Residence, Road> type) {
 
 // the first tile found to contain componentNum is used. Then need to loop through to get all otehr tiles that 
 // have componentNum on them as well -> they will always be after.
-void Model::updatePlayerSettlements(int tileNum, string componentNum, Color c, Residence r, bool isVertexNum) {
+// This function only works for a basement of road type. If isVertexNum == true, then adding a basement.
+void Model::updatePlayerSettlements(int tileNum, string componentNum, Color c, bool isVertexNum) {
     vector<int> occupTiles{tileNum}; // storing tileNum in vector
     if (!players[static_cast<int>(c)].hasOccupTile(tileNum)) {
         board.addTilesContaining(occupTiles, tileNum + 1, componentNum, isVertexNum); // adds all tiles sharing componentNum excluding tileNum
@@ -70,7 +71,7 @@ void Model::updatePlayerSettlements(int tileNum, string componentNum, Color c, R
         players[static_cast<int>(c)].addOccupiedTiles(n);
         //cout << n << endl;
     }
-    players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(r));
+    players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(Residence::B));
 }
 
 pair<Residence, bool> Model::placeNonBasement(string bVertex, Color c) {
@@ -85,14 +86,25 @@ pair<Residence, bool> Model::placeNonBasement(string bVertex, Color c) {
         }
         res = r;
     }
-    return {res, wasPlaced};
+    return {res, wasPlaced}; // putting this outside so compiler doesn't say warning
+}
+
+bool Model::placeRoad(string edgeNum, Color c) {
+    try {
+        board.placeRoad(edgeNum, c); // will only catch a vector of occupiedTiles if can build on the tile
+    } catch (int tileNum) {
+        updatePlayerSettlements(tileNum, edgeNum, c, false); // adds buidling points and occupied tiles
+        return true;
+    }
+   // cout << "Model did not place" << endl;
+    return false; // if nothing gets thrown, means that residence was not able to be built on
 }
 
 bool Model::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     try {
         board.placeBasement(bVertex, c, isDuringTurn); // will only catch a vector of occupiedTiles if can build on the tile
     } catch (int tileNum) {
-        updatePlayerSettlements(tileNum, bVertex, c, Residence::B); // adds buidling points and occupied tiles
+        updatePlayerSettlements(tileNum, bVertex, c); // adds buidling points and occupied tiles
         return true;
     }
    // cout << "Model did not place" << endl;

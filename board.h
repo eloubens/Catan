@@ -25,6 +25,7 @@ class Board {
  public:
     Board(std::istringstream &iss, bool isLoadGame = false); 
     Board(std::istringstream &iss, int geeseTileNum);  // when loding game
+    void placeRoad(std::string edgeNum, Color c);
     void placeNonBasement(std::string vertexNum, Color c);
     //vector<int> findGetRes(std::string vertexNum);
     void addTilesContaining(vector<int> &occupTiles, int startingTile, std::string componentNum, bool isVertexNum);

@@ -335,8 +335,9 @@ int Controller::DuringTurn() {
                 //out << "iNNN" << endl;
             } else if (cmd == "improve") {
                 improveRes(num);
-            } 
-            // else for road
+            } else if (cmd == "build-road") {
+                buildRoad(num);
+            }
             if (hasWon()) {
                 return gameWon;
             }
@@ -358,6 +359,19 @@ int Controller::DuringTurn() {
 }
 
 
+void Controller::buildRoad(string edgeNum) {
+    if (!model->hasEnoughResoc(turn, Road::R)) {
+        out << "You do not have enough resources." << endl;
+        return;
+    }
+    if (!model->placeRoad(edgeNum, turn)) {
+        out << "You cannot build here." << endl;
+        return;
+    }
+    out << "Road Placed." << endl;
+    // check for adjacent road + vertex in between this road and adjcent one or residencde
+}
+
 // To improve a res old today
 void Controller::improveRes(string vertexNum) {
     auto [res, wasPlaced] = model->placeNonBasement(vertexNum, turn);
@@ -375,11 +389,11 @@ void Controller::improveRes(string vertexNum) {
 // for dynamic building of a Basement
 void Controller::buildRes(string vertexNum){
     if (!model->hasEnoughResoc(turn, Residence::B)) {
-        cout << "You do not have enough resources." << endl;
+        out << "You do not have enough resources." << endl;
         return;
     }
     if (!model->placeBasement(vertexNum, turn, true)) {
-        cout << "You cannot build here." << endl;
+        out << "You cannot build here." << endl;
         return;
     }
     out << "Basement Placed." << endl;
@@ -453,11 +467,10 @@ int Controller::roll(Color turn) {
             in >> rollVal;
             if (isEOF()) return eof;
         }
-        //model->diceRolledUpdate(rollVal);
-
+        //model->diceRolledUpdate(rollVal); (should not call from here)
     } else if (diceType == "fair") {
         rollVal = model->fairRoll(turn);
-        //model->diceRolledUpdate(rollVal);
+        //model->diceRolledUpdate(rollVal); (should not call from here)
     }
 
     return rollVal;

@@ -67,11 +67,46 @@ void Vertex::placeNonBasement(string vertexNum, Color c) {
     throw residenceType;
 }
 
+void Edge::placeRoad(string edgeNum, Color c) {
+    if (location != edgeNum) { return; } // correct edge
+    if (isRoad) { 
+        throw false;
+    } // check that it is totally empty
+    for (auto v : adjVertices) {
+        if (v->isOwnedBy(c)) {
+            player = c;
+            isRoad = true;
+            throw true;
+        }
+    }
+    for (auto e : adjEdges) {
+        if (e->isOwnedBy(c)) {
+            for (auto v : adjVertices) {
+                if (e->hasAdjVertex(v)) { // v is a pointer !,
+                    if (!v->isOccupied()) { // v can only be occupied by non c since it was checked already on line 75
+                        player = c;
+                        isRoad = true;
+                        throw true;
+                    }
+                } 
+            }
+        }
+    }
+    throw false;
+}
+
+bool Edge::hasAdjVertex(Vertex *v) {
+    for (auto adjV : adjVertices) {
+        if (adjV == v) { return true; }
+    }
+    return false;
+}
+
+
 // throws true or false
 void Vertex::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     if (location != bVertex) { return; } // correct vertex
     if (player != Color::DNE) { 
-       // cout << "herwwwwwwe" << endl;
         throw false;
     } // check that it is totally empty
 
@@ -81,14 +116,14 @@ void Vertex::placeBasement(string bVertex, Color c, bool isDuringTurn) {
         }
     }
     if (isDuringTurn) {
-        bool ownsAdjEdge = false;
+        bool ownsAdjE = false;
         for (auto e : adjEdges) {
             if (e->isOwnedBy(c)) {
-                ownsAdjEdge = true;
+                ownsAdjE = true;
                 break;
             }
         }
-        if (ownsAdjEdge == false) { throw false; }
+        if (ownsAdjE == false) { throw false; }
     }
     player = c;
     residenceType = Residence::B;

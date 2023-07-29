@@ -64,6 +64,7 @@ class Tile {
     /* returns true if edgeNum is an edge in the tile. 
         Also places a road on the edge if found.*/
     bool isPlaceValidRoad(std::string edgeNum, Color color); 
+    void placeRoad(std::string edgeNum, Color c);
     /* returns true if vertexNum is an vertex in the tile. 
         Also places a res on the vertex if found.*/
     bool isPlaceValidRes(std::string vertexNum, Color color, Residence res);

@@ -53,12 +53,13 @@ class Model{
     Board board;
  public:
     //vector<int> findGetRes(std::string vertexNum);
+    bool placeRoad(string edgeNum, Color c);
     std::pair<Residence, bool> placeNonBasement(std::string bVertex, Color c);
     std::map<string, Residence> getVertexResMap(int player);
     Tile* getTiles();
     Model(std::istringstream &iss); // for just loading a board (from file or random generated)
     void setDice(Color c, std::string cmd);
-    void updatePlayerSettlements(int tileNum, std::string componentNum, Color c, Residence r, bool isVertexNum = true);
+    void updatePlayerSettlements(int tileNum, std::string componentNum, Color c, bool isVertexNum = true);
     Model(std::vector<std::istringstream> &&pResocs, std::vector<std::istringstream> &&pSettlements, 
                                                     std::istringstream &board ,int geeseTileNum);
     bool placeBasement(std::string bVertex, Color c, bool isDuringTurn);                                               

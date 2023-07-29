@@ -49,6 +49,16 @@ void Tile::placeNonBasement(string vertexNum, Color c) {
     }
 }
 
+void Tile::placeRoad(string edgeNum, Color c) {
+    for (int i = 0; i < edgesAmount; i++)  {
+        try {
+            edges[i]->placeRoad(edgeNum, c);
+        } catch(bool isValid) {
+            throw isValid;
+        }
+    }
+}
+
 // Correct. Leave as is. 
 void Tile::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     for (int i = 0; i < verticesAmount; i++)  {

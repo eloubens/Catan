@@ -88,26 +88,30 @@ void Board::placeNonBasement(string vertexNum, Color c) {
 }
 
 void Board::placeBasement(string bVertex, Color c, bool isDuringTurn) {
-    // if the vertex is shared by 2 tiles, need to add the second tile to
-    //      list of occupied tiles.
     for (int i = 0; i < tilesAmount; i++) {
         try {
             tiles[i].placeBasement(bVertex, c, isDuringTurn);
         } catch(bool isValid){
             if(isValid) {
-                //cout << "Board polace" << endl;
                 throw i;
-                // vector<int> occupTiles{i}; // adding tile i to vector
-                // addTilesHavingVertex(occupTiles, i + 1, bVertex);
-                // throw occupTiles;
             }
-           // cout << "Board did not polace" << endl;
             return;
         }
     }
 }
 
-
+void Board::placeRoad(string edgeNum, Color c) {
+    for (int i = 0; i < tilesAmount; i++) {
+        try {
+            tiles[i].placeRoad(edgeNum, c);
+        } catch(bool isValid){
+            if(isValid) {
+                throw i;
+            }
+            return;
+        }
+    }
+}
 
 
 
