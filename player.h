@@ -49,6 +49,9 @@ class Player {
     void removeResoc(std::string resoc);
 
     int fairRoll();
+
+    bool enoughResoc(std::string give);
+    bool validSteal(std::string take);
 };
 
 #endif
