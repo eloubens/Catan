@@ -57,7 +57,7 @@ class Model{
     Tile* getTiles();
     Model(std::istringstream &iss); // for just loading a board (from file or random generated)
     void setDice(Color c, std::string cmd);
-
+    Player * getPlayer(int i); 
     Model(std::vector<std::istringstream> &&pResocs, std::vector<std::istringstream> &&pSettlements, 
                                                     std::istringstream &board ,int geeseTileNum);
     bool placeBasement(std::string bVertex, Color c, bool isDuringTurn);                                               
@@ -79,7 +79,7 @@ class Model{
 
     bool hasWon(Color turn);
     std::string getDiceType(Color c);
-
+    
     void trade(string curPlayer, string tradePlayer, string give, string take);
 
     int fairRoll(Color turn);

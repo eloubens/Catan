@@ -93,6 +93,10 @@ bool Model::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     return false; // if nothing gets thrown, means that residence was not able to be built on
 }
 
+Player * Model::getPlayer(int i) {
+    return &players[i]; 
+}
+
 Tile* Model::getTiles() {
     return board.getTiles();
 }
