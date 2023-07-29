@@ -29,10 +29,11 @@ void Board::addSettlementsLocation(int tileNum, Color c, vector<string> &roads, 
 //     for (int i = 0; i < tilesAmount; i++) {
 //         try {
 //             tiles[i].findGetRes(vertexNum);
-//         } catch (auto [res, vertexInt, color]) { 
+//         } catch (auto [res, player]) { 
 //             // vertexInt is 0..5 meaning which vertex location in a tile.
 //             // res is an integer corresponding to Residence
-//             return vector<int>{res, i, vertexInt,}; 
+//             // i is tileNum
+//             return vector<int>{res, i, color}; 
 //         }
 //     }
     
@@ -78,11 +79,11 @@ void Board::placeNonBasement(string vertexNum, Color c) {
     for (int i = 0; i < tilesAmount; i++) {
         try {
             tiles[i].placeNonBasement(vertexNum, c);
-        } catch(bool notValid){
-            return; // stop unecessary looping
-        } //catch (Residence r) { // don't need
-        //     throw r;
-        // }
+        } catch (Residence r) {
+           // cout << "Board polace" << endl;
+            throw r;
+        }
+        //cout << "Board did not polace" << endl;
     }
 }
 
@@ -94,15 +95,21 @@ void Board::placeBasement(string bVertex, Color c, bool isDuringTurn) {
             tiles[i].placeBasement(bVertex, c, isDuringTurn);
         } catch(bool isValid){
             if(isValid) {
+                //cout << "Board polace" << endl;
                 throw i;
                 // vector<int> occupTiles{i}; // adding tile i to vector
                 // addTilesHavingVertex(occupTiles, i + 1, bVertex);
                 // throw occupTiles;
             }
+           // cout << "Board did not polace" << endl;
             return;
         }
     }
 }
+
+
+
+
 
 // only throws if it knows you can place a res
 // then throws a vector of all tiles having the vertex that you are building on.

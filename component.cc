@@ -53,26 +53,16 @@ int Vertex::getResidenceAmount(Color color) const {
 
 }
 
+// void Vertex::findGetRes(string vertexNum) {
+//     throw {residenceType, player};
+// }
 
-// throws false or Residence
+// throws Residence
 void Vertex::placeNonBasement(string vertexNum, Color c) {
     if (location != vertexNum) { return; }
     if (player != c || residenceType == Residence::NONE || residenceType == Residence::T) {
-        throw false;
+        throw Residence::NONE; // meaning no residence was improved
     }
-    for (auto v : adjVertices) {
-        if (v->isOccupied()) {
-            throw false;
-        }
-    }
-    bool ownsAdjEdge = false;
-    for (auto e : adjEdges) {
-        if (e->isOwnedBy(c)) {
-            ownsAdjEdge = true;
-            break;
-        }
-    }
-    if (ownsAdjEdge == false) { throw false; }
     residenceType = static_cast<Residence>(static_cast<int>(residenceType) + 1);
     throw residenceType;
 }
@@ -81,6 +71,7 @@ void Vertex::placeNonBasement(string vertexNum, Color c) {
 void Vertex::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     if (location != bVertex) { return; } // correct vertex
     if (player != Color::DNE) { 
+       // cout << "herwwwwwwe" << endl;
         throw false;
     } // check that it is totally empty
 

@@ -34,7 +34,7 @@ bool Tile::tileHasVE(string componentNum, bool isVertex) {
 //         try {
 //             vertices[i].findGetRes(string vertexNum);
 //         } catch(auto [res, player]) {
-//             throw vector<int>{res, i, player};
+//             throw pair<int,int>{res, player};
 //         }
 //     }
 // }
@@ -42,13 +42,10 @@ bool Tile::tileHasVE(string componentNum, bool isVertex) {
 void Tile::placeNonBasement(string vertexNum, Color c) {
     for (int i = 0; i < verticesAmount; i++)  {
         vertices[i]->placeNonBasement(vertexNum, c);
-        // try {
-            
-        // } catch(bool notValid) { // will only catch false
-        //     throw notValid;
-        // } catch(Residence r) {
-        //     throw r;
-        // }
+        try {
+        } catch(Residence r) {
+            throw r;
+        }
     }
 }
 

@@ -26,7 +26,7 @@ class Board {
     Board(std::istringstream &iss, bool isLoadGame = false); 
     Board(std::istringstream &iss, int geeseTileNum);  // when loding game
     void placeNonBasement(std::string vertexNum, Color c);
-    // vector<int> findGetRes(std::string vertexNum);
+    //vector<int> findGetRes(std::string vertexNum);
     void addTilesContaining(vector<int> &occupTiles, int startingTile, std::string componentNum, bool isVertexNum);
      // returns {Resource::NA, 0} if no resources for the player or {resocType, resocTotal} for the player on tile tileNum
     std::pair<Resource, int> getResoc(int tileNum, int tileValRolled, Color player) const;

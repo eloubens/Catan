@@ -49,18 +49,15 @@ bool Model::hasEnoughResoc(Color c, variant<Residence, Road> type) {
 }
 
 // vector<int> Model::findGetRes(string vertexNum) {
+// // vertexInt is 0..5 meaning which vertex location in a tile.
+//             // res is an integer corresponding to Residence
+//             // i is tileNum
+//             return vector<int>{res, i, color}; 
+
 //     return board.findGetRes(vertexNum);
 // }
 
-void Model::placeNonBasement(string bVertex, Color c) {
-    try {
-        board.placeNonBasement(bVertex, c); // will only catch a vector of occupiedTiles if can build on the tile
-    } catch (Residence r) {
-        //updatePlayerSettlements(tileNum, bVertex, c, Residence::B); // adds buidling points and occupied tiles
-        players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(r));
-        throw r;
-    }
-}
+
 
 // the first tile found to contain componentNum is used. Then need to loop through to get all otehr tiles that 
 // have componentNum on them as well -> they will always be after.
@@ -71,9 +68,24 @@ void Model::updatePlayerSettlements(int tileNum, string componentNum, Color c, R
     }
     for (auto n : occupTiles) {
         players[static_cast<int>(c)].addOccupiedTiles(n);
-        cout << n << endl;
+        //cout << n << endl;
     }
     players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(r));
+}
+
+pair<Residence, bool> Model::placeNonBasement(string bVertex, Color c) {
+    Residence res;
+    bool wasPlaced = false;
+    try {
+        board.placeNonBasement(bVertex, c); // will only catch a vector of occupiedTiles if can build on the tile
+    } catch (Residence r) {
+        if (r != Residence::NONE) {
+            wasPlaced = true;
+            players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(r));
+        }
+        res = r;
+    }
+    return {res, wasPlaced};
 }
 
 bool Model::placeBasement(string bVertex, Color c, bool isDuringTurn) {
@@ -83,6 +95,7 @@ bool Model::placeBasement(string bVertex, Color c, bool isDuringTurn) {
         updatePlayerSettlements(tileNum, bVertex, c, Residence::B); // adds buidling points and occupied tiles
         return true;
     }
+   // cout << "Model did not place" << endl;
     return false; // if nothing gets thrown, means that residence was not able to be built on
 }
 

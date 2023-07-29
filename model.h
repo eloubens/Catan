@@ -52,8 +52,8 @@ class Model{
     Player players[4];
     Board board;
  public:
-    // vector<int> findGetRes(std::string vertexNum);
-    void placeNonBasement(std::string bVertex, Color c);
+    //vector<int> findGetRes(std::string vertexNum);
+    std::pair<Residence, bool> placeNonBasement(std::string bVertex, Color c);
     std::map<string, Residence> getVertexResMap(int player);
     Tile* getTiles();
     Model(std::istringstream &iss); // for just loading a board (from file or random generated)
