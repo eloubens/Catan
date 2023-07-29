@@ -112,22 +112,11 @@ bool Model::placeBasement(string bVertex, Color c, bool isDuringTurn) {
 }
 
 
-// returns if you can place a basement or not
-// in add OccupiedTiles, you would check for duplicates there
-// bool Model::placeBasement(string bVertex, Color c, bool isDuringTurn) {
-//     try {
-//         board.placeBasement(bVertex, c, isDuringTurn); // will only catch a vector of occupiedTiles if can build on the tile
-//     } catch (const vector<int> &occupTiles) {
-//         for (auto n : occupTiles) {
-//             players[static_cast<int>(c)].addOccupiedTiles(n);
-//         }
-//         players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(Residence::B));
-//         return true;
-//     }
-//     return false; // if nothing gets thrown, means that residence was not able to be built on
-// }
+Player *Model::getPlayer(int i) {
+    return &players[i]; 
+}
 
-Tile* Model::getTiles() {
+Tile *Model::getTiles() {
     return board.getTiles();
 }
 

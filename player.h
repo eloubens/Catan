@@ -29,7 +29,6 @@ class Player {
     bool hasOccupTile(int tileNum);
     void updateResocMap(const std::pair<Resource, int> &gainedResoc);
     std::map<Resource, int>& getResocMap();
-    void getStatus(std::ostream &out);
     // accessors
     std::vector<int>& getOccupiedTiles();
     int getResocTotal();

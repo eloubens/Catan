@@ -21,6 +21,22 @@ const int edgeMax = 71;
 // returns true if non-normal state
 bool Controller::isSpecialState(int n) { return n != 0; }
 
+void Controller::getStatus(int i) {
+    Player * p = model->getPlayer(i); 
+    out << getColorStr(p->getColour()) << " has " << p->getBuildingPoints() << " building points,"; 
+
+    for (const auto& entry : p->getResocMap()) {
+        if (entry.first == Resource::WIFI) {
+            out << " and " << entry.second << " " << getResocLowerCaseStr(entry.first) << "." << endl;; 
+        } else {
+            out << " " << entry.second << " " << getResocLowerCaseStr(entry.first) << ","; 
+        }
+    }
+}
+
+//     out << getColorStr(color) << " has built:" ;
+// }
+
 // sets the Model field of the controller. 
 // Loads a board from a file, creates and loads a randomized board, or loads a saved game.
 int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed, vector<string> &arg_vec) {
@@ -192,15 +208,19 @@ int Controller::buildDefaultBasements(int i, bool isInc) {
 
 int Controller::beginningOfTurn() {
     view->printBoard();
-    out << "Builder " << getColorStr(turn) << "'s turn." << endl;
+    out << "Builder " << getColorStr(turn) << "'s turn." << endl << "> ";
     // HERE NEED TO ADD CODE TO PRINT OUT THE STATUS OF THE BUILDER WHOS TURN IT IS (in variable turn)!!!!!!!!!
     // printing status of player
-    out << "rolling dice: " << endl;
-    out << "> "; 
+    int currTurn = static_cast<int>(turn);
+    getStatus(currTurn); 
+    map <string, Residence> vertexResidenceMap = model->getVertexResMap(currTurn); 
+    for (const auto& entry : vertexResidenceMap) {
+        out << " " << entry.first << " " << getResStr(entry.second);
+    }
     string cmd;
     
     while(!(in >> cmd) || (cmd != "roll")) {
-        if (isEOF()) { return eof; }
+        if (isEOF()) { return eof; }  /// ASK ABT THIS PART 
         if (cmd == "load") {
             out << "Dice set to load." << endl;
             model->setDice(turn, cmd);
