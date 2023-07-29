@@ -404,27 +404,27 @@ int Controller::general(vector<string> &arg_vec) {
 
 int Controller::roll(Color turn) {
     string diceType = model->getDiceType(turn);
+    int rollVal;
 
     if (diceType == "load") {
-        int loadedRoll;
         out << "Input a roll between 2 and 12: " << endl;
-        in >> loadedRoll;
+        in >> rollVal;
         if (isEOF()) return eof;
 
-        while ((loadedRoll < 2) || (loadedRoll > 12)) {
+        while ((rollVal < 2) || (rollVal > 12)) {
             out << "Invalid roll." << endl;
             out << "Input a roll between 2 and 12: " << endl;
-            in >> loadedRoll;
+            in >> rollVal;
             if (isEOF()) return eof;
         }
-        model->diceRolledUpdate(loadedRoll);
+        model->diceRolledUpdate(rollVal);
+
     } else if (diceType == "fair") {
-        int fairRoll;
-        fairRoll = model->fairRoll(turn);
-        model->diceRolledUpdate(fairRoll);
+        rollVal = model->fairRoll(turn);
+        model->diceRolledUpdate(rollVal);
     }
 
-    return 0;
+    return rollVal;
 }
 
 int Controller::geese() {
