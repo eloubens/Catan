@@ -216,7 +216,7 @@ int Controller::beginningOfTurn() {
     out << endl <<  "> "; 
     string cmd;
     while(!(in >> cmd) || (cmd != "roll")) {
-        if (isEOF()) { return eof; }  /// ASK ABT THIS PART 
+        if (isEOF()) { return eof; }  
         if (cmd == "load") {
             out << "Dice set to load." << endl;
             model->setDice(turn, cmd);
@@ -399,13 +399,13 @@ int Controller::roll(Color turn) {
     int rollVal;
 
     if (diceType == "load") {
-        out << "Input a roll between 2 and 12: " << endl;
+        out << "Input a roll between 2 and 12: " << endl << "> ";
         in >> rollVal;
         if (isEOF()) return eof;
 
         while ((rollVal < 2) || (rollVal > 12)) {
             out << "Invalid roll." << endl;
-            out << "Input a roll between 2 and 12: " << endl;
+            out << "Input a roll between 2 and 12: " << endl << "> ";
             in >> rollVal;
             if (isEOF()) return eof;
         }
@@ -435,7 +435,7 @@ int Controller::geese() {
 
     // placing geese on different tile now
     int tileNum;
-    out << "Choose where to place the GEESE." << endl;
+    out << "Choose where to place the GEESE." << endl << "> ";
     in >> tileNum;
     if (isEOF()) return eof;;
    
@@ -452,7 +452,7 @@ int Controller::geese() {
             out << " " << n << ",";
         }
         out << endl;
-        out << "Choose a builder to steal from." << endl;
+        out << "Choose a builder to steal from." << endl << "> ";
         string toSteal;
         in >> toSteal;
         if (isEOF()) return eof;;
@@ -476,12 +476,12 @@ int Controller::trade() {
     if (isEOF()) return eof; 
 
     out << curPlayer << " offers " << toTradeWith << " one " << give << " for one " << take << "." << endl;
-    out << "Does " <<  toTradeWith << " accept this offer?" << endl;
+    out << "Does " <<  toTradeWith << " accept this offer?" << endl << "> ";
     in >> answer;
     if (isEOF()) return eof;
 
     while ((answer != "yes") || (answer != "no")) {
-        out << "Does " <<  toTradeWith << " accept this offer?" << endl;
+        out << "Does " <<  toTradeWith << " accept this offer?" << endl << "> ";
         in >> answer;
         if (isEOF()) return eof;
     }
