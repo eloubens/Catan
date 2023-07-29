@@ -374,7 +374,7 @@ int Controller::general(vector<string> &arg_vec) {
             if (!(cin >> input)) { return eof; } // MAYBE NEED SAVE HERE, NOT SURE (aka return save();)
         } while(input != "yes" && input != "no");
         if (input == "yes") {
-            //resetGame(); WRITE THIS FUNCTION
+            reset();
             continue;
         }
         if (input == "no") {
