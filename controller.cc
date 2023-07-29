@@ -13,8 +13,8 @@
 using namespace std;
 
 const int gameWon = 1;
-const int invalidInput = 2;
-const int eof = 3;
+const int invalidInput = -2;
+const int eof = -1;
 const int tilesAmount = 19;
 const int vertexMax = 53;
 const int edgeMax = 71;
@@ -211,36 +211,38 @@ int Controller::beginningOfTurn() {
             model->setDice(turn, cmd);
             out << "Dice set to fair." << endl;
         }
+        out << "> ";
     } 
     // ANYTIME YOU USE in >>. Must use isEOF() command and return oef if true
     // deal with loading the dice here (fair + loaded)
 
     // dice is rolled
     int rollVal = roll(turn); 
+    out << rollVal << endl;
     if (rollVal == 7) {
         int s = geese();
         if (s == eof) {
             return eof;
             //save();
         }
+    } else {
+        vector<map<Resource, int>> resocMap = model->diceRolledUpdate(rollVal);
+        bool didPrint = false;
+        for (int i = 0; i < playerAmount; i++) {
+            if (resocMap[i].size() == 0 ) { continue; }
+            if (didPrint != true ) { didPrint = true; }
+            out << "Builder " << getColorStr(static_cast<Color>(i)) << " gained:" << endl;
+            for (auto [resoc, resocNum] : resocMap[i]) {
+                out << resocNum << " " << getResocStr(resoc) << endl;
+            }
+        }
+        if (!didPrint) {
+            out << "No builders gained resources." << endl;
+        }
     }
-    
     // updates resocs for each player
     // vector (size 4) of a map.
     // stores all the resources aquired for each player. index 0,..,3 has player 1,..,4.
-    vector<map<Resource, int>> resocMap = model->diceRolledUpdate(rollVal);
-    bool didPrint = false;
-    for (int i = 0; i < playerAmount; i++) {
-        if (resocMap[i].size() == 0 ) { continue; }
-        if (didPrint != true ) { didPrint = true; }
-        out << "Builder " << getColorStr(static_cast<Color>(i)) << " gained:" << endl;
-        for (auto [resoc, resocNum] : resocMap[i]) {
-            out << resocNum << " " << getResocStr(resoc) << endl;
-        }
-    }
-    if (!didPrint) {
-        out << "No builders gained resources." << endl;
-    }
     return 0;
 }
 
@@ -349,12 +351,12 @@ int Controller::general(vector<string> &arg_vec) {
             int state = DuringTurn();
             if (state == eof) { return save(); }
             if (state == gameWon) { break; }
-            break; // REMOVE THIS LINE AT THE END OF THE PROJECT
+             // REMOVE THIS LINE AT THE END OF THE PROJECT
         }
         string input;
         // state will always be gameWon here??? if not check that it is
         do {
-            out << "Would you like to play again? " << endl << "< ";
+            out << "Would you like to play again? " << endl << "> ";
             if (!(cin >> input)) { return eof; } // MAYBE NEED SAVE HERE, NOT SURE (aka return save();)
         } while(input != "yes" && input != "no");
         if (input == "yes") {

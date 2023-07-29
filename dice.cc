@@ -9,9 +9,6 @@
 
 using namespace std;
 
-int Dice::rollLoaded() {
-
-}
 int Dice::rollFair() {
     vector<int> d = {1, 2, 3, 4, 5, 6};
     int rollVal;
@@ -28,13 +25,6 @@ int Dice::rollFair() {
 
     rollVal = f + s;
     return rollVal;
-}
-
-int Dice::roll() {
-    if(type == "load") {
-        return rollLoaded();
-    }
-    return rollFair();
 }
 
 

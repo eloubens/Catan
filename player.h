@@ -21,7 +21,6 @@ class Player {
     void setDice(std::string cmd);
     explicit Player(Color color);
     Player(std::istringstream &playerData, Color color);
-    int roll(); //returns tilevalue rolled
     // adds tileNum to vector of occupiedTiles, doesn't add it if it already exists
     void addOccupiedTiles(int tileNum);
     void addBuildingPoints(int num);

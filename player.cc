@@ -161,11 +161,6 @@ std::vector<int> occupiedTiles
 */
 
 
-
-int Player::roll() {
-    return dice.roll();
-}
-
 void Player::updateResocMap(const pair<Resource, int> &gainedResoc) {
     resocMap[gainedResoc.first] += gainedResoc.second;
 }
