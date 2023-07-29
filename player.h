@@ -21,7 +21,6 @@ class Player {
     void setDice(std::string cmd);
     explicit Player(Color color);
     Player(std::istringstream &playerData, Color color);
-    int roll(); //returns tilevalue rolled
     // adds tileNum to vector of occupiedTiles, doesn't add it if it already exists
     void addOccupiedTiles(int tileNum);
     void addBuildingPoints(int num);
@@ -30,7 +29,6 @@ class Player {
 
     void updateResocMap(const std::pair<Resource, int> &gainedResoc);
     std::map<Resource, int>& getResocMap();
-    void getStatus(std::ostream &out);
     // accessors
     std::vector<int>& getOccupiedTiles();
     int getResocTotal();

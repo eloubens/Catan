@@ -9,7 +9,6 @@
 #include "view.h"
 #include "board.h"
 
-
 extern const int invalidInput; // 1
 extern const int eof; // 2
 extern const int gameWon; // 3
@@ -47,6 +46,7 @@ class Controller {
     void randomize(std::ostringstream& board_oss, unsigned& seed);
  public: 
     // no ctor
+    void getStatus(int i);
     int general(std::vector<string> &arg_vec);
     int createController(std::vector<string> &arg_vec); // reads in command line inputs, creates model and view
 };

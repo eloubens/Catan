@@ -86,11 +86,15 @@ bool Model::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     } catch (const vector<int> &occupTiles) {
         for (auto n : occupTiles) {
             players[static_cast<int>(c)].addOccupiedTiles(n);
-            players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(Residence::B));
         }
+        players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(Residence::B));
         return true;
     }
     return false; // if nothing gets thrown, means that residence was not able to be built on
+}
+
+Player * Model::getPlayer(int i) {
+    return &players[i]; 
 }
 
 Tile* Model::getTiles() {
