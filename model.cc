@@ -112,8 +112,8 @@ map<string, Residence> Model::getVertexResMap(int player) {
 }
 
 
-void Model::save(Color turn) {
-    ofstream backup{"backup.sv"};
+void Model::save(Color turn, string fileName) {
+    ofstream backup{fileName};
     
     backup << static_cast<int>(turn) << endl;
     for (int i = 0; i < playerAmount; i++) {

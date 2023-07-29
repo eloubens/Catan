@@ -19,7 +19,7 @@ const int tilesAmount = 19;
 const int vertexMax = 53;
 const int edgeMax = 71;
 
-// returns true if bad state
+// returns true if non-normal state
 bool Controller::isSpecialState(int n) { return n != 0; }
 
 // sets the Model field of the controller. 
@@ -129,8 +129,8 @@ int Controller::createController(vector<string> &arg_vec) {
     return 0;
 }
 
-int Controller::save() {
-    model->save(turn);
+int Controller::save(string fileName) {
+    model->save(turn, fileName);
     return eof; 
 }
 
@@ -193,8 +193,8 @@ int Controller::beginningOfTurn() {
     // HERE NEED TO ADD CODE TO PRINT OUT THE STATUS OF THE BUILDER WHOS TURN IT IS (in variable turn)!!!!!!!!!
     // printing status of player
     int currTurn = static_cast<int>(turn);
-    string playerCol = getColorChar(model->players[currTurn].getColour()); 
-    model->players[currTurn].getStatus(out);
+    //string playerCol = getColorChar(model->players[currTurn].getColour()); 
+    model->players[currTurn].getStatus(out);//
     map <string, Residence> vertexResidenceMap = model->getVertexResMap(currTurn); 
     for (const auto& entry : vertexResidenceMap) {
         out << " " << entry.first << " " << getResStr(entry.second);
@@ -202,7 +202,7 @@ int Controller::beginningOfTurn() {
     out << endl <<  "> "; 
     string cmd;
     while(!(in >> cmd) || (cmd != "roll")) {
-        if (isEOF()) { exit(0) ; return eof; }  /// ASK ABT THIS PART 
+        if (isEOF()) { return eof; }
         if (cmd == "load") {
             out << "Dice set to load." << endl;
             model->setDice(turn, cmd);
@@ -211,55 +211,12 @@ int Controller::beginningOfTurn() {
             model->setDice(turn, cmd);
             out << "Dice set to fair." << endl;
         }
-        if (cmd == "next") {
-            currTurn++; 
-            if (currTurn > 3) {
-                turn = Color::B;
-            } else {
-                turn = static_cast<Color>(currTurn);
-            }
-            in.ignore(); 
-            in.clear(); 
-            beginningOfTurn();
-        } if (cmd == "board") {
-            view->printBoard();
-        } if (cmd == "help") {
-            out << "Valid commands:" << endl << "board" << endl << "status" << endl << "residences" << endl 
-            << "build-road <edge#>" << endl << "build-res <housing#>" << endl << "improve <housing#>" << endl 
-            << "trade <colour> <give> <take>" << endl << "next" << endl << "save <file>" << endl;
-        } if (cmd == "status") {
-            for (int i = 0; i < 4; i++) {
-                string playerCol = getColorChar(model->players[i].getColour()); 
-                model->players[i].getStatus(out);
-                vertexResidenceMap = model->getVertexResMap(i); 
-                for (const auto& entry : vertexResidenceMap) {
-                    out << " " << entry.first << " " << getResStr(entry.second);
-                }
-                out << endl;
-            }
-        } if (cmd == "residences") {
-            string playerCol = getColorChar(model->players[currTurn].getColour()); 
-            model->players[currTurn].getStatus(out);
-            vertexResidenceMap = model->getVertexResMap(currTurn); 
-            for (const auto& entry : vertexResidenceMap) {
-                out << " " << getResStr(entry.second);
-            }
-            out << endl;
-        }
-        out << "> ";
     } 
-    // roll the dice
-    // check of 7 if yes do geese, else do code below
-    // ANYTIME YOU USE in >>. Must use isEOF() command and return oef if true
-    //int rollVal = 6; // value of the dice rolled. This reperesents the tilevalue
-
-
     // ANYTIME YOU USE in >>. Must use isEOF() command and return oef if true
     // deal with loading the dice here (fair + loaded)
 
-    roll(turn);
-
-    int rollVal = 7; // value of the dice rolled. This reperesents the tilevalue
+    // dice is rolled
+    int rollVal = roll(turn); 
     if (rollVal == 7) {
         int s = geese();
         if (s == eof) {
@@ -268,6 +225,7 @@ int Controller::beginningOfTurn() {
         }
     }
     
+    // updates resocs for each player
     // vector (size 4) of a map.
     // stores all the resources aquired for each player. index 0,..,3 has player 1,..,4.
     vector<map<Resource, int>> resocMap = model->diceRolledUpdate(rollVal);
@@ -283,12 +241,6 @@ int Controller::beginningOfTurn() {
     if (!didPrint) {
         out << "No builders gained resources." << endl;
     }
-    //vector<map<Resource, int>> diceRolledUpdate(rollVal); // updates for everyone
-    // prints color: then go throughr map. If non have any, then "No builders gained resources"
-
-    //int vertexNum; // the vertex number the user wants to build a basement on
-    // Used when build-res command
-    //model->buildRes(turn, vertexNum);
     return 0;
 }
 
@@ -341,15 +293,39 @@ int Controller::DuringTurn() {
             }
             state = buildRes(vertexNum);
             if(isSpecialState(state)) { return state;}
+        } else if (cmd == "help") {
+            out << "Valid commands:" << endl << "board" << endl << "status" << endl << "residences" << endl 
+            << "build-road <edge#>" << endl << "build-res <housing#>" << endl << "improve <housing#>" << endl 
+            << "trade <colour> <give> <take>" << endl << "next" << endl << "save <file>" << endl;
+        } else if (cmd == "status") {
+            // for (int i = 0; i < 4; i++) {
+            //     //string playerCol = getColorChar(model->players[i].getColour()); 
+            //     model->players[i].getStatus(out);
+            //     map <string, Residence> vertexResidenceMap = model->getVertexResMap(i); 
+            //     for (const auto& entry : vertexResidenceMap) {
+            //         out << " " << entry.first << " " << getResStr(entry.second);
+            //     }
+            //     out << endl;
+            // }
+        } else if (cmd == "save") {
+            if (!(cin >> cmd)) { return save(); }
+            return save(cmd);
+        } else if (cmd == "trade") {
+            if (isSpecialState(trade())) { return eof; }
+        } else if (cmd == "residences") {
+           // string playerCol = getColorChar(model->players[currTurn].getColour()); 
+            // model->players[currTurn].getStatus(out);
+            // vertexResidenceMap = model->getVertexResMap(currTurn); 
+            // for (const auto& entry : vertexResidenceMap) {
+            //     out << " " << getResStr(entry.second);
+            // }
+            // out << endl;
         } else {
             out << "Invalid command." << endl;
         }
         // can't improve from a tower to more , can't improve if nothing on vertex
         // check building points for imrpove res and make road commands
         // cannot build road through a vertex of a different residence
-
-
-
         //return gameWon; if building points more than 10
     }
     if (turn == Color::Y) {
@@ -469,9 +445,8 @@ int Controller::geese() {
         string stolenResoc = model->steal(curPlayer, toSteal);
 
         out << "Builder " << curPlayer << " steals " << stolenResoc << " from Builder" << toSteal << "." << endl;
-
-        return 0;
     }
+    return 0;
 }
 
 int Controller::trade() {

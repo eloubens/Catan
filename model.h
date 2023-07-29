@@ -66,7 +66,7 @@ class Model{
     //void roll(Color turn);, no longer needed
     //buildRes(Color c, vertexNum)
     // saves current state of game
-    void save(Color turn);
+    void save(Color turn, std::string fileName);
     bool hasEnoughResoc(Color C, std::variant<Residence, Road> type);
     std::vector<std::map<Resource, int>> diceRolledUpdate(int rollVal);
     bool buildRes(Color turn, std::string vertexNum, bool isDuringTurn);
