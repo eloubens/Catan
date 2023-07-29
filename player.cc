@@ -262,3 +262,15 @@ int Player::fairRoll() {
     return rollVal;
 
 }
+
+bool Player::enoughResoc(string give) {
+    Resource r = getResocR(give);
+    if(resocMap[r] <= 0) return false;
+    else return true;
+}
+
+bool Player::validSteal(string take) {
+    Resource r = getResocR(take);
+    if(resocMap[r] <= 0) return false;
+    else return true;
+}

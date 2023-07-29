@@ -300,3 +300,23 @@ int Model::fairRoll(Color turn) {
 
     return rollVal;
 }
+
+bool Model::enoughResoc(string curPlayer, string give) {
+    for (auto p : players) {
+        if (getColorStr(p.getColour()) == curPlayer) {
+            return p.enoughResoc(give);
+        }
+    }
+
+    return false;
+}
+
+bool Model::validSteal(string tradePlayer, string take) {
+    for (auto p : players) {
+        if (getColorStr(p.getColour()) == tradePlayer) {
+            return p.validSteal(take);
+        }
+    }
+
+    return false;
+}

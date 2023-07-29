@@ -86,6 +86,10 @@ class Model{
 
     int fairRoll(Color turn);
 
+    bool enoughResoc(std::string curPlayer, std::string give);
+
+    bool validSteal(std::string tradePlayer, std::string take);
+
 
 
 
