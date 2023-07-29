@@ -379,23 +379,30 @@ int Controller::general(vector<string> &arg_vec) {
 
 
 
+
 int Controller::roll(Color turn) {
     string diceType = model->getDiceType(turn);
+    int rollVal;
 
     if (diceType == "load") {
-        int loadedRoll;
         out << "Input a roll between 2 and 12: " << endl;
-        in >> loadedRoll;
-        if (isEOF()) return 1;
+        in >> rollVal;
+        if (isEOF()) return eof;
 
-        model->diceRolledUpdate(loadedRoll);
+        while ((rollVal < 2) || (rollVal > 12)) {
+            out << "Invalid roll." << endl;
+            out << "Input a roll between 2 and 12: " << endl;
+            in >> rollVal;
+            if (isEOF()) return eof;
+        }
+        model->diceRolledUpdate(rollVal);
+
     } else if (diceType == "fair") {
-        int fairRoll;
-        fairRoll = model->fairRoll(turn);
-        model->diceRolledUpdate(fairRoll);
+        rollVal = model->fairRoll(turn);
+        model->diceRolledUpdate(rollVal);
     }
 
-    return 0;
+    return rollVal;
 }
 
 int Controller::geese() {
@@ -452,16 +459,31 @@ int Controller::trade() {
     string answer;
 
     in >> toTradeWith >> give >> take;
-    if (isEOF()) return eof; // DOUBLE CHECK
+    if (isEOF()) return eof; 
 
     out << curPlayer << " offers " << toTradeWith << " one " << give << " for one " << take << "." << endl;
     out << "Does " <<  toTradeWith << " accept this offer?" << endl;
-
     in >> answer;
-    if (isEOF()) return eof; // DOUBLE CHECK
+    if (isEOF()) return eof;
 
-    if (answer == "yes") model->trade(curPlayer, toTradeWith, give, take);
+    while ((answer != "yes") || (answer != "no")) {
+        out << "Does " <<  toTradeWith << " accept this offer?" << endl;
+        in >> answer;
+        if (isEOF()) return eof;
+    }
 
+    if (answer == "yes") {
+        if (model->enoughResoc(curPlayer, give)) {
+            if (model->validSteal(toTradeWith, take)) {
+                model->trade(curPlayer, toTradeWith, give, take);
+            } else {
+                out << toTradeWith << " does not have enough resources." << endl;
+            }
+        } else {
+            out << "You do not have enough resources." << endl;
+        }
+    
+    }
 
     return 0;
 
