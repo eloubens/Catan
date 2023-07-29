@@ -15,12 +15,14 @@ using namespace std;
 const int gameWon = 1;
 const int invalidInput = -2;
 const int eof = -1;
-const int tilesAmount = 19;
 const int vertexMax = 53;
 const int edgeMax = 71;
 
 // returns true if non-normal state
 bool Controller::isSpecialState(int n) { return n != 0; }
+
+
+
 
 // sets the Model field of the controller. 
 // Loads a board from a file, creates and loads a randomized board, or loads a saved game.
@@ -35,7 +37,7 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
         shuffle(tileVal.begin(), tileVal.end(), rng);
         for (int i = 0; i < tilesAmount; i++) {
             board_oss << " " << tileResource[i] << " " << tileVal[i]; 
-        } 
+        }
         istringstream board_iss{board_oss.str()}; 
         model = make_unique<Model>(board_iss); 
         // own testing
@@ -141,14 +143,14 @@ int Controller::beginningOfGame() {
     //for (int i = 0; i < 3; i++) {
     for (int i = 0; i < playerAmount; i++) {
         try {
-            i = buildBasements(i, true);
+            i = buildDefaultBasements(i, true);
         } catch (int save) {
             return eof;
         }
     }
     for (int i = playerAmount - 1; i >= 0 ; i--) {
         try {
-            i = buildBasements(i, false);
+            i = buildDefaultBasements(i, false);
         } catch (int save) {
             return eof; 
         }
@@ -157,7 +159,8 @@ int Controller::beginningOfGame() {
 }
 
 // if isInc, means its in the increasing loop
-int Controller::buildBasements(int i, bool isInc) {
+// building Mandatory Basements
+int Controller::buildDefaultBasements(int i, bool isInc) {
     int tester;
     string bVertex; // basement vertex
     Color c;
@@ -192,14 +195,15 @@ int Controller::beginningOfTurn() {
     out << "Builder " << getColorStr(turn) << "'s turn." << endl;
     // HERE NEED TO ADD CODE TO PRINT OUT THE STATUS OF THE BUILDER WHOS TURN IT IS (in variable turn)!!!!!!!!!
     // printing status of player
-    int currTurn = static_cast<int>(turn);
-    //string playerCol = getColorChar(model->players[currTurn].getColour()); 
-    model->players[currTurn].getStatus(out);//
-    map <string, Residence> vertexResidenceMap = model->getVertexResMap(currTurn); 
-    for (const auto& entry : vertexResidenceMap) {
-        out << " " << entry.first << " " << getResStr(entry.second);
-    }
-    out << endl <<  "> "; 
+
+    // hadeya code
+    //int currTurn = static_cast<int>(turn);
+    // model->players[currTurn].getStatus(out);//
+    // map <string, Residence> vertexResidenceMap = model->getVertexResMap(currTurn); 
+    // for (const auto& entry : vertexResidenceMap) {
+    //     out << " " << entry.first << " " << getResStr(entry.second);
+    // }
+    out << "> "; 
     string cmd;
     while(!(in >> cmd) || (cmd != "roll")) {
         if (isEOF()) { return eof; }
@@ -246,55 +250,65 @@ int Controller::beginningOfTurn() {
     return 0;
 }
 
+// To improve a res
+void Controller::improveRes(string vertexNum) {
+    try {
+        model->placeNonBasement(vertexNum, turn);
+    } catch (Residence r) {
+        if (!model->hasEnoughResoc(turn, r)) {
+            cout << "You do not have enough resources." << endl;
+            return;
+        }
+        return;
+    }
+    cout << "You cannot build here." << endl;
+}
 
-int Controller::buildRes(string vertexNum){
+// for dynamic building of a Basement
+void Controller::buildRes(string vertexNum){
     if (!model->hasEnoughResoc(turn, Residence::B)) {
         cout << "You do not have enough resources." << endl;
-        return 0;
+        return;
     }
     if (!model->placeBasement(vertexNum, turn, true)) {
         cout << "You cannot build here." << endl;
-        return 0;
     }
-    if (hasWon()) {
-        return gameWon;
-    }
-    return 0;
 }
-
-// int Controller::improveRes(string vertexNum){ 
-//     // first check if can build
-//     // then check if has resoc 
-//     //model->buildRes(turn, vertexNum);
-//     if (hasWon()) {
-//         return gameWon;
-//     } 
-//     return 0;
-// }
 
 bool Controller::hasWon() {
     return model->hasWon(turn);
 }
 
-
 int Controller::DuringTurn() {
-    int vNumInt, state;
-    string cmd,vertexNum;
+    int numInt;
+    string cmd, num;
     while(true) {
+        out << "in" << endl;
         out << "> ";
-        if (!(cin >> cmd)) { return eof; } // would only fail at eof since cmd is a string
+        
+        if (!(in >> cmd)) { return eof; } // would only fail at eof since cmd is a string
         if (cmd == "next") { break; }
         else if (cmd == "board") { view->printBoard(); }
-        else if (cmd == "build-res") {
-            if (!(cin >> vertexNum)) { return eof; }
-            istringstream iss{vertexNum};
-            iss >> vNumInt;
-            if (vNumInt < 0 || vNumInt > vertexMax) {
+        else if (cmd == "improve-res" || cmd == "build-res" || cmd == "build-road") {
+            if (!(in >> num)) { return eof; }
+            istringstream iss{num};
+            iss >> numInt;
+            if (numInt < 0 || (cmd == "build-road" && numInt > edgeMax) || ( numInt > vertexMax)) {
                 out << "Invalid command." << endl;
                 continue;
             }
-            state = buildRes(vertexNum);
-            if(isSpecialState(state)) { return state;}
+            if (cmd == "build-res") {
+                buildRes(num);
+                out << "iNNN" << endl;
+            } else if (cmd == "improve-res") {
+                improveRes(num);
+            } else {
+                //buildRoad(num);
+            }
+            if (hasWon()) {
+                return gameWon;
+            }
+            out << "madeit" << endl;
         } else if (cmd == "help") {
             out << "Valid commands:" << endl << "board" << endl << "status" << endl << "residences" << endl 
             << "build-road <edge#>" << endl << "build-res <housing#>" << endl << "improve <housing#>" << endl 
@@ -351,7 +365,6 @@ int Controller::general(vector<string> &arg_vec) {
             int state = DuringTurn();
             if (state == eof) { return save(); }
             if (state == gameWon) { break; }
-             // REMOVE THIS LINE AT THE END OF THE PROJECT
         }
         string input;
         // state will always be gameWon here??? if not check that it is
@@ -368,12 +381,6 @@ int Controller::general(vector<string> &arg_vec) {
         }
         break; // REMOVE THIS LINE AT THE END OF THE PROJECT
     }
-    
-
-    // check for case when trying to impove on empty res!!!!!
-
-    //cout << "printing the board" << endl; 
-    //view->printBoard(); 
     return 0;
 }
 

@@ -58,6 +58,7 @@ class Vertex final : public Component {
 	Residence residenceType = Residence::NONE;
  public: 
 	explicit Vertex(std::string location);
+	void placeNonBasement(std::string vertexNum, Color c);
 	int getResidenceAmount(Color color) const; // returns the corresponding num for a residence only if its owned by color
 	void setValidRes(Color color, Residence res);
 	Residence getRes();

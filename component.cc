@@ -48,13 +48,42 @@ string Vertex::getVertex() {
 int Vertex::getResidenceAmount(Color color) const {
     if (player != color) return 0;
     return static_cast<int>(residenceType);
+
+
+
 }
 
+
+// throws false or Residence
+void Vertex::placeNonBasement(string vertexNum, Color c) {
+    if (location != vertexNum) { return; }
+    if (player != c || residenceType == Residence::NONE || residenceType == Residence::T) {
+        throw false;
+    }
+    for (auto v : adjVertices) {
+        if (v->isOccupied()) {
+            throw false;
+        }
+    }
+    bool ownsAdjEdge = false;
+    for (auto e : adjEdges) {
+        if (e->isOwnedBy(c)) {
+            ownsAdjEdge = true;
+            break;
+        }
+    }
+    if (ownsAdjEdge == false) { throw false; }
+    residenceType = static_cast<Residence>(static_cast<int>(residenceType) + 1);
+    throw residenceType;
+}
+
+// throws true or false
 void Vertex::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     if (location != bVertex) { return; } // correct vertex
     if (player != Color::DNE) { 
         throw false;
     } // check that it is totally empty
+
     for (auto v : adjVertices) {
         if (v->isOccupied()) {
             throw false;
@@ -73,18 +102,6 @@ void Vertex::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     player = c;
     residenceType = Residence::B;
     throw true;
-    // add res here
-
-
-    // check that adjacent vertices are empty (only if arrays are not 0)
-/*
-string location
-Color player = Color::DNE
-std::vector<Vertex*> adjVertices
-std::vector<Edge*> adjEdges
-Residence residenceType = Residence::NONE
-*/
-
 }
 
 bool Component::isOccupied() {

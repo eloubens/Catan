@@ -12,13 +12,44 @@ string Tile::getResource() {
 }
 
 
-bool Tile::tileHasVertex(string bVertex) {
-    for (int i = 0; i < verticesAmount; i++) {
-        if (vertices[i]->isNum(bVertex)) {
-            return true;
+bool Tile::tileHasVE(string componentNum, bool isVertex) {
+    if (isVertex) {
+        for (int i = 0; i < verticesAmount; i++) {
+            if (vertices[i]->isNum(componentNum)) {
+                return true;
+            }
+        }
+    } else {
+        for (int i = 0; i < edgesAmount; i++) {
+            if (edges[i]->isNum(componentNum)) {
+                return true;
+            }
         }
     }
     return false;
+}
+
+// void Tile::findGetRes(string vertexNum) {
+//     for (int i = 0; i < vertexNum; i++) {
+//         try {
+//             vertices[i].findGetRes(string vertexNum);
+//         } catch(auto [res, player]) {
+//             throw vector<int>{res, i, player};
+//         }
+//     }
+// }
+
+void Tile::placeNonBasement(string vertexNum, Color c) {
+    for (int i = 0; i < verticesAmount; i++)  {
+        vertices[i]->placeNonBasement(vertexNum, c);
+        // try {
+            
+        // } catch(bool notValid) { // will only catch false
+        //     throw notValid;
+        // } catch(Residence r) {
+        //     throw r;
+        // }
+    }
 }
 
 // Correct. Leave as is. 
@@ -29,9 +60,7 @@ void Tile::placeBasement(string bVertex, Color c, bool isDuringTurn) {
         } catch(bool isValid) {
             throw isValid;
         }
-        
     }
-
 }
 
 /*
@@ -73,7 +102,7 @@ string Tile::getTileValueReg() {
 }
 
 
-
+// used for save
 void Tile::addSettlementsLocation(Color c, vector<string> &roads, vector<string> &resNum, vector<Residence> &resType) {
     for (int i = 0; i < verticesAmount; i++) {
         if (vertices[i]->isPlayer(c)){
