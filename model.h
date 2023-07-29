@@ -49,9 +49,7 @@ class Model{
             }
         }
     };
-    public: // CHANGE
     Player players[4];
-    private: // CHANGE 
     Board board;
 
  public:
