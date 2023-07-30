@@ -65,7 +65,7 @@ void View::printVertex(string i) {
 }
 
 void View::printEdge(int prevPad, string i) {
-    cout << setw(textPad + prevPad + 1) << i ; 
+    cout << setw(textPad + prevPad + 1) << i; 
 }
 
 void View::printSingleBar(int prevPad) {
@@ -109,7 +109,7 @@ void View::printBoard() {
     printBar(spacePad + textPad); 
 
     if (tiles[i - 1].getGeese()) {
-        cout << "" << setw(2) << "" << "GEEESE" << setw(1) << ""; printBar(0);
+        cout << "" << setw(2) << "" << "GEESE" << setw(1) << ""; printBar(0);
     } else {
         printBar(spacePad - textPad + 1); 
     } 
@@ -132,11 +132,11 @@ void View::printBoard() {
     printBar(spacePad + textPad);
 
     if (tiles[i].getGeese()) {
-        cout << "" << setw(2) << "" << "GEEESE" << setw(1) << ""; printBar(0);
+        cout << "" << setw(2) << "" << "GEESE" << setw(1) << ""; printBar(0);
     } else { printBar(spacePad + fillPad + 1); } 
     
     if (tiles[i + 1].getGeese()) {
-        cout << "" << setw(2) << "" << "GEEESE" << setw(1) << ""; printBar(0);
+        cout << "" << setw(2) << "" << "GEESE" << setw(1) << ""; printBar(0);
     } else { printBar(spacePad + fillPad + 1);  } 
 
     cout << endl;
@@ -163,15 +163,15 @@ void View::printBoard() {
     printSingleBar(0);
 
     if (tiles[i].getGeese()) {
-        cout << "" << setw(2) << "" << "GEEESE" << setw(1) << "";  printBar(0);
+        cout << "" << setw(2) << "" << "GEESE" << setw(1) << "";  printBar(0);
     } else { printBar(spacePad + fillPad + 1); } 
 
     if (tiles[i + 1].getGeese()) {
-        cout << "" << setw(2) << "" << "GEEESE" << setw(1) << ""; printBar(0);
+        cout << "" << setw(2) << "" << "GEESE" << setw(1) << ""; printBar(0);
     } else { printBar(spacePad + fillPad + 1); } 
 
     if (tiles[i + 2].getGeese()) {
-        cout << "" << setw(2) << "" << "GEEESE" << setw(1) << ""; cout << "|" ;
+        cout << "" << setw(2) << "" << "GEESE" << setw(1) << ""; cout << "|" ;
     } else { printSingleBar(spacePad + fillPad - 2); } 
     cout << endl; 
 
@@ -193,11 +193,11 @@ void View::printBoard() {
 
     printBar(spacePad + textPad);
     if (tiles[i].getGeese()) {
-        cout << "" << setw(2) << "" << "GEEESE" << setw(1) << ""; printBar(0);
+        cout << "" << setw(2) << "" << "GEESE" << setw(1) << ""; printBar(0);
     } else { printBar(spacePad + fillPad + 1); } 
 
     if (tiles[i + 1].getGeese()) {
-         cout << "" << setw(2) << "" << "GEEESE" << setw(1) << ""; printBar(0);
+         cout << "" << setw(2) << "" << "GEESE" << setw(1) << ""; printBar(0);
     } else { printBar(spacePad + fillPad + 1); }
 
     cout << endl; 
@@ -222,15 +222,15 @@ void View::printBoard() {
     printSingleBar(0);
 
     if (tiles[i].getGeese()) {
-        cout << "" << setw(2) << "" << "GEEESE" << setw(1) << "";  printBar(0);
+        cout << "" << setw(2) << "" << "GEESE" << setw(1) << "";  printBar(0);
     } else { printBar(spacePad + fillPad + 1); } 
     
     if (tiles[i + 1].getGeese()) {
-        cout << "" << setw(2) << "" << "GEEESE" << setw(1) << ""; printBar(0);
+        cout << "" << setw(2) << "" << "GEESE" << setw(1) << ""; printBar(0);
     } else { printBar(spacePad + fillPad + 1); } 
 
     if (tiles[i + 2].getGeese()) {
-        cout << "" << setw(2) << "" << "GEEESE" << setw(1) << ""; cout << "|" ;
+        cout << "" << setw(2) << "" << "GEESE" << setw(1) << ""; cout << "|" ;
     } else { printSingleBar(spacePad + fillPad - 2); }
 
     cout << endl;
@@ -254,11 +254,11 @@ void View::printBoard() {
     
     printBar(spacePad + textPad);
     if (tiles[i].getGeese()) {
-        cout << "" << setw(2) << "" << "GEEESE" << setw(1) << ""; printBar(0);
+        cout << "" << setw(2) << "" << "GEESE" << setw(1) << ""; printBar(0);
     } else { printBar(spacePad + fillPad + 1); } 
 
     if (tiles[i + 1].getGeese()) {
-        cout << "" << setw(2) << "" << "GEEESE" << setw(1) << ""; printBar(0);
+        cout << "" << setw(2) << "" << "GEESE" << setw(1) << ""; printBar(0);
     } else { printBar(spacePad + fillPad + 1);}
 
     cout << endl; 
@@ -281,15 +281,15 @@ void View::printBoard() {
 
     printSingleBar(0); 
     if (tiles[i].getGeese()) {
-        cout << "" << setw(2) << "" << "GEEESE" << setw(1) << ""; printBar(0);
+        cout << "" << setw(2) << "" << "GEESE" << setw(1) << ""; printBar(0);
     } else { printBar(spacePad + fillPad + 1); }
 
     if (tiles[i + 1].getGeese()) {
-        cout << "" << setw(2) << "" << "GEEESE" << setw(1) << ""; printBar(0);
+        cout << "" << setw(2) << "" << "GEESE" << setw(1) << ""; printBar(0);
     } else { printBar(spacePad + fillPad + 1); } 
 
     if (tiles[i + 2].getGeese()) {
-        cout << "" << setw(2) << "" << "GEEESE" << setw(1) << ""; cout << "|" ;
+        cout << "" << setw(2) << "" << "GEESE" << setw(1) << ""; cout << "|" ;
     } else { printSingleBar(spacePad + fillPad - 2); }
 
     cout << endl;
@@ -316,11 +316,11 @@ void View::printBoard() {
     printSingleBar(spacePad - 1); 
     //printBar(spacePad + textPad); 
     if (tiles[i - 2].getGeese()) {
-        cout << "" << setw(2) << "" << "GEEESE" << setw(1) << ""; printBar(0);
+        cout << "" << setw(2) << "" << "GEESE" << setw(1) << ""; printBar(0);
     } else { printBar(spacePad - textPad + 1); }
 
     if (tiles[i - 1].getGeese()) {
-        cout << "" << setw(2) << "" << "GEEESE" << setw(1) << ""; cout << "|";
+        cout << "" << setw(2) << "" << "GEESE" << setw(1) << ""; cout << "|";
     } else { printSingleBar(spacePad - textPad - 2); }
 
     cout << endl;
@@ -340,7 +340,7 @@ void View::printBoard() {
 
    // printBar(spacePad + textPad); cout << endl; 
     printSingleBar(spacePad + textPad - 3);
-    if (tiles[i - 1].getGeese()) { cout << "  GEEESE |"; } else { printSingleBar(fillPad - 1); } 
+    if (tiles[i - 1].getGeese()) { cout << "  GEESE |"; } else { printSingleBar(fillPad - 1); } 
     cout << endl; 
     printEdge(spacePad, tiles[i - 1].getEdge(edgeEnum::BL)); 
     printEdge(fillPad - 1, tiles[i - 1].getEdge(edgeEnum::BR)); cout << endl; 
