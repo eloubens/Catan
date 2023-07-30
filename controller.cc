@@ -22,7 +22,7 @@ const int edgeMax = 71;
 bool Controller::isSpecialState(int n) { return n != 0; }
 
 void Controller::getStatus(int i) {
-    Player * p = model->getPlayer(i); 
+    Player *p = model->getPlayer(i); 
     out << getColorStr(p->getColour()) << " has " << p->getBuildingPoints() << " building points,"; 
 
     for (const auto& entry : p->getResocMap()) {
