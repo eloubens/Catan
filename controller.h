@@ -40,10 +40,12 @@ class Controller {
     void improveRes(std::string vertexNum);
     void buildRoad(std::string edgeNum);
     bool hasWon();
+    void printHelp();
+    void printStatus(int i);
+    void printResidences();
 
  public: 
     // no ctor
-    void getStatus(int i);
     int general(std::vector<string> &arg_vec);
     int createController(std::vector<string> &arg_vec); // reads in command line inputs, creates model and view
 };

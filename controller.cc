@@ -13,6 +13,7 @@
 using namespace std;
 
 const int gameWon = 1;
+const int eofNoSave = -3;
 const int invalidInput = -2;
 const int eof = -1;
 const int vertexMax = 53;
@@ -21,17 +22,7 @@ const int edgeMax = 71;
 // returns true if non-normal state
 bool Controller::isSpecialState(int n) { return n != 0; }
 
-void Controller::getStatus(int i) {
-    out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building points,"; 
 
-    for (const auto& entry : model->getResocMap(i)) {
-        if (entry.first == Resource::WIFI) {
-            out << " and " << entry.second << " " << getResocLowerCaseStr(entry.first) << "." << endl;; 
-        } else {
-            out << " " << entry.second << " " << getResocLowerCaseStr(entry.first) << ","; 
-        }
-    }
-}
 
 //     out << getColorStr(color) << " has built:" ;
 // }
@@ -205,19 +196,32 @@ int Controller::buildDefaultBasements(int i, bool isInc) {
     return i;
 }
 
+void Controller::printStatus(int i) {
+    out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building points,"; 
+    for (const auto& entry : model->getResocMap(i)) {
+        if (entry.first == Resource::WIFI) {
+            out << " and " << entry.second << " " << getResocLowerCaseStr(entry.first) << "." << endl;; 
+        } else {
+            out << " " << entry.second << " " << getResocLowerCaseStr(entry.first) << ","; 
+        }
+    }
+}
+
+// prints residences of player turn
+void Controller::printResidences() {
+    map <string, Residence> vertexResidenceMap = model->getVertexResMap(static_cast<int>(turn)); 
+    out << getColorStr(turn) << " has built:" << endl;
+    for (const auto& entry : vertexResidenceMap) {
+        out << entry.first << " " << getResStr(entry.second) << endl;
+    }
+}
+
 int Controller::beginningOfTurn() {
     view->printBoard();
-    out << "Builder " << getColorStr(turn) << "'s turn." << endl << "> ";
-    // HERE NEED TO ADD CODE TO PRINT OUT THE STATUS OF THE BUILDER WHOS TURN IT IS (in variable turn)!!!!!!!!!
-    // printing status of player
-    int currTurn = static_cast<int>(turn);
-    getStatus(currTurn); 
-    map <string, Residence> vertexResidenceMap = model->getVertexResMap(currTurn); 
-    for (const auto& entry : vertexResidenceMap) {
-        out << " " << entry.first << " " << getResStr(entry.second);
-    }
+    out << "Builder " << getColorStr(turn) << "'s turn." << endl;
+    printStatus(static_cast<int>(turn)); 
     string cmd;
-    
+    out << "> ";
     while(!(in >> cmd) || (cmd != "roll")) {
         if (isEOF()) { return eof; }  /// ASK ABT THIS PART 
         if (cmd == "load") {
@@ -260,6 +264,11 @@ int Controller::beginningOfTurn() {
     return 0;
 }
 
+void Controller::printHelp() {
+    out << "Valid commands:" << endl << "board" << endl << "status" << endl << "residences" << endl 
+    << "build-road <edge#>" << endl << "build-res <housing#>" << endl << "improve <housing#>" << endl 
+    << "trade <colour> <give> <take>" << endl << "next" << endl << "save <file>" << "help" << endl;
+}
 
 bool Controller::hasWon() {
     return model->hasWon(turn);
@@ -269,46 +278,34 @@ int Controller::DuringTurn() {
     int numInt;
     string cmd, num;
     while(true) {
-        out << "BEGINNING OF LOOP OF COMMANDS. Type Next To Move On." << endl; // just for testing
-
         out << "> ";
-        
         if (!(in >> cmd)) { return eof; } // would only fail at eof since cmd is a string
         if (cmd == "next") { break; }
         else if (cmd == "board") { view->printBoard(); }
         else if (cmd == "help") {
-            out << "Valid commands:" << endl << "board" << endl << "status" << endl << "residences" << endl 
-            << "build-road <edge#>" << endl << "build-res <housing#>" << endl << "improve <housing#>" << endl 
-            << "trade <colour> <give> <take>" << endl << "next" << endl << "save <file>" << endl;
-        } else if (cmd == "status") { }
-            // for (int i = 0; i < 4; i++) {
-            //     //string playerCol = getColorChar(model->players[i].getColour()); 
-            //     model->players[i].getStatus(out);
-            //     map <string, Residence> vertexResidenceMap = model->getVertexResMap(i); 
-            //     for (const auto& entry : vertexResidenceMap) {
-            //         out << " " << entry.first << " " << getResStr(entry.second);
-            //     }
-            //     out << endl;
-            // }
-        else if (cmd == "save") {
-            if (!(cin >> cmd)) { return save(); }
-            return save(cmd);
+            printHelp();
+        } else if (cmd == "status") { 
+            for (int i = 0; i < playerAmount; i++) {
+                printStatus(i);
+            }
+        } else if (cmd == "save") {
+            if (!(cin >> cmd)) { 
+                return eof;
+            }
+            save(cmd);
+            return eofNoSave;
         } else if (cmd == "trade") {
             if (isSpecialState(trade())) { return eof; }
         } else if (cmd == "residences") {
-           // string playerCol = getColorChar(model->players[currTurn].getColour()); 
-            // model->players[currTurn].getStatus(out);
-            // vertexResidenceMap = model->getVertexResMap(currTurn); 
-            // for (const auto& entry : vertexResidenceMap) {
-            //     out << " " << getResStr(entry.second);
-            // }
-            // out << endl;
+            printResidences();
         }  else if (cmd == "improve" || cmd == "build-res" || cmd == "build-road") {
             if (!(in >> num)) { 
                 return eof; 
             }
             istringstream iss{num};
-            if (!(iss >> numInt) || numInt < 0 || (cmd == "build-road" && numInt > edgeMax) || ( cmd != "build-road" && numInt > vertexMax)) {
+            if (!(iss >> numInt) || numInt < 0 || 
+                (cmd == "build-road" && numInt > edgeMax) || 
+                ( cmd != "build-road" && numInt > vertexMax)) {
                 out << "Invalid command." << endl;
                 continue;
             }
@@ -325,7 +322,6 @@ int Controller::DuringTurn() {
         } else {
             out << "Invalid command." << endl;
         }
-        out << "new loop" << endl;
         // can't improve from a tower to more , can't improve if nothing on vertex
         // check b uilding points for imrpove res and make road commands
         // cannot build road through a vertex of a different residence
@@ -389,23 +385,24 @@ int Controller::general(vector<string> &arg_vec) {
         while(true) {
             if (isSpecialState(beginningOfTurn())) { return save(); }
             int state = DuringTurn();
+            if (state == eofNoSave) { return eof; }
             if (state == eof) { return save(); }
             if (state == gameWon) { break; }
         }
         string input;
-        // state will always be gameWon here??? if not check that it is
+        // state will always be gameWon here
         do {
             out << "Would you like to play again? " << endl << "> ";
-            if (!(cin >> input)) { return eof; } // MAYBE NEED SAVE HERE, NOT SURE (aka return save();)
+            if (!(cin >> input)) { return eof; } // Doesn't save file here on eof
         } while(input != "yes" && input != "no");
         if (input == "yes") {
             //resetGame(); WRITE THIS FUNCTION
+            break; // REMOVE THIS ONCE RESETGAME IS WRITTEN
             continue;
         }
         if (input == "no") {
             break;
         }
-        //break; // REMOVE THIS LINE AT THE END OF THE PROJECT
     }
     return 0;
 }

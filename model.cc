@@ -113,8 +113,6 @@ bool Model::placeBasement(string bVertex, Color c, bool isDuringTurn) {
 }
 
 
-Tile* Model::getTiles() {
-
 Tile *Model::getTiles() {
     return board.getTiles();
 }
