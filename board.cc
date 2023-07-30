@@ -11,8 +11,8 @@
  
 using namespace std;
 
-const unsigned long maxSharedTiles = 3; /// magic number
-const int tilesNum = 19;
+const unsigned long maxVSharedTiles = 3; // cut down on runtime
+const int tilesAmount = 19;
 
 Board::Board(istringstream &iss, int geeseTileNum) : Board{iss, true} { 
     this->geeseTileNum = geeseTileNum; 
@@ -25,50 +25,114 @@ void Board::addSettlementsLocation(int tileNum, Color c, vector<string> &roads, 
     tiles[tileNum].addSettlementsLocation(c, roads, resNum, resType);
 }
 
+// vector<int> Board::findGetRes(string vertexNum) {
+//     for (int i = 0; i < tilesAmount; i++) {
+//         try {
+//             tiles[i].findGetRes(vertexNum);
+//         } catch (auto [res, player]) { 
+//             // vertexInt is 0..5 meaning which vertex location in a tile.
+//             // res is an integer corresponding to Residence
+//             // i is tileNum
+//             return vector<int>{res, i, color}; 
+//         }
+//     }
+    
+// }
+
 string Board::getTileVal(int num) { return tiles[num].getTileValueReg(); }    
 string Board::getTileResoc(int num) { return tiles[num].getResocIntFormat(); }
 
+
 // returns true if bVertex is a vertex that is shared by/adjacent to multiple tiles (more than 1).
-bool Board::isSharedVertex(string bVertex) {
-    vector<string> nonSharedV{"0","1","2","5","6","11","12","17","24","29","36","41","42","47","48","51","52","53"};
-    for (auto n : nonSharedV) {
-        if(bVertex == n) { return false; }
+// cuts down on runtime
+bool Board::isShared(string componentNum, bool isVertex) {
+    if (isVertex) {
+        for (auto n : nonSharedV) {
+            if(componentNum == n) { return false; }
+        }
+    } else {
+        for (auto n : nonSharedE) {
+            if(componentNum == n) { return false; }
+        }
     }
     return true;
 }
 
-// Used to find all tiles sharing bVertex and add them to occupTiles.
-// This excludes the first tile in the board that contains bVertex and assumes it has
-// already been added to occupTiles.
-void Board::addTilesHavingVertex(vector<int> &occupTiles, int startingTile, string bVertex) {
-     if (isSharedVertex(bVertex)) { // means bVertex is shared by many tiles
-        for (int j = startingTile; j < tilesNum; j++) {
-            if (tiles[j].tileHasVertex(bVertex)) {
+// Used to find all tiles starting at startingTile sharing componentNum and add them to occupTiles.
+// Assumes original tile found has already been added to occupTiles.
+void Board::addTilesContaining(vector<int> &occupTiles,int startingTile, string componentNum, bool isVertexNum) {
+    if (isShared(componentNum, isVertexNum)) { // means bVertex is shared by many tiles
+        for (int j = startingTile; j < tilesAmount; j++) {
+            if (tiles[j].tileHasVE(componentNum, isVertexNum)) {
                 occupTiles.emplace_back(j);
-                if (occupTiles.size() == maxSharedTiles) { break; } // to prevent unecessary looping,
+                if (isVertexNum) {
+                    if (occupTiles.size() == maxVSharedTiles) { return; } // to prevent unecessary looping,
+                } else {
+                    return; // maximum shared edges by tiles is 2 and occupTiles already has 1 tile when a paramater
+                }
             }
         }
     }
 }
 
-// only throws if it knows you can place a res
-// then throws a vector of all tiles having the vertex that you are building on.
+void Board::placeNonBasement(string vertexNum, Color c) {
+    for (int i = 0; i < tilesAmount; i++) {
+        try {
+            tiles[i].placeNonBasement(vertexNum, c);
+        } catch (Residence r) {
+           // cout << "Board polace" << endl;
+            throw r;
+        }
+        //cout << "Board did not polace" << endl;
+    }
+}
+
 void Board::placeBasement(string bVertex, Color c, bool isDuringTurn) {
-    // if the vertex is shared by 2 tiles, need to add the second tile to
-    //      list of occupied tiles.
-    for (int i = 0; i < tilesNum; i++) {
+    for (int i = 0; i < tilesAmount; i++) {
         try {
             tiles[i].placeBasement(bVertex, c, isDuringTurn);
         } catch(bool isValid){
             if(isValid) {
-                vector<int> occupTiles{i}; // adding tile i to vector
-                addTilesHavingVertex(occupTiles, i + 1, bVertex);
-                throw occupTiles;
+                throw i;
             }
             return;
         }
     }
 }
+
+void Board::placeRoad(string edgeNum, Color c) {
+    for (int i = 0; i < tilesAmount; i++) {
+        try {
+            tiles[i].placeRoad(edgeNum, c);
+        } catch(bool isValid){
+            if(isValid) {
+                throw i;
+            }
+            return;
+        }
+    }
+}
+
+
+
+// only throws if it knows you can place a res
+// then throws a vector of all tiles having the vertex that you are building on.
+// void Board::placeBasement(string bVertex, Color c, bool isDuringTurn) {
+//     // if the vertex is shared by 2 tiles, need to add the second tile to
+//     //      list of occupied tiles.
+//     for (int i = 0; i < tilesAmount; i++) {
+//         try {
+//             tiles[i].placeBasement(bVertex, c, isDuringTurn);
+//         } catch(bool isValid){
+//             if(isValid) {
+//                 vector<int> occupTiles{i}; // adding tile i to vector
+//                 addTilesHavingVertex(occupTiles, i + 1, bVertex);
+//                 throw occupTiles;
+//             }
+//             return;
+//         }
+//     }
+// }
 
 Board::Board(istringstream &iss, bool isLoadGame): 
 vertices{
@@ -117,7 +181,7 @@ tiles{
 } {
     // reading in resources and tile values from ifs
     int tileVal, resoc;
-    for (int i = 0 ; i < tilesNum; i++) {
+    for (int i = 0 ; i < tilesAmount; i++) {
         iss >> resoc >> tileVal;
         tiles[i].setTileVal(tileVal);
         if (isLoadGame) { 
@@ -1016,7 +1080,7 @@ tiles{
 // returns tileNum that road is on
 int Board::placeValidRoad(string edgeNum, Color color) {
     // finding what tile the road is on and placing it
-    for (int i = 0; i < tilesNum; i++) {
+    for (int i = 0; i < tilesAmount; i++) {
         if(tiles[i].isPlaceValidRoad(edgeNum, color)) {
             return i;
         }
@@ -1026,7 +1090,7 @@ int Board::placeValidRoad(string edgeNum, Color color) {
 
 int Board::placeValidRes(string vertexNum, Color color, Residence res) {
      // finding what tile the res is on and placing it
-    for (int i = 0; i < tilesNum; i++) {
+    for (int i = 0; i < tilesAmount; i++) {
         if(tiles[i].isPlaceValidRes(vertexNum, color, res)) {
             return i;
         }

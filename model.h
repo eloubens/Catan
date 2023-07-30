@@ -51,13 +51,16 @@ class Model{
     };
     Player players[4];
     Board board;
-
  public:
+    //vector<int> findGetRes(std::string vertexNum);
+    bool placeRoad(string edgeNum, Color c);
+    std::pair<Residence, bool> placeNonBasement(std::string bVertex, Color c);
     std::map<string, Residence> getVertexResMap(int player);
     Tile* getTiles();
     Model(std::istringstream &iss); // for just loading a board (from file or random generated)
     void setDice(Color c, std::string cmd);
-    Player * getPlayer(int i); 
+
+    void updatePlayerSettlements(int tileNum, std::string componentNum, Color c, bool isVertexNum = true);
     Model(std::vector<std::istringstream> &&pResocs, std::vector<std::istringstream> &&pSettlements, 
                                                     std::istringstream &board ,int geeseTileNum);
     bool placeBasement(std::string bVertex, Color c, bool isDuringTurn);                                               
@@ -70,7 +73,8 @@ class Model{
     bool buildRes(Color turn, std::string vertexNum, bool isDuringTurn);
     std::vector<std::pair<std::string, std::vector<std::pair<std::string, int>>>> lostResoc();
     std::vector<std::pair<std::string, int>> numLostResoc();
-
+    void addTilesHavingVertex(vector<int> &occupTiles, int startingTile, string bVertex);
+    bool isSharedVertex(std::string bVertex);
     void placeGeese(int tile);
 
     std::vector<std::string> getPlayersToStealFrom(Color turn);
@@ -81,15 +85,13 @@ class Model{
     std::string getDiceType(Color c);
     
     void trade(string curPlayer, string tradePlayer, string give, string take);
-
+    Color GetColour(int i);
+    int getBuildingPoints(int i); 
+    map<Resource, int>& getResocMap(int i);
     int fairRoll(Color turn);
 
     bool enoughResoc(std::string curPlayer, std::string give);
-
     bool validSteal(std::string tradePlayer, std::string take);
-
-
-
 
 };
 

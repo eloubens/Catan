@@ -12,7 +12,6 @@
 extern const int invalidInput; // 1
 extern const int eof; // 2
 extern const int gameWon; // 3
-extern const int tilesAmount; // 19
 extern const int vertexMax; // 53
 extern const int edgeMax; // 70
 
@@ -34,13 +33,13 @@ class Controller {
     int save(std::string fileName = "backup.sv");
     int beginningOfGame();
     bool isEOF();
-    int buildBasements(int i, bool isInc);
+    int buildDefaultBasements(int i, bool isInc);
     // NEED TO ADD CODE HERE TO PRINT THE STATUS OF THE PLAYER IN FUNCTIONS LATER
     int beginningOfTurn(); 
     int DuringTurn();
-    int buildRes(std::string vertexNum);
-    int improveRes(std::string vertexNum);
-    int buildRoad(std::string edgeNum);
+    void buildRes(std::string vertexNum);
+    void improveRes(std::string vertexNum);
+    void buildRoad(std::string edgeNum);
     bool hasWon();
     void reset();
     void randomize(std::ostringstream& board_oss, unsigned& seed);

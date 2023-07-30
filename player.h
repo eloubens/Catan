@@ -21,12 +21,12 @@ class Player {
     void setDice(std::string cmd);
     explicit Player(Color color);
     Player(std::istringstream &playerData, Color color);
-    // adds tileNum to vector of occupiedTiles, doesn't add it if it already exists
+    // adds tileNum to vector of occupiedTiles, doesn't add duplicates
     void addOccupiedTiles(int tileNum);
     void addBuildingPoints(int num);
     int getBuildingPoints();
     bool hasEnoughResoc(const std::map<Resource,int> &rMapNeed);
-
+    bool hasOccupTile(int tileNum);
     void updateResocMap(const std::pair<Resource, int> &gainedResoc);
     std::map<Resource, int>& getResocMap();
     // accessors
