@@ -17,5 +17,6 @@ enum class Resource {
 
 std::string getResocStr(Resource r);
 std::string getResocLowerCaseStr(Resource r);
+Resource getResocR(std::string r);
 
 #endif
