@@ -30,7 +30,16 @@ Player::Player(istringstream &playerData, Color color) : color{color} {
 
 int Player::getBuildingPoints() { return buildingPoints; }
 
+bool Player::hasOccupTile(int tileNum) {
+    for (auto num : occupiedTiles) {
+        if (num == tileNum) { return true; }
+    }
+    return false;
+}
+
 void Player::addOccupiedTiles(int tileNum) {
+    // the original tile found was checked already to be a duplicate by hasOccupTilesu
+    // but the original tiles' shared tiles still might be a duplicate
     for (auto num : occupiedTiles) {
         if (num == tileNum) { return; }
     }

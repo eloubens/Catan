@@ -48,43 +48,86 @@ string Vertex::getVertex() {
 int Vertex::getResidenceAmount(Color color) const {
     if (player != color) return 0;
     return static_cast<int>(residenceType);
+
+
+
 }
 
+// void Vertex::findGetRes(string vertexNum) {
+//     throw {residenceType, player};
+// }
+
+// throws Residence
+void Vertex::placeNonBasement(string vertexNum, Color c) {
+    if (location != vertexNum) { return; }
+    if (player != c || residenceType == Residence::NONE || residenceType == Residence::T) {
+        throw Residence::NONE; // meaning no residence was improved
+    }
+    residenceType = static_cast<Residence>(static_cast<int>(residenceType) + 1);
+    throw residenceType;
+}
+
+void Edge::placeRoad(string edgeNum, Color c) {
+    if (location != edgeNum) { return; } // correct edge
+    if (isRoad) { 
+        throw false;
+    } // check that it is totally empty
+    for (auto v : adjVertices) {
+        if (v->isOwnedBy(c)) {
+            player = c;
+            isRoad = true;
+            throw true;
+        }
+    }
+    for (auto e : adjEdges) {
+        if (e->isOwnedBy(c)) {
+            for (auto v : adjVertices) {
+                if (e->hasAdjVertex(v)) { // v is a pointer !,
+                    if (!v->isOccupied()) { // v can only be occupied by non c since it was checked already on line 75
+                        player = c;
+                        isRoad = true;
+                        throw true;
+                    }
+                } 
+            }
+        }
+    }
+    throw false;
+}
+
+bool Edge::hasAdjVertex(Vertex *v) {
+    for (auto adjV : adjVertices) {
+        if (adjV == v) { return true; }
+    }
+    return false;
+}
+
+
+// throws true or false
 void Vertex::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     if (location != bVertex) { return; } // correct vertex
     if (player != Color::DNE) { 
         throw false;
     } // check that it is totally empty
+
     for (auto v : adjVertices) {
         if (v->isOccupied()) {
             throw false;
         }
     }
     if (isDuringTurn) {
-        bool ownsAdjEdge = false;
+        bool ownsAdjE = false;
         for (auto e : adjEdges) {
             if (e->isOwnedBy(c)) {
-                ownsAdjEdge = true;
+                ownsAdjE = true;
                 break;
             }
         }
-        if (ownsAdjEdge == false) { throw false; }
+        if (ownsAdjE == false) { throw false; }
     }
     player = c;
     residenceType = Residence::B;
     throw true;
-    // add res here
-
-
-    // check that adjacent vertices are empty (only if arrays are not 0)
-/*
-string location
-Color player = Color::DNE
-std::vector<Vertex*> adjVertices
-std::vector<Edge*> adjEdges
-Residence residenceType = Residence::NONE
-*/
-
 }
 
 bool Component::isOccupied() {

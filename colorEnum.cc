@@ -8,8 +8,10 @@ std::string getColorStr(Color c) {
             return "Red";
         case Color::O:
             return "Orange";
-        default:
+        case Color::Y:
             return "Yellow";
+        default:
+            return "N";
     }
 }
 
