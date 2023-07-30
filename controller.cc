@@ -22,10 +22,9 @@ const int edgeMax = 71;
 bool Controller::isSpecialState(int n) { return n != 0; }
 
 void Controller::getStatus(int i) {
-    Player * p = model->getPlayer(i); 
-    out << getColorStr(p->getColour()) << " has " << p->getBuildingPoints() << " building points,"; 
+    out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building points,"; 
 
-    for (const auto& entry : p->getResocMap()) {
+    for (const auto& entry : model->getResocMap(i)) {
         if (entry.first == Resource::WIFI) {
             out << " and " << entry.second << " " << getResocLowerCaseStr(entry.first) << "." << endl;; 
         } else {

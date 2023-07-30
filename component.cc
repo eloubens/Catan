@@ -14,7 +14,7 @@ Vertex::Vertex(string location) : Component{location} {}
 
 string Edge::getEdge() {
     if (isRoad) {
-        string s = getColorChar(player);
+        string s = getColorChar(player) + "R";
         return s; 
         // ostringstream oss;
         // if (player == Color::R) {oss << "R";}
