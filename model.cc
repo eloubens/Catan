@@ -4,6 +4,7 @@
 #include <iostream>
 #include <utility>
 #include <vector>
+#include <map>
 
 using namespace std;
 
@@ -93,12 +94,20 @@ bool Model::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     return false; // if nothing gets thrown, means that residence was not able to be built on
 }
 
-Player * Model::getPlayer(int i) {
-    return &players[i]; 
-}
-
 Tile* Model::getTiles() {
     return board.getTiles();
+}
+
+int Model::getBuildingPoints(int i) {
+    return players[i].getBuildingPoints(); 
+}
+
+Color Model::GetColour(int i){
+    return players[i].getColour(); 
+}
+
+map<Resource, int>& Model::getResocMap(int i) {
+    return players[i].getResocMap(); 
 }
 
 map<string, Residence> Model::getVertexResMap(int player) {
