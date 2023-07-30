@@ -38,7 +38,7 @@ class Tile {
     // returns {Resource::NA, 0} if no resources for the player or {resocType, resocTotal} for the player on the current tile
     std::pair<Resource, int> evalResoc(int tileValRolled, Color player) const;
 
-    bool tileHasVertex(std::string bVertex);
+    bool tileHasVE(std::string componentNum, bool isVertex);
 
     Vertex *getVertexAdr(vertexEnum num);
     Edge *getEdgeAdr(edgeEnum num);
@@ -52,6 +52,9 @@ class Tile {
     void setGeese(bool geese);
     bool getGeese();
     // basic setter method
+   // void findGetRes(std::string vertexNum);
+
+    void placeNonBasement(std::string vertexNum, Color c);
     void setResoc(Resource resocType);
     void placeAdjVerticesV(vertexEnum vertex, std::vector<Vertex*> &&adjVertices);
     void placeAdjEdgesV(vertexEnum vertex, std::vector<Edge*> &&adjEdges);
@@ -61,6 +64,7 @@ class Tile {
     /* returns true if edgeNum is an edge in the tile. 
         Also places a road on the edge if found.*/
     bool isPlaceValidRoad(std::string edgeNum, Color color); 
+    void placeRoad(std::string edgeNum, Color c);
     /* returns true if vertexNum is an vertex in the tile. 
         Also places a res on the vertex if found.*/
     bool isPlaceValidRes(std::string vertexNum, Color color, Residence res);

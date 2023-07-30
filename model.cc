@@ -49,52 +49,73 @@ bool Model::hasEnoughResoc(Color c, variant<Residence, Road> type) {
     return players[static_cast<int>(c)].hasEnoughResoc(settlementCost[type]);
 }
 
-// OLD CODE
-// void Model::roll(Color turn) {
-//     int tileValRolled = players[static_cast<int>(turn)].roll();
-//     if (tileValRolled == 7) {
-//         // GEESE STUFF HERE 
-//     }
-/* void Model::roll(Color turn) {
-    int tileValRolled = players[static_cast<int>(turn)].roll();
-    
-    if (tileValRolled == 7) {
-        // GEESE STUFF HERE 
-    }
- */
+// vector<int> Model::findGetRes(string vertexNum) {
+// // vertexInt is 0..5 meaning which vertex location in a tile.
+//             // res is an integer corresponding to Residence
+//             // i is tileNum
+//             return vector<int>{res, i, color}; 
 
-
-//     // gets resources for each player 
-//     for (int player = 0; player < playerAmount - 1; player++) {
-//         vector<int> occupiedTiles = players[player].getOccupiedTiles();
-//         int vecSize = occupiedTiles.size();
-//         for (int j = 0; j < vecSize; j++) {
-//             // gets the number of resources for 1 tile
-//             const pair<Resource, int> gainedResoc = board.getResoc(occupiedTiles[j], tileValRolled, static_cast<Color>(player));
-//             if (gainedResoc.second != 0) {
-//                 players[player].updateResocMap(gainedResoc);
-//             }
-//         }
-//     }
+//     return board.findGetRes(vertexNum);
 // }
-//auto [resoc, amount] resocGained =
 
-// returns if you can place a basement or not
-// in add OccupiedTiles, you would check for duplicates there
-bool Model::placeBasement(string bVertex, Color c, bool isDuringTurn) {
+
+
+// the first tile found to contain componentNum is used. Then need to loop through to get all otehr tiles that 
+// have componentNum on them as well -> they will always be after.
+// This function only works for a basement of road type. If isVertexNum == true, then adding a basement.
+void Model::updatePlayerSettlements(int tileNum, string componentNum, Color c, bool isVertexNum) {
+    vector<int> occupTiles{tileNum}; // storing tileNum in vector
+    if (!players[static_cast<int>(c)].hasOccupTile(tileNum)) {
+        board.addTilesContaining(occupTiles, tileNum + 1, componentNum, isVertexNum); // adds all tiles sharing componentNum excluding tileNum
+    }
+    for (auto n : occupTiles) {
+        players[static_cast<int>(c)].addOccupiedTiles(n);
+        //cout << n << endl;
+    }
+}
+
+bool Model::placeRoad(string edgeNum, Color c) {
     try {
-        board.placeBasement(bVertex, c, isDuringTurn); // will only catch a vector of occupiedTiles if can build on the tile
-    } catch (const vector<int> &occupTiles) {
-        for (auto n : occupTiles) {
-            players[static_cast<int>(c)].addOccupiedTiles(n);
-        }
-        players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(Residence::B));
+        board.placeRoad(edgeNum, c); // will only catch a vector of occupiedTiles if can build on the tile
+    } catch (int tileNum) {
+        updatePlayerSettlements(tileNum, edgeNum, c, false); // adds buidling points and occupied tiles
         return true;
     }
+   // cout << "Model did not place" << endl;
     return false; // if nothing gets thrown, means that residence was not able to be built on
 }
 
+pair<Residence, bool> Model::placeNonBasement(string bVertex, Color c) {
+    Residence res;
+    bool wasPlaced = false;
+    try {
+        board.placeNonBasement(bVertex, c); // will only catch a vector of occupiedTiles if can build on the tile
+    } catch (Residence r) {
+        if (r != Residence::NONE) {
+            wasPlaced = true;
+            players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(r));
+        }
+        res = r;
+    }
+    return {res, wasPlaced}; // putting this outside so compiler doesn't say warning
+}
+
+bool Model::placeBasement(string bVertex, Color c, bool isDuringTurn) {
+    try {
+        board.placeBasement(bVertex, c, isDuringTurn); // will only catch a vector of occupiedTiles if can build on the tile
+    } catch (int tileNum) {
+        updatePlayerSettlements(tileNum, bVertex, c); // adds buidling points and occupied tiles
+        players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(Residence::B));
+        return true;
+    }
+   // cout << "Model did not place" << endl;
+    return false; // if nothing gets thrown, means that residence was not able to be built on
+}
+
+
 Tile* Model::getTiles() {
+
+Tile *Model::getTiles() {
     return board.getTiles();
 }
 

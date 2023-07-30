@@ -15,7 +15,6 @@ using namespace std;
 const int gameWon = 1;
 const int invalidInput = -2;
 const int eof = -1;
-const int tilesAmount = 19;
 const int vertexMax = 53;
 const int edgeMax = 71;
 
@@ -50,7 +49,7 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
         shuffle(tileVal.begin(), tileVal.end(), rng);
         for (int i = 0; i < tilesAmount; i++) {
             board_oss << " " << tileResource[i] << " " << tileVal[i]; 
-        } 
+        }
         istringstream board_iss{board_oss.str()}; 
         model = make_unique<Model>(board_iss); 
         // own testing
@@ -154,16 +153,19 @@ bool Controller::isEOF() { return in.eof(); }
 
 int Controller::beginningOfGame() {
     //for (int i = 0; i < 3; i++) {
+    // int i = 0;
+    // buildDefaultBasements(i, true);
+    // buildDefaultBasements(i, true);
     for (int i = 0; i < playerAmount; i++) {
         try {
-            i = buildBasements(i, true);
+            i = buildDefaultBasements(i, true);
         } catch (int save) {
             return eof;
         }
     }
     for (int i = playerAmount - 1; i >= 0 ; i--) {
         try {
-            i = buildBasements(i, false);
+            i = buildDefaultBasements(i, false);
         } catch (int save) {
             return eof; 
         }
@@ -172,7 +174,8 @@ int Controller::beginningOfGame() {
 }
 
 // if isInc, means its in the increasing loop
-int Controller::buildBasements(int i, bool isInc) {
+// building Mandatory Basements
+int Controller::buildDefaultBasements(int i, bool isInc) {
     int tester;
     string bVertex; // basement vertex
     Color c;
@@ -204,15 +207,17 @@ int Controller::buildBasements(int i, bool isInc) {
 
 int Controller::beginningOfTurn() {
     view->printBoard();
-    out << "Builder " << getColorStr(turn) << "'s turn." << endl;
+    out << "Builder " << getColorStr(turn) << "'s turn." << endl << "> ";
+    // HERE NEED TO ADD CODE TO PRINT OUT THE STATUS OF THE BUILDER WHOS TURN IT IS (in variable turn)!!!!!!!!!
+    // printing status of player
     int currTurn = static_cast<int>(turn);
     getStatus(currTurn); 
     map <string, Residence> vertexResidenceMap = model->getVertexResMap(currTurn); 
     for (const auto& entry : vertexResidenceMap) {
         out << " " << entry.first << " " << getResStr(entry.second);
     }
-    out << endl <<  "> "; 
     string cmd;
+    
     while(!(in >> cmd) || (cmd != "roll")) {
         if (isEOF()) { return eof; }  /// ASK ABT THIS PART 
         if (cmd == "load") {
@@ -224,18 +229,17 @@ int Controller::beginningOfTurn() {
             out << "Dice set to fair." << endl;
         }
         out << "> ";
-    } 
+    }  
+
+
     // ANYTIME YOU USE in >>. Must use isEOF() command and return oef if true
-    // deal with loading the dice here (fair + loaded)
 
     // dice is rolled
     int rollVal = roll(turn); 
-    out << rollVal << endl;
     if (rollVal == 7) {
         int s = geese();
         if (s == eof) {
             return eof;
-            //save();
         }
     } else {
         vector<map<Resource, int>> resocMap = model->diceRolledUpdate(rollVal);
@@ -252,66 +256,31 @@ int Controller::beginningOfTurn() {
             out << "No builders gained resources." << endl;
         }
     }
-    // updates resocs for each player
-    // vector (size 4) of a map.
-    // stores all the resources aquired for each player. index 0,..,3 has player 1,..,4.
+    
     return 0;
 }
 
-
-int Controller::buildRes(string vertexNum){
-    if (!model->hasEnoughResoc(turn, Residence::B)) {
-        cout << "You do not have enough resources." << endl;
-        return 0;
-    }
-    if (!model->placeBasement(vertexNum, turn, true)) {
-        cout << "You cannot build here." << endl;
-        return 0;
-    }
-    if (hasWon()) {
-        return gameWon;
-    }
-    return 0;
-}
-
-// int Controller::improveRes(string vertexNum){ 
-//     // first check if can build
-//     // then check if has resoc 
-//     //model->buildRes(turn, vertexNum);
-//     if (hasWon()) {
-//         return gameWon;
-//     } 
-//     return 0;
-// }
 
 bool Controller::hasWon() {
     return model->hasWon(turn);
 }
 
-
 int Controller::DuringTurn() {
-    int vNumInt, state;
-    string cmd,vertexNum;
+    int numInt;
+    string cmd, num;
     while(true) {
+        out << "BEGINNING OF LOOP OF COMMANDS. Type Next To Move On." << endl; // just for testing
+
         out << "> ";
-        if (!(cin >> cmd)) { return eof; } // would only fail at eof since cmd is a string
+        
+        if (!(in >> cmd)) { return eof; } // would only fail at eof since cmd is a string
         if (cmd == "next") { break; }
         else if (cmd == "board") { view->printBoard(); }
-        else if (cmd == "build-res") {
-            if (!(cin >> vertexNum)) { return eof; }
-            istringstream iss{vertexNum};
-            iss >> vNumInt;
-            if (vNumInt < 0 || vNumInt > vertexMax) {
-                out << "Invalid command." << endl;
-                continue;
-            }
-            state = buildRes(vertexNum);
-            if(isSpecialState(state)) { return state;}
-        } else if (cmd == "help") {
+        else if (cmd == "help") {
             out << "Valid commands:" << endl << "board" << endl << "status" << endl << "residences" << endl 
             << "build-road <edge#>" << endl << "build-res <housing#>" << endl << "improve <housing#>" << endl 
             << "trade <colour> <give> <take>" << endl << "next" << endl << "save <file>" << endl;
-        } else if (cmd == "status") {
+        } else if (cmd == "status") { }
             // for (int i = 0; i < 4; i++) {
             //     //string playerCol = getColorChar(model->players[i].getColour()); 
             //     model->players[i].getStatus(out);
@@ -321,7 +290,7 @@ int Controller::DuringTurn() {
             //     }
             //     out << endl;
             // }
-        } else if (cmd == "save") {
+        else if (cmd == "save") {
             if (!(cin >> cmd)) { return save(); }
             return save(cmd);
         } else if (cmd == "trade") {
@@ -334,11 +303,31 @@ int Controller::DuringTurn() {
             //     out << " " << getResStr(entry.second);
             // }
             // out << endl;
+        }  else if (cmd == "improve" || cmd == "build-res" || cmd == "build-road") {
+            if (!(in >> num)) { 
+                return eof; 
+            }
+            istringstream iss{num};
+            if (!(iss >> numInt) || numInt < 0 || (cmd == "build-road" && numInt > edgeMax) || ( cmd != "build-road" && numInt > vertexMax)) {
+                out << "Invalid command." << endl;
+                continue;
+            }
+            if (cmd == "build-res") {
+                buildRes(num);
+            } else if (cmd == "improve") {
+                improveRes(num);
+            } else if (cmd == "build-road") {
+                buildRoad(num);
+            }
+            if (hasWon()) {
+                return gameWon;
+            }
         } else {
             out << "Invalid command." << endl;
         }
+        out << "new loop" << endl;
         // can't improve from a tower to more , can't improve if nothing on vertex
-        // check building points for imrpove res and make road commands
+        // check b uilding points for imrpove res and make road commands
         // cannot build road through a vertex of a different residence
         //return gameWon; if building points more than 10
     }
@@ -350,6 +339,45 @@ int Controller::DuringTurn() {
     return 0;
 }
 
+
+void Controller::buildRoad(string edgeNum) {
+    if (!model->hasEnoughResoc(turn, Road::R)) {
+        out << "You do not have enough resources." << endl;
+        return;
+    }
+    if (!model->placeRoad(edgeNum, turn)) {
+        out << "You cannot build here." << endl;
+        return;
+    }
+    out << "Road Placed." << endl;
+}
+
+// To improve a res old today
+void Controller::improveRes(string vertexNum) {
+    auto [res, wasPlaced] = model->placeNonBasement(vertexNum, turn);
+    if (!model->hasEnoughResoc(turn, res)) {
+        out << "You do not have enough resources." << endl;
+        return;
+    }
+    if (wasPlaced) {
+        out << "Residence Improved." << endl;
+    } else {
+        out << "You cannot build here." << endl;
+    }
+}
+
+// for dynamic building of a Basement
+void Controller::buildRes(string vertexNum){
+    if (!model->hasEnoughResoc(turn, Residence::B)) {
+        out << "You do not have enough resources." << endl;
+        return;
+    }
+    if (!model->placeBasement(vertexNum, turn, true)) {
+        out << "You cannot build here." << endl;
+        return;
+    }
+    out << "Basement Placed." << endl;
+}
 
 //this acts like the main function essentially 
 int Controller::general(vector<string> &arg_vec) {
@@ -363,7 +391,6 @@ int Controller::general(vector<string> &arg_vec) {
             int state = DuringTurn();
             if (state == eof) { return save(); }
             if (state == gameWon) { break; }
-             // REMOVE THIS LINE AT THE END OF THE PROJECT
         }
         string input;
         // state will always be gameWon here??? if not check that it is
@@ -378,40 +405,34 @@ int Controller::general(vector<string> &arg_vec) {
         if (input == "no") {
             break;
         }
-        break; // REMOVE THIS LINE AT THE END OF THE PROJECT
+        //break; // REMOVE THIS LINE AT THE END OF THE PROJECT
     }
-    
-
-    // check for case when trying to impove on empty res!!!!!
-
-    //cout << "printing the board" << endl; 
-    //view->printBoard(); 
     return 0;
 }
-
-
-
 
 int Controller::roll(Color turn) {
     string diceType = model->getDiceType(turn);
     int rollVal;
 
     if (diceType == "load") {
-        out << "Input a roll between 2 and 12: " << endl;
-        in >> rollVal;
-        if (isEOF()) return eof;
+        while (true) {
+            out << "Input a roll between 2 and 12: " << endl <<  "> ";
+            if (!(in >> rollVal)) {
+                if (in.eof()) return eof;
+                in.clear();
+                in.ignore();
+            }
+            if ((rollVal < 2) || (rollVal > 12)) {
+                out << "Invalid roll." << endl;
+            } else {
+                break;
+            }
 
-        while ((rollVal < 2) || (rollVal > 12)) {
-            out << "Invalid roll." << endl;
-            out << "Input a roll between 2 and 12: " << endl;
-            in >> rollVal;
-            if (isEOF()) return eof;
         }
-        model->diceRolledUpdate(rollVal);
-
+        //model->diceRolledUpdate(rollVal); (should not call from here)
     } else if (diceType == "fair") {
         rollVal = model->fairRoll(turn);
-        model->diceRolledUpdate(rollVal);
+        //model->diceRolledUpdate(rollVal); (should not call from here)
     }
 
     return rollVal;
@@ -433,7 +454,7 @@ int Controller::geese() {
 
     // placing geese on different tile now
     int tileNum;
-    out << "Choose where to place the GEESE." << endl;
+    out << "Choose where to place the GEESE." << endl << "> ";
     in >> tileNum;
     if (isEOF()) return eof;;
    
@@ -450,7 +471,7 @@ int Controller::geese() {
             out << " " << n << ",";
         }
         out << endl;
-        out << "Choose a builder to steal from." << endl;
+        out << "Choose a builder to steal from." << endl << "> ";
         string toSteal;
         in >> toSteal;
         if (isEOF()) return eof;;
@@ -474,12 +495,12 @@ int Controller::trade() {
     if (isEOF()) return eof; 
 
     out << curPlayer << " offers " << toTradeWith << " one " << give << " for one " << take << "." << endl;
-    out << "Does " <<  toTradeWith << " accept this offer?" << endl;
+    out << "Does " <<  toTradeWith << " accept this offer?" << endl << "> ";
     in >> answer;
     if (isEOF()) return eof;
 
     while ((answer != "yes") || (answer != "no")) {
-        out << "Does " <<  toTradeWith << " accept this offer?" << endl;
+        out << "Does " <<  toTradeWith << " accept this offer?" << endl << "> ";
         in >> answer;
         if (isEOF()) return eof;
     }

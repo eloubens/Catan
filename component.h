@@ -20,12 +20,12 @@ class Component {
 	std::vector<Vertex*> adjVertices; // PRIVATE
 	std::vector<Edge*> adjEdges; // PRIVATE
 
-
 	
-	bool isOccupied();
+	
 	//bool hasAdjVertices() const;
 	//bool hasAdjEdges() const;
  public:
+ 	bool isOccupied();
  	bool isOwnedBy(Color color);
  	//std::string location; //vertex number or edge number // PRIVATE
  
@@ -43,7 +43,9 @@ class Component {
 
 class Edge final : public Component {
 	bool isRoad = false;
+	bool hasAdjVertex(Vertex *v);
  public:
+ 	void placeRoad(std::string edgeNum, Color c);
 	explicit Edge(std::string location); // ctor
 	void setValidRoad(Color color); // places a road, known to be valid
 	string getEdge();
@@ -57,7 +59,9 @@ class Edge final : public Component {
 class Vertex final : public Component {
 	Residence residenceType = Residence::NONE;
  public: 
+ 	//void findGetRes(std::string vertexNum);
 	explicit Vertex(std::string location);
+	void placeNonBasement(std::string vertexNum, Color c);
 	int getResidenceAmount(Color color) const; // returns the corresponding num for a residence only if its owned by color
 	void setValidRes(Color color, Residence res);
 	Residence getRes();
