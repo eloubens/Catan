@@ -21,6 +21,10 @@ Board::Board(istringstream &iss, int geeseTileNum) : Board{iss, true} {
 
 int Board::getGeeseTile() { return geeseTileNum; }
 
+void Board::setGeeseTileNum(int tile) { 
+    geeseTileNum = tile;
+}
+
 void Board::addSettlementsLocation(int tileNum, Color c, vector<string> &roads, vector<string> &resNum, vector<Residence> &resType) {
     tiles[tileNum].addSettlementsLocation(c, roads, resNum, resType);
 }
@@ -1107,6 +1111,6 @@ pair<Resource, int> Board::getResoc(int tileNum, int tileValRolled, Color player
     return tiles[tileNum].evalResoc(tileValRolled, player);
 }
 
-void Board::setGeese(int tileNum, bool geese) {
+void Board::setGeeseV2(int tileNum, bool geese) {
     tiles[tileNum].setGeese(geese);
 }

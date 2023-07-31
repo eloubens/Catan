@@ -23,26 +23,20 @@ class Tile {
  public:
 
     //ctor
+    Tile(int tileNum, Vertex *v1, Vertex *v2, Vertex *v3, Vertex *v4, Vertex *v5, Vertex *v6, 
+                        Edge *e1, Edge *e2, Edge *e3, Edge *e4, Edge *e5, Edge *e6);
     std::string getResource(); // used for printing
     std::string getTileNum(); // for printing only, has extra conditions
     std::string getTileValue(); // for printing only
     std::string getResocIntFormat();
     std::string getTileValueReg();
-
     std::string getVertex(vertexEnum v);
     std::string getEdge(edgeEnum e);
-
-    Tile(int tileNum, Vertex *v1, Vertex *v2, Vertex *v3, Vertex *v4, Vertex *v5, Vertex *v6, 
-                        Edge *e1, Edge *e2, Edge *e3, Edge *e4, Edge *e5, Edge *e6);
- 
     // returns {Resource::NA, 0} if no resources for the player or {resocType, resocTotal} for the player on the current tile
     std::pair<Resource, int> evalResoc(int tileValRolled, Color player) const;
-
     bool tileHasVE(std::string componentNum, bool isVertex);
-
     Vertex *getVertexAdr(vertexEnum num);
     Edge *getEdgeAdr(edgeEnum num);
-
     void setTileVal(int tileVal);
     // function used in ctor of board (only used when reading in a board, not saved game)
     // returns true if a Geese was placed aka if resocType == PARK. 
@@ -53,7 +47,6 @@ class Tile {
     bool getGeese();
     // basic setter method
    // void findGetRes(std::string vertexNum);
-
     void placeNonBasement(std::string vertexNum, Color c);
     void setResoc(Resource resocType);
     void placeAdjVerticesV(vertexEnum vertex, std::vector<Vertex*> &&adjVertices);
@@ -75,12 +68,5 @@ class Tile {
 
     
 };
-
-
-//void printResidences(Color color) const;
-    // void checkTileRoad(Color color, int egde) const;
-    // void checkTileRes(Color color, int vertex, bool isBeginPhase) const;
-    // void placeGoose();
-    //bool isTileValue(int value) const;
 
 #endif
