@@ -172,6 +172,12 @@ std::vector<int> occupiedTiles
 
 void Player::updateResocMap(const pair<Resource, int> &gainedResoc) {
     resocMap[gainedResoc.first] += gainedResoc.second;
+    ++resocTotal;
+}
+
+void Player::removeResoc(const pair<Resource, int> &lostResoc) {
+    resocMap[lostResoc.first] -= lostResoc.second;
+    --resocTotal;
 }
 
 map<Resource, int>& Player::getResocMap() { return resocMap; }
@@ -215,27 +221,30 @@ string Player::stealResoc() {
     
     stolenResoc = getResocStr(lost);
 
-    // update Player info
-    resocTotal -= numToLose;
-    resocMap[lost] -= numToLose;
+    std::pair<Resource, int> lostR(lost, 1);
+
+    removeResoc(lostR);
 
     return stolenResoc;
 }
 
 
+/*
 void Player::addResoc(string resoc) {
     Resource r = getResocR(resoc);
     resocMap[r] += 1;
 }
+*/
 
 string Player::getDiceType() {
     return dice.getDiceType();
 }
 
-void Player::removeResoc(string resoc) {
+/*void Player::removeResoc(string resoc) {
     Resource r = getResocR(resoc);
     resocMap[r] -= 1;
-}
+}*/
+
 
 int Player::fairRoll() {
     int rollVal = dice.rollFair();

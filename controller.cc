@@ -193,21 +193,6 @@ int Controller::buildDefaultBasements(int i, bool isInc) {
     return i;
 }
 
-void Controller::printStatus(int i) {
-    int points = model->getBuildingPoints(i);
-    if (points == 1 ) {
-        out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building point,"; 
-    } else {
-        out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building points,"; 
-    }
-    for (const auto& entry : model->getResocMap(i)) {
-        if (entry.first == Resource::WIFI) {
-            out << " and " << entry.second << " " << getResocLowerCaseStr(entry.first) << "." << endl;; 
-        } else {
-            out << " " << entry.second << " " << getResocLowerCaseStr(entry.first) << ","; 
-        }
-    }
-}
 
 // prints residences of player turn
 void Controller::printResidences() {
@@ -492,22 +477,32 @@ int Controller::geese() {
         } else {
             for (auto n : playersSteal) {
                 if (n == playersSteal[playersSteal.size() - 1]) {
-                    out << " " << n << ".";
+                    out << " " << n << "." << endl;
                 } else {
                     out << " " << n << ",";
                 }
             }
         }
-        out << "Choose a builder to steal from." << endl << "> ";
+        
         string toSteal;
-        in >> toSteal;
-        if (isEOF()) return eof;;
-        // check from eof and valid input
+
+        while(true) {
+            out << "Choose a builder to steal from." << endl << "> ";
+            in >> toSteal;
+            if (isEOF()) return eof;
+            
+            auto it = std::find(playersSteal.begin(), playersSteal.end(), toSteal);
+            
+            if (it != playersSteal.end()) break;
+            else out << "You cannot choose that builder." << endl;
+        }
+       
 
         string stolenResoc = model->steal(curPlayer, toSteal);
 
         out << "Builder " << curPlayer << " steals " << stolenResoc << " from Builder " << toSteal << "." << endl;
-        model->updateSteal(curPlayer, toSteal, stolenResoc);
+        //model->updateSteal(curPlayer, toSteal, stolenResoc);
+
     }
     return 0;
 }
@@ -593,3 +588,19 @@ std::unique_ptr<View> view;
     O = 2, // Player 3, Orange
     Y = 3,  // Player 4, Yellow
 */
+
+void Controller::printStatus(int i) {
+    int points = model->getBuildingPoints(i);
+    if (points == 1 ) {
+        out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building point,"; 
+    } else {
+        out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building points,"; 
+    }
+    for (const auto& entry : model->getResocMap(i)) {
+        if (entry.first == Resource::WIFI) {
+            out << " and " << entry.second << " " << getResocLowerCaseStr(entry.first) << "." << endl;; 
+        } else {
+            out << " " << entry.second << " " << getResocLowerCaseStr(entry.first) << ","; 
+        }
+    }
+}

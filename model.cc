@@ -277,37 +277,39 @@ vector<string> Model::getPlayersToStealFrom(Color turn) {
 
     for (auto n : players) {
         if ((n.hasRes(geeseTile)) && (n.getResocTotal() >= 1) && (n.getColour() != turn)) {
-            if(board.isRes(geeseTile)) {
+            //if(board.isRes(geeseTile)) {
+                //cout << "made it 2" << endl;
                 c = getColorStr(n.getColour());
                 p.emplace_back(c);
-            }
-
+            //}
         }
-    }
 
-    //cout << "18 " << endl;
-    for (auto k : p) {
-        cout << k << endl;
     }
-
+    
     return p;
 
 }
 
 string Model::steal(string curPlayer, string playerToSteal) {
     string c, r;
+    Resource resoc;
+
     for (auto p : players) {
-        c = getColorStr(p.getColour()); // enum to str
+        c = getColorStr(p.getColour()); 
         if (c == playerToSteal){
             r = p.stealResoc();
+            resoc = getResocR(r);
         }
     }
 
+    std::pair<Resource, int> gainedCur(resoc, 1);
+    
     for (auto n : players) {
         c = getColorStr(n.getColour());
         if (c == curPlayer) {
-            n.addResoc(r);
+            n.updateResocMap(gainedCur);
         }
+
     }
 
     return r;
@@ -327,17 +329,20 @@ bool Model::hasWon(Color turn) {
 
 
 void Model::trade(string curPlayer, string tradePlayer, string give, string take) {
+    Resource g = getResocR(give);
+    Resource t = getResocR(take);
+    std::pair<Resource, int> gainedCur(t, 1);
+    std::pair<Resource, int> lostCur(g, 1);
+
     for (auto p : players) {
         if(getColorStr(p.getColour()) == curPlayer) {
-            cout << "Take Resoc: " << take << endl;
-            p.addResoc(take);
-            p.removeResoc(give);
+            p.updateResocMap(gainedCur);
+            p.removeResoc(lostCur);
         }
         
         if(getColorStr(p.getColour()) == tradePlayer) {
-            cout << "made it 2" << endl;
-            p.addResoc(give);
-            p.removeResoc(take);
+            p.updateResocMap(lostCur);
+            p.removeResoc(gainedCur);
         }
     }
 }
@@ -377,10 +382,3 @@ int Model::getGeeseTile() {
     return board.getGeeseTile();
 }
 
-void Model::updateSteal(string curPlayer, string stealPlayer, string resoc) {
-    for (auto p : players) {
-        if (getColorStr(p.getColour()) == curPlayer) p.addResoc(resoc);
-
-        if (getColorStr(p.getColour()) == stealPlayer) p.removeResoc(resoc);
-    }
-}
