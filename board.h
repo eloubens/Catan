@@ -49,6 +49,8 @@ class Board {
     void setGeeseV2(int tileNum, bool geese);
 
     void setGeeseTileNum(int tile);
+
+    bool isRes(int tileNum);
 };
 
 #endif

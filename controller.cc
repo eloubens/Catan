@@ -491,9 +491,12 @@ int Controller::geese() {
             out << " " << playersSteal[0] << "." << endl;
         } else {
             for (auto n : playersSteal) {
-                out << " " << n << ",";
+                if (n == playersSteal[playersSteal.size() - 1]) {
+                    out << " " << n << ".";
+                } else {
+                    out << " " << n << ",";
+                }
             }
-            out << "." << endl;
         }
         out << "Choose a builder to steal from." << endl << "> ";
         string toSteal;
@@ -504,6 +507,7 @@ int Controller::geese() {
         string stolenResoc = model->steal(curPlayer, toSteal);
 
         out << "Builder " << curPlayer << " steals " << stolenResoc << " from Builder " << toSteal << "." << endl;
+        model->updateSteal(curPlayer, toSteal, stolenResoc);
     }
     return 0;
 }
@@ -531,7 +535,9 @@ int Controller::trade() {
 
     if (answer == "yes") {
         if (model->enoughResoc(curPlayer, give)) {
+            cout << "Made it 1" << endl;
             if (model->validSteal(toTradeWith, take)) {
+                cout << "Made it 2" << endl;
                 model->trade(curPlayer, toTradeWith, give, take);
             } else {
                 out << toTradeWith << " does not have enough resources." << endl;

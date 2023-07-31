@@ -277,9 +277,11 @@ vector<string> Model::getPlayersToStealFrom(Color turn) {
 
     for (auto n : players) {
         if ((n.hasRes(geeseTile)) && (n.getResocTotal() >= 0) && (n.getColour() != turn)) {
-            c = getColorStr(n.getColour());
-            // conv enum Color to string
-            p.emplace_back(c);
+            if(board.isRes(geeseTile)) {
+                c = getColorStr(n.getColour());
+                p.emplace_back(c);
+            }
+
         }
     }
 
@@ -371,4 +373,12 @@ bool Model::validSteal(string tradePlayer, string take) {
 
 int Model::getGeeseTile() {
     return board.getGeeseTile();
+}
+
+void Model::updateSteal(string curPlayer, string stealPlayer, string resoc) {
+    for (auto p : players) {
+        if (getColorStr(p.getColour()) == curPlayer) p.addResoc(resoc);
+
+        if (getColorStr(p.getColour()) == stealPlayer) p.removeResoc(resoc);
+    }
 }
