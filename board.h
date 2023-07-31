@@ -46,7 +46,9 @@ class Board {
 
     int getGeeseTile();
 
-    void setGeese(int tileNum, bool geese);
+    void setGeeseV2(int tileNum, bool geese);
+
+    void setGeeseTileNum(int tile);
 };
 
 #endif
