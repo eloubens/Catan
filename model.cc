@@ -33,7 +33,7 @@ Model::Model(vector<istringstream> &&pResocs, vector<istringstream> &&pSettlemen
             while(pSettlements[i] >> veNum) {  // edge num
                 //tileNum stores the number of the tile that the road was placed om
                 tileNum = this->board.placeValidRoad(to_string(veNum), static_cast<Color>(i));
-                players[i].addOccupiedTiles(tileNum);
+                updatePlayerSettlements(tileNum, to_string(veNum), static_cast<Color>(i), false); 
             }
             pSettlements[i].clear();
             pSettlements[i].ignore();  // ignores 'h' for house
@@ -44,11 +44,10 @@ Model::Model(vector<istringstream> &&pResocs, vector<istringstream> &&pSettlemen
             //getResStr(res)
             while(pSettlements[i] >> veNum) {
                 pSettlements[i] >> r;
-                cout << "Residence Type: " << r << endl;
                 res = getResFromStr(r);
                 tileNum = this->board.placeValidRes(to_string(veNum), static_cast<Color>(i), res);
                 players[i].addBuildingPoints(static_cast<int>(res));
-                players[i].addOccupiedTiles(tileNum);
+                updatePlayerSettlements(tileNum, to_string(veNum), static_cast<Color>(i)); 
             }
         }
     }
