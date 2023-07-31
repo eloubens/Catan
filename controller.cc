@@ -22,11 +22,6 @@ const int edgeMax = 71;
 // returns true if non-normal state
 bool Controller::isSpecialState(int n) { return n != 0; }
 
-
-
-//     out << getColorStr(color) << " has built:" ;
-// }
-
 // sets the Model field of the controller. 
 // Loads a board from a file, creates and loads a randomized board, or loads a saved game.
 int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed, vector<string> &arg_vec) {
@@ -66,6 +61,7 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
             } 
             // loading game from specified file 
             else if (arg_vec[i] == "-load") { 
+                wasBoardLoad = true;
                 i++;
                 ifstream ifs{arg_vec[i]};
                 if (!ifs) {
@@ -81,7 +77,9 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
                 for (int i = 0; i < playerAmount; i++) {
                     // read until 'r' character representing road
                     getline(ifs, resoc, 'r');
+                    out << "Resoc  " << resoc << endl;
                     getline(ifs, settlements);
+                    out << "Settle  " << settlements << endl;
                     pResocs.emplace_back(istringstream{resoc});
                     pSettlements.emplace_back(istringstream{settlements});
                 }
@@ -197,7 +195,12 @@ int Controller::buildDefaultBasements(int i, bool isInc) {
 }
 
 void Controller::printStatus(int i) {
-    out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building points,"; 
+    int points = model->getBuildingPoints(i);
+    if (points == 1 ) {
+        out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building point,"; 
+    } else {
+        out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building points,"; 
+    }
     for (const auto& entry : model->getResocMap(i)) {
         if (entry.first == Resource::WIFI) {
             out << " and " << entry.second << " " << getResocLowerCaseStr(entry.first) << "." << endl;; 
@@ -220,7 +223,9 @@ int Controller::beginningOfTurn() {
     view->printBoard();
     out << "Builder " << getColorStr(turn) << "'s turn." << endl;
     printStatus(static_cast<int>(turn)); 
+    printResidences();
     string cmd;
+    out << "Enter load, fair, or roll:" << endl;
     out << "> ";
     while(!(in >> cmd) || (cmd != "roll")) {
         if (isEOF()) { return eof; }  /// ASK ABT THIS PART 
@@ -240,6 +245,7 @@ int Controller::beginningOfTurn() {
 
     // dice is rolled
     int rollVal = roll(turn); 
+    out << "Dice Rolled: " << rollVal << endl;
     if (rollVal == 7) {
         int s = geese();
         if (s == eof) {
@@ -267,7 +273,7 @@ int Controller::beginningOfTurn() {
 void Controller::printHelp() {
     out << "Valid commands:" << endl << "board" << endl << "status" << endl << "residences" << endl 
     << "build-road <edge#>" << endl << "build-res <housing#>" << endl << "improve <housing#>" << endl 
-    << "trade <colour> <give> <take>" << endl << "next" << endl << "save <file>" << "help" << endl;
+    << "trade <colour> <give> <take>" << endl << "next" << endl << "save <file>" << endl << "help" << endl;
 }
 
 bool Controller::hasWon() {
@@ -380,7 +386,9 @@ int Controller::general(vector<string> &arg_vec) {
     if (isSpecialState(createController(arg_vec))) { return invalidInput; } // could only return invalidInput here
     while(true) {
         // beginning of game. 
-        if (isSpecialState(beginningOfGame())) { return save(); }
+        if (!wasBoardLoad) {
+            if (isSpecialState(beginningOfGame())) { return save(); }
+        }
         // game begins
         while(true) {
             if (isSpecialState(beginningOfTurn())) { return save(); }

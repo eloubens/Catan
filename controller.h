@@ -15,6 +15,7 @@ extern const int vertexMax; // 53
 extern const int edgeMax; // 70
 
 class Controller {
+    bool wasBoardLoad = false;
     std::ostream &out = std::cout;
     std::istream &in = std::cin;
     std::ostream &err = std::cerr;
