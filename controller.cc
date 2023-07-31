@@ -296,9 +296,12 @@ int Controller::DuringTurn() {
                 printStatus(i);
             }
         } else if (cmd == "save") {
-            if (!(cin >> cmd)) { 
+            if (!(in >> cmd)) { 
+                in.clear();
+                in.ignore();
                 return eof;
             }
+            //out << cmd;
             save(cmd);
             return eofNoSave;
         } else if (cmd == "trade") {
@@ -390,12 +393,16 @@ int Controller::general(vector<string> &arg_vec) {
         if (!wasBoardLoad) {
             if (isSpecialState(beginningOfGame())) { return save(); }
         }
+        wasBoardLoad = false; // for when a new game starts, was Board will not be applicable anymore
         // game begins
         while(true) {
             if (isSpecialState(beginningOfTurn())) { return save(); }
             int state = DuringTurn();
             if (state == eofNoSave) { return eof; }
-            if (state == eof) { return save(); }
+            if (state == eof) { 
+                return save(); 
+                out << "I am je";
+            }
             if (state == gameWon) { break; }
         }
         string input;
