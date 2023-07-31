@@ -182,7 +182,6 @@ bool Player::hasRes(int tileNum) {
     for (auto n : occupiedTiles) {
         if (tileNum == n) {
             return true;
-            break;
         }
     }
 
@@ -277,3 +276,4 @@ bool Player::validSteal(string take) {
     if(resocMap[r] <= 0) return false;
     else return true;
 }
+
