@@ -95,6 +95,8 @@ class Model{
 
     int getGeeseTile();
 
+    void updateSteal(std::string curPlayer, std::string stealPlayer, std::string resoc);
+
 };
 
 

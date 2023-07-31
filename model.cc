@@ -276,14 +276,16 @@ vector<string> Model::getPlayersToStealFrom(Color turn) {
     string c;
 
     for (auto n : players) {
-        if ((n.hasRes(geeseTile)) && (n.getResocTotal() >= 0) && (n.getColour() != turn)) {
-            c = getColorStr(n.getColour());
-            // conv enum Color to string
-            p.emplace_back(c);
+        if ((n.hasRes(geeseTile)) && (n.getResocTotal() >= 1) && (n.getColour() != turn)) {
+            if(board.isRes(geeseTile)) {
+                c = getColorStr(n.getColour());
+                p.emplace_back(c);
+            }
+
         }
     }
 
-    cout << "players to steal from: " << endl;
+    //cout << "18 " << endl;
     for (auto k : p) {
         cout << k << endl;
     }
@@ -327,11 +329,13 @@ bool Model::hasWon(Color turn) {
 void Model::trade(string curPlayer, string tradePlayer, string give, string take) {
     for (auto p : players) {
         if(getColorStr(p.getColour()) == curPlayer) {
+            cout << "Take Resoc: " << take << endl;
             p.addResoc(take);
             p.removeResoc(give);
         }
         
         if(getColorStr(p.getColour()) == tradePlayer) {
+            cout << "made it 2" << endl;
             p.addResoc(give);
             p.removeResoc(take);
         }
@@ -371,4 +375,12 @@ bool Model::validSteal(string tradePlayer, string take) {
 
 int Model::getGeeseTile() {
     return board.getGeeseTile();
+}
+
+void Model::updateSteal(string curPlayer, string stealPlayer, string resoc) {
+    for (auto p : players) {
+        if (getColorStr(p.getColour()) == curPlayer) p.addResoc(resoc);
+
+        if (getColorStr(p.getColour()) == stealPlayer) p.removeResoc(resoc);
+    }
 }
