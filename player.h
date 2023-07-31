@@ -29,6 +29,7 @@ class Player {
     bool hasEnoughResoc(const std::map<Resource,int> &rMapNeed);
     bool hasOccupTile(int tileNum);
     void updateResocMap(const std::pair<Resource, int> &gainedResoc);
+    void removeResoc(const std::pair<Resource, int> &lostResoc);
     std::map<Resource, int>& getResocMap();
     // accessors
     std::vector<int>& getOccupiedTiles();
@@ -38,9 +39,9 @@ class Player {
     std::vector<std::pair<std::string, int>> removeHalfResocs();
     bool hasRes(int tileNum);
     std::string stealResoc();
-    void addResoc(std::string resoc);
+    //void addResoc(std::string resoc);
     std::string getDiceType();
-    void removeResoc(std::string resoc);
+    //void removeResoc(std::string resoc);
     int fairRoll();
     bool enoughResoc(std::string give);
     bool validSteal(std::string take);

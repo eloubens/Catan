@@ -220,15 +220,11 @@ Board board;
 
 vector<pair<string, vector<pair<string, int>>>> Model::lostResoc() {
     vector<pair<string, vector<pair<string, int>>>> lostResocs;
-    for (auto p : players) {
-        if (p.getResocTotal() >= 10) {
-            vector<pair<string, int>> resocs = p.removeHalfResocs();
-            string c;
 
-            if (p.getColour() == Color::B) c = "Blue";
-            else if (p.getColour() == Color::O) c = "Orange";
-            else if (p.getColour() == Color::R) c = "Red";
-            else if (p.getColour() == Color::Y) c = "Yellow";
+    for (int i = 0; i < 4; ++i) {
+        if (players[i].getResocTotal() >= 10) {
+            vector<pair<string, int>> resocs = players[i].removeHalfResocs();
+            string c = getColorStr(players[i].getColour());
 
             lostResocs.emplace_back(make_pair(c, resocs));
         }
@@ -275,38 +271,41 @@ vector<string> Model::getPlayersToStealFrom(Color turn) {
     int geeseTile = board.getGeeseTile();
     string c;
 
-    for (auto n : players) {
-        if ((n.hasRes(geeseTile)) && (n.getResocTotal() >= 1) && (n.getColour() != turn)) {
-            if(board.isRes(geeseTile)) {
-                c = getColorStr(n.getColour());
+    for (int i = 0; i < 4; ++i) {
+        if ((players[i].hasRes(geeseTile)) && (players[i].getResocTotal() >= 1) && (players[i].getColour() != turn)) {
+            if (board.isRes(geeseTile)) {
+                c = getColorStr(players[i].getColour());
                 p.emplace_back(c);
             }
-
         }
     }
-
-    //cout << "18 " << endl;
-    for (auto k : p) {
-        cout << k << endl;
-    }
-
+    
     return p;
 
 }
 
+
 string Model::steal(string curPlayer, string playerToSteal) {
     string c, r;
-    for (auto p : players) {
-        c = getColorStr(p.getColour()); // enum to str
-        if (c == playerToSteal){
-            r = p.stealResoc();
+    Resource resoc;
+
+    for(int i = 0; i < 4; ++i) {
+        c = getColorStr(players[i].getColour());
+
+        if (c == playerToSteal) {
+            r = players[i].stealResoc();
+            resoc = getResocR(r);
         }
+        
     }
 
-    for (auto n : players) {
-        c = getColorStr(n.getColour());
+    std::pair<Resource, int> gainedCur(resoc, 1);
+    
+    for (int k = 0; k < 4; ++k) {
+        c = getColorStr(players[k].getColour());
+
         if (c == curPlayer) {
-            n.addResoc(r);
+            players[k].updateResocMap(gainedCur);
         }
     }
 
@@ -327,19 +326,25 @@ bool Model::hasWon(Color turn) {
 
 
 void Model::trade(string curPlayer, string tradePlayer, string give, string take) {
-    for (auto p : players) {
-        if(getColorStr(p.getColour()) == curPlayer) {
-            cout << "Take Resoc: " << take << endl;
-            p.addResoc(take);
-            p.removeResoc(give);
+    Resource g = getResocR(give);
+    Resource t = getResocR(take);
+    std::pair<Resource, int> gainedCur(t, 1);
+    std::pair<Resource, int> lostCur(g, 1);
+
+    for (int i = 0; i < 4; ++i) {
+        string c = getColorStr(players[i].getColour());
+
+        if (c == curPlayer) {
+            players[i].updateResocMap(gainedCur);
+            players[i].removeResoc(lostCur);
         }
-        
-        if(getColorStr(p.getColour()) == tradePlayer) {
-            cout << "made it 2" << endl;
-            p.addResoc(give);
-            p.removeResoc(take);
+
+        if (c == tradePlayer) {
+            players[i].updateResocMap(lostCur);
+            players[i].removeResoc(gainedCur);
         }
     }
+   
 }
 
 int Model::fairRoll(Color turn) {
@@ -354,9 +359,9 @@ int Model::fairRoll(Color turn) {
 }
 
 bool Model::enoughResoc(string curPlayer, string give) {
-    for (auto p : players) {
-        if (getColorStr(p.getColour()) == curPlayer) {
-            return p.enoughResoc(give);
+    for(int i = 0; i < 4; ++i) {
+        if (getColorStr(players[i].getColour()) == curPlayer) {
+            return players[i].enoughResoc(give);
         }
     }
 
@@ -364,12 +369,12 @@ bool Model::enoughResoc(string curPlayer, string give) {
 }
 
 bool Model::validSteal(string tradePlayer, string take) {
-    for (auto p : players) {
-        if (getColorStr(p.getColour()) == tradePlayer) {
-            return p.validSteal(take);
+    for (int i = 0; i < 4; ++i) {
+        if (getColorStr(players[i].getColour()) == tradePlayer) {
+            return players[i].validSteal(take);
         }
     }
-
+ 
     return false;
 }
 
@@ -377,10 +382,4 @@ int Model::getGeeseTile() {
     return board.getGeeseTile();
 }
 
-void Model::updateSteal(string curPlayer, string stealPlayer, string resoc) {
-    for (auto p : players) {
-        if (getColorStr(p.getColour()) == curPlayer) p.addResoc(resoc);
 
-        if (getColorStr(p.getColour()) == stealPlayer) p.removeResoc(resoc);
-    }
-}
