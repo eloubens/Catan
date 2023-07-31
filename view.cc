@@ -82,8 +82,6 @@ void View::printGeese(int prevPad) {
 }
 
 void View::printBoard() {
-    cout << endl;
-    cout << endl; 
     string text; 
     int textPad = 2; 
     int spacePad = 21;

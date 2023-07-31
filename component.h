@@ -15,23 +15,12 @@ class Component {
  protected:
  	std::string location; //vertex number or edge number
 	Color player = Color::DNE; //Player that built res/road
-	//std::vector<Vertex*> adjVertices;
-	//std::vector<Edge*> adjEdges;
-	std::vector<Vertex*> adjVertices; // PRIVATE
-	std::vector<Edge*> adjEdges; // PRIVATE
-
-	
-	
-	//bool hasAdjVertices() const;
-	//bool hasAdjEdges() const;
+	std::vector<Vertex*> adjVertices;
+	std::vector<Edge*> adjEdges;
  public:
+ 	explicit Component(std::string location);
  	bool isOccupied();
  	bool isOwnedBy(Color color);
- 	//std::string location; //vertex number or edge number // PRIVATE
- 
-	explicit Component(std::string location);
-	//Component(std::string location,  Color playerType);
-	// virtual void print() const = 0;
 	void setAdjV(std::vector<Vertex*> &&adjVertices);
 	void setAdjE(std::vector<Edge*> &&adjEdges);
 	bool isNum(std::string num); // returns true if location matches the location of the vertex/edge
@@ -49,12 +38,7 @@ class Edge final : public Component {
 	explicit Edge(std::string location); // ctor
 	void setValidRoad(Color color); // places a road, known to be valid
 	string getEdge();
-	// void print() const override;
-	//void checkRoad(Color color, int edge) const; // ???
 };
-
-
-
 
 class Vertex final : public Component {
 	Residence residenceType = Residence::NONE;
@@ -70,10 +54,6 @@ class Vertex final : public Component {
         doesn't do anything if vertex not found. */
 	void placeBasement(std::string bVertex, Color c, bool isDuringTurn);
 	string getVertex(); 
-
-	//void printResidences() const;
-	//void print() const override;
-
 };
 
 #endif

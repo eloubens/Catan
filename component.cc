@@ -6,9 +6,6 @@
 using namespace std;
  
 Component::Component(string location) : location{location} {}
-
-//Component::Component(string location, Color playerType) : location{location}, playerType{playerType} {}
-
 Edge::Edge(string location) : Component{location} {}
 Vertex::Vertex(string location) : Component{location} {}
 
