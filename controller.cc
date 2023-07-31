@@ -465,9 +465,17 @@ int Controller::geese() {
 
     // placing geese on different tile now
     int tileNum;
+    int curGeeseTile = model->getGeeseTile();
     out << "Choose where to place the GEESE." << endl << "> ";
     in >> tileNum;
     if (isEOF()) return eof;;
+
+    while (tileNum == curGeeseTile) {
+        out << "You cannot place the GEESE here." << endl;
+        out << "Choose where to place the GEESE." << endl << "> ";
+        in >> tileNum;
+        if (isEOF()) return eof;;
+    }
    
     model->placeGeese(tileNum);
 
@@ -478,10 +486,15 @@ int Controller::geese() {
         out << "Builder " << curPlayer << " has no builders to steal from." << endl;
     } else {
         out << "Builder " << curPlayer << " can choose to steal from";
-        for (auto n : playersSteal) {
-            out << " " << n << ",";
+
+        if (playersSteal.size() == 1) {
+            out << " " << playersSteal[0] << "." << endl;
+        } else {
+            for (auto n : playersSteal) {
+                out << " " << n << ",";
+            }
+            out << "." << endl;
         }
-        out << endl;
         out << "Choose a builder to steal from." << endl << "> ";
         string toSteal;
         in >> toSteal;
@@ -490,7 +503,7 @@ int Controller::geese() {
 
         string stolenResoc = model->steal(curPlayer, toSteal);
 
-        out << "Builder " << curPlayer << " steals " << stolenResoc << " from Builder" << toSteal << "." << endl;
+        out << "Builder " << curPlayer << " steals " << stolenResoc << " from Builder " << toSteal << "." << endl;
     }
     return 0;
 }
