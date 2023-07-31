@@ -341,7 +341,7 @@ void Model::trade(string curPlayer, string tradePlayer, string give, string take
 
         if (c == tradePlayer) {
             players[i].updateResocMap(lostCur);
-            players[i].updateResocMap(gainedCur);
+            players[i].removeResoc(gainedCur);
         }
     }
    
