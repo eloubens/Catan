@@ -78,9 +78,7 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
                 for (int i = 0; i < playerAmount; i++) {
                     // read until 'r' character representing road
                     getline(ifs, resoc, 'r');
-                    out << "Resoc  " << resoc << endl;
                     getline(ifs, settlements);
-                    out << "Settle  " << settlements << endl;
                     pResocs.emplace_back(istringstream{resoc});
                     pSettlements.emplace_back(istringstream{settlements});
                 }

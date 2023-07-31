@@ -110,16 +110,39 @@ string Tile::getTileValueReg() {
 
 
 // used for save
+// deals with duplicates
 void Tile::addSettlementsLocation(Color c, vector<string> &roads, vector<string> &resNum, vector<Residence> &resType) {
+    string location;
+    bool foundDuplicate;
     for (int i = 0; i < verticesAmount; i++) {
+        foundDuplicate = false;
         if (vertices[i]->isPlayer(c)){
-            resNum.emplace_back(vertices[i]->getLocation());
-            resType.emplace_back(vertices[i]->getRes());
+            location = vertices[i]->getLocation();
+            for (auto num : resNum) {
+                if (num == location) {
+                    foundDuplicate = true;
+                    break;
+                } 
+            }
+            if (!foundDuplicate) {
+                resNum.emplace_back(location);
+                resType.emplace_back(vertices[i]->getRes());
+            }
         }
     }
     for (int i = 0; i < edgesAmount; i++) {
+        foundDuplicate = false;
         if (edges[i]->isPlayer(c)){
-            roads.emplace_back(edges[i]->getLocation());
+            location = edges[i]->getLocation();
+            for (auto num : roads) {
+                if (num == location) {
+                    foundDuplicate = true;
+                    break;
+                } 
+            }
+            if (!foundDuplicate) {
+                roads.emplace_back(location);
+            }
         }
     }
 
