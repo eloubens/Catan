@@ -510,7 +510,7 @@ int Controller::trade() {
     in >> answer;
     if (isEOF()) return eof;
 
-    while ((answer != "yes") || (answer != "no")) {
+    while ((answer != "yes") && (answer != "no")) {
         out << "Does " <<  toTradeWith << " accept this offer?" << endl << "> ";
         in >> answer;
         if (isEOF()) return eof;

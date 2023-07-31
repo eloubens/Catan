@@ -356,7 +356,7 @@ bool Model::enoughResoc(string curPlayer, string give) {
 
 bool Model::validSteal(string tradePlayer, string take) {
     for (auto p : players) {
-        if (getColorStr(p.getColour()) == tradePlayer) {
+        if (getColorStr(p.getColour()) == tradePlayer || getColorChar(p.getColour()) == tradePlayer) {
             return p.validSteal(take);
         }
     }
