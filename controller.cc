@@ -501,8 +501,8 @@ int Controller::geese() {
         string stolenResoc = model->steal(curPlayer, toSteal);
 
         out << "Builder " << curPlayer << " steals " << stolenResoc << " from Builder " << toSteal << "." << endl;
-        //model->updateSteal(curPlayer, toSteal, stolenResoc);
-
+        
+        
     }
     return 0;
 }

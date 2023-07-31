@@ -263,4 +263,3 @@ bool Player::validSteal(string take) {
     if(resocMap[r] <= 0) return false;
     else return true;
 }
-
