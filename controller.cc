@@ -41,17 +41,18 @@ void Controller::getStatus(int i) {
 int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed, vector<string> &arg_vec) {
     ostringstream board_oss; 
     if (canRandomize && foundRandomize) {  // means -boardload found and  no -board or -load found
-        vector<int> tileVal = {2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12}; // die roll
-        // 4 bricks(0), 4 energy(1), 4 glass(2), 3 heat(3), 3 wifi(4), 1 park(5)
-        vector<int> tileResource = {0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5}; 
-        default_random_engine rng{seed};
-        shuffle(tileResource.begin(), tileResource.end(), rng);
-        shuffle(tileVal.begin(), tileVal.end(), rng);
-        for (int i = 0; i < tilesAmount; i++) {
-            board_oss << " " << tileResource[i] << " " << tileVal[i]; 
-        }
+        randomize(board_oss, seed);
         istringstream board_iss{board_oss.str()}; 
         model = make_unique<Model>(board_iss); 
+        return 0;
+        // TESTING
+        // Assume you have a std::unique_ptr<Model> named model
+        // Create a new Model instance
+        //std::unique_ptr<Model> newModel = std::make_unique<Model>(board_iss);
+        // Assign the new Model to the existing unique_ptr
+        //model = std::move(newModel);
+
+
         // own testing
         //cout << board_oss.str() << endl;
     } else if (!canRandomize) { // means -board or -load found
@@ -219,7 +220,7 @@ int Controller::beginningOfTurn() {
     string cmd;
     
     while(!(in >> cmd) || (cmd != "roll")) {
-        if (isEOF()) { return eof; }  /// ASK ABT THIS PART 
+        if (isEOF()) { return eof; }  
         if (cmd == "load") {
             out << "Dice set to load." << endl;
             model->setDice(turn, cmd);
@@ -399,7 +400,7 @@ int Controller::general(vector<string> &arg_vec) {
             if (!(cin >> input)) { return eof; } // MAYBE NEED SAVE HERE, NOT SURE (aka return save();)
         } while(input != "yes" && input != "no");
         if (input == "yes") {
-            //resetGame(); WRITE THIS FUNCTION
+            reset();
             continue;
         }
         if (input == "no") {
@@ -520,6 +521,33 @@ int Controller::trade() {
 
     return 0;
 
+}
+
+void Controller::randomize(ostringstream& board_oss, unsigned& seed) {
+   
+    vector<int> tileVal = {2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12}; // die roll
+    // 4 bricks(0), 4 energy(1), 4 glass(2), 3 heat(3), 3 wifi(4), 1 park(5)
+    vector<int> tileResource = {0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5}; 
+    default_random_engine rng{seed};
+    shuffle(tileResource.begin(), tileResource.end(), rng);
+    shuffle(tileVal.begin(), tileVal.end(), rng);
+    for (int i = 0; i < tilesAmount; i++) {
+        board_oss << " " << tileResource[i] << " " << tileVal[i]; 
+    } 
+
+}
+
+void Controller::reset() {
+    unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+    ostringstream board_oss;
+
+    randomize(board_oss, seed);
+    istringstream board_iss{board_oss.str()};
+    // Create a new Model instance
+    std::unique_ptr<Model> newModel = std::make_unique<Model>(board_iss);
+    
+    // Assign the new Model to the existing unique_ptr
+    model = std::move(newModel);   
 }
 
 
