@@ -23,8 +23,13 @@ Model::Model(vector<istringstream> &&pResocs, vector<istringstream> &&pSettlemen
     board{board, geeseTileNum} {
         for (int i = 0; i < playerAmount; i++) {
             int veNum, tileNum; //ve means vertex or edge
-            pSettlements[i].ignore(); // ignores 'r' for road
+            //pSettlements[i].ignore(); // ignores 'r' for road
             // reading in roads
+            // cout << "printing" << endl;
+            // for (auto &n : pSettlements) {
+            //     cout << n.str() << endl;
+            // }
+            // cout << "printing" << endl;
             while(pSettlements[i] >> veNum) {  // edge num
                 //tileNum stores the number of the tile that the road was placed om
                 tileNum = this->board.placeValidRoad(to_string(veNum), static_cast<Color>(i));
@@ -32,11 +37,15 @@ Model::Model(vector<istringstream> &&pResocs, vector<istringstream> &&pSettlemen
             }
             pSettlements[i].clear();
             pSettlements[i].ignore();  // ignores 'h' for house
-            char r;
+            // pSettlements[i] >> veNum;
+            // cout << "HERE" << veNum;
+            string r;
             Residence res;
+            //getResStr(res)
             while(pSettlements[i] >> veNum) {
                 pSettlements[i] >> r;
-                res = static_cast<Residence>(r);
+                cout << "Residence Type: " << r << endl;
+                res = getResFromStr(r);
                 tileNum = this->board.placeValidRes(to_string(veNum), static_cast<Color>(i), res);
                 players[i].addBuildingPoints(static_cast<int>(res));
                 players[i].addOccupiedTiles(tileNum);

@@ -16,6 +16,7 @@ extern const int vertexMax; // 53
 extern const int edgeMax; // 70
 
 class Controller {
+    bool wasBoardLoad = false;
     std::ostream &out = std::cout;
     std::istream &in = std::cin;
     std::ostream &err = std::cerr;
@@ -41,11 +42,13 @@ class Controller {
     void improveRes(std::string vertexNum);
     void buildRoad(std::string edgeNum);
     bool hasWon();
+    void printHelp();
+    void printStatus(int i);
+    void printResidences();
     void reset();
     void randomize(std::ostringstream& board_oss, unsigned& seed);
  public: 
     // no ctor
-    void getStatus(int i);
     int general(std::vector<string> &arg_vec);
     int createController(std::vector<string> &arg_vec); // reads in command line inputs, creates model and view
 };

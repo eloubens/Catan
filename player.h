@@ -18,11 +18,12 @@ class Player {
     std::vector<int> occupiedTiles;
     int buildingPoints = 0, resocTotal = 0;
  public:
-    void setDice(std::string cmd);
-    explicit Player(Color color);
+    
     Player(std::istringstream &playerData, Color color);
     // adds tileNum to vector of occupiedTiles, doesn't add duplicates
     void addOccupiedTiles(int tileNum);
+    void setDice(std::string cmd);
+    explicit Player(Color color);
     void addBuildingPoints(int num);
     int getBuildingPoints();
     bool hasEnoughResoc(const std::map<Resource,int> &rMapNeed);
@@ -33,21 +34,14 @@ class Player {
     std::vector<int>& getOccupiedTiles();
     int getResocTotal();
     Color getColour();
-
     // geese functions
     std::vector<std::pair<std::string, int>> removeHalfResocs();
-
     bool hasRes(int tileNum);
-
     std::string stealResoc();
     void addResoc(std::string resoc);
-
     std::string getDiceType();
-
     void removeResoc(std::string resoc);
-
     int fairRoll();
-
     bool enoughResoc(std::string give);
     bool validSteal(std::string take);
 };

@@ -30,7 +30,7 @@ std::string getResocLowerCaseStr(Resource r) {
         case Resource::HEAT:
             return "heat";
         case Resource::WIFI:
-            return "wifi";
+            return "WiFi";
         case Resource::PARK:
             return "park";
         default:

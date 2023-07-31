@@ -11,5 +11,6 @@ enum class Residence {
 };
 
 std::string getResStr(Residence r);
+Residence getResFromStr(std::string r);
 
 #endif
