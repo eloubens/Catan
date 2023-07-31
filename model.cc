@@ -122,7 +122,7 @@ bool Model::placeBasement(string bVertex, Color c, bool isDuringTurn) {
 }
 
 
-Tile *Model::getTiles() {
+Tile* Model::getTiles() {
     return board.getTiles();
 }
 
@@ -262,9 +262,12 @@ void Model::placeGeese(int tile) {
     int geeseCurrentTile = board.getGeeseTile();
 
     if (tile != geeseCurrentTile) {
-        board.setGeese(geeseCurrentTile, false);
-        board.setGeese(tile, true);
+        board.setGeeseTileNum(tile);
+        board.setGeeseV2(geeseCurrentTile, false);
+        board.setGeeseV2(tile, true);
     }
+
+    //cout << "Geese Tile: " << board.getGeeseTile() << endl;
 
 }
 
