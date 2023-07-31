@@ -7,6 +7,7 @@
 #include "colorEnum.h"
 #include "model.h"
 #include "view.h"
+#include "board.h"
 
 extern const int invalidInput; // 1
 extern const int eof; // 2
@@ -40,7 +41,8 @@ class Controller {
     void improveRes(std::string vertexNum);
     void buildRoad(std::string edgeNum);
     bool hasWon();
-
+    void reset();
+    void randomize(std::ostringstream& board_oss, unsigned& seed);
  public: 
     // no ctor
     void getStatus(int i);
