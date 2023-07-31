@@ -523,21 +523,19 @@ int Controller::trade() {
     if (isEOF()) return eof; 
 
     out << curPlayer << " offers " << toTradeWith << " one " << give << " for one " << take << "." << endl;
-    out << "Does " <<  toTradeWith << " accept this offer?" << endl << "> ";
-    in >> answer;
-    if (isEOF()) return eof;
 
-    while ((answer != "yes") || (answer != "no")) {
+
+    while(true) {
         out << "Does " <<  toTradeWith << " accept this offer?" << endl << "> ";
         in >> answer;
         if (isEOF()) return eof;
+
+        if ((answer == "yes") || (answer == "no")) break;
     }
 
     if (answer == "yes") {
         if (model->enoughResoc(curPlayer, give)) {
-            cout << "Made it 1" << endl;
             if (model->validSteal(toTradeWith, take)) {
-                cout << "Made it 2" << endl;
                 model->trade(curPlayer, toTradeWith, give, take);
             } else {
                 out << toTradeWith << " does not have enough resources." << endl;
