@@ -193,21 +193,6 @@ int Controller::buildDefaultBasements(int i, bool isInc) {
     return i;
 }
 
-void Controller::printStatus(int i) {
-    int points = model->getBuildingPoints(i);
-    if (points == 1 ) {
-        out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building point,"; 
-    } else {
-        out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building points,"; 
-    }
-    for (const auto& entry : model->getResocMap(i)) {
-        if (entry.first == Resource::WIFI) {
-            out << " and " << entry.second << " " << getResocLowerCaseStr(entry.first) << "." << endl;; 
-        } else {
-            out << " " << entry.second << " " << getResocLowerCaseStr(entry.first) << ","; 
-        }
-    }
-}
 
 // prints residences of player turn
 void Controller::printResidences() {
@@ -491,19 +476,33 @@ int Controller::geese() {
             out << " " << playersSteal[0] << "." << endl;
         } else {
             for (auto n : playersSteal) {
-                out << " " << n << ",";
+                if (n == playersSteal[playersSteal.size() - 1]) {
+                    out << " " << n << "." << endl;
+                } else {
+                    out << " " << n << ",";
+                }
             }
-            out << "." << endl;
         }
-        out << "Choose a builder to steal from." << endl << "> ";
+        
         string toSteal;
-        in >> toSteal;
-        if (isEOF()) return eof;;
-        // check from eof and valid input
+
+        while(true) {
+            out << "Choose a builder to steal from." << endl << "> ";
+            in >> toSteal;
+            if (isEOF()) return eof;
+            
+            auto it = std::find(playersSteal.begin(), playersSteal.end(), toSteal);
+            
+            if (it != playersSteal.end()) break;
+            else out << "You cannot choose that builder." << endl;
+        }
+       
 
         string stolenResoc = model->steal(curPlayer, toSteal);
 
         out << "Builder " << curPlayer << " steals " << stolenResoc << " from Builder " << toSteal << "." << endl;
+        
+        
     }
     return 0;
 }
@@ -519,14 +518,12 @@ int Controller::trade() {
     if (isEOF()) return eof; 
 
     out << curPlayer << " offers " << toTradeWith << " one " << give << " for one " << take << "." << endl;
-    out << "Does " <<  toTradeWith << " accept this offer?" << endl << "> ";
-    in >> answer;
-    if (isEOF()) return eof;
-
-    while ((answer != "yes") && (answer != "no")) {
+    while(true) {
         out << "Does " <<  toTradeWith << " accept this offer?" << endl << "> ";
         in >> answer;
         if (isEOF()) return eof;
+
+        if ((answer == "yes") || (answer == "no")) break;
     }
 
     if (answer == "yes") {
@@ -589,3 +586,19 @@ std::unique_ptr<View> view;
     O = 2, // Player 3, Orange
     Y = 3,  // Player 4, Yellow
 */
+
+void Controller::printStatus(int i) {
+    int points = model->getBuildingPoints(i);
+    if (points == 1 ) {
+        out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building point,"; 
+    } else {
+        out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building points,"; 
+    }
+    for (const auto& entry : model->getResocMap(i)) {
+        if (entry.first == Resource::WIFI) {
+            out << " and " << entry.second << " " << getResocLowerCaseStr(entry.first) << "." << endl;; 
+        } else {
+            out << " " << entry.second << " " << getResocLowerCaseStr(entry.first) << ","; 
+        }
+    }
+}

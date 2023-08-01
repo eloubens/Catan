@@ -172,6 +172,12 @@ std::vector<int> occupiedTiles
 
 void Player::updateResocMap(const pair<Resource, int> &gainedResoc) {
     resocMap[gainedResoc.first] += gainedResoc.second;
+    ++resocTotal;
+}
+
+void Player::removeResoc(const pair<Resource, int> &lostResoc) {
+    resocMap[lostResoc.first] -= lostResoc.second;
+    --resocTotal;
 }
 
 map<Resource, int>& Player::getResocMap() { return resocMap; }
@@ -215,49 +221,30 @@ string Player::stealResoc() {
     
     stolenResoc = getResocStr(lost);
 
-    // update Player info
-    resocTotal -= numToLose;
-    resocMap[lost] -= numToLose;
+    std::pair<Resource, int> lostR(lost, 1);
+
+    removeResoc(lostR);
 
     return stolenResoc;
 }
 
 
+/*
 void Player::addResoc(string resoc) {
-    if (resoc == "Brick") resocMap[Resource::BRICK] += 1;
-    else if (resoc == "Energy") resocMap[Resource::ENERGY] += 1;
-    else if (resoc == "Glass") resocMap[Resource::GLASS] += 1;
-    else if (resoc == "Heat") resocMap[Resource::HEAT] += 1;
-    else if (resoc == "Wifi") resocMap[Resource::WIFI] += 1;
-    else if (resoc == "Park") resocMap[Resource::PARK] += 1;
-    else if (resoc == "BRICK") resocMap[Resource::BRICK] += 1;
-    else if (resoc == "ENERGY") resocMap[Resource::ENERGY] += 1;
-    else if (resoc == "GLASS") resocMap[Resource::GLASS] += 1;
-    else if (resoc == "HEAT") resocMap[Resource::HEAT] += 1;
-    else if (resoc == "WIFI") resocMap[Resource::WIFI] += 1;
-    else if (resoc == "PARK") resocMap[Resource::PARK] += 1;
-    else if (resoc == "WiFi") resocMap[Resource::WIFI] += 1;
+    Resource r = getResocR(resoc);
+    resocMap[r] += 1;
 }
+*/
 
 string Player::getDiceType() {
     return dice.getDiceType();
 }
 
-void Player::removeResoc(string resoc) {
-    if (resoc == "Brick") resocMap[Resource::BRICK] -= 1;
-    else if (resoc == "Energy") resocMap[Resource::ENERGY] -= 1;
-    else if (resoc == "Glass") resocMap[Resource::GLASS] -= 1;
-    else if (resoc == "Heat") resocMap[Resource::HEAT] -= 1;
-    else if (resoc == "Wifi") resocMap[Resource::WIFI] -= 1;
-    else if (resoc == "Park") resocMap[Resource::PARK] -= 1;
-    else if (resoc == "BRICK") resocMap[Resource::BRICK] -= 1;
-    else if (resoc == "ENERGY") resocMap[Resource::ENERGY] -= 1;
-    else if (resoc == "GLASS") resocMap[Resource::GLASS] -= 1;
-    else if (resoc == "HEAT") resocMap[Resource::HEAT] -= 1;
-    else if (resoc == "WIFI") resocMap[Resource::WIFI] -= 1;
-    else if (resoc == "PARK") resocMap[Resource::PARK] -= 1;
-    else if (resoc == "WiFi") resocMap[Resource::WIFI] -= 1;
-}
+/*void Player::removeResoc(string resoc) {
+    Resource r = getResocR(resoc);
+    resocMap[r] -= 1;
+}*/
+
 
 int Player::fairRoll() {
     int rollVal = dice.rollFair();
@@ -276,4 +263,3 @@ bool Player::validSteal(string take) {
     if(resocMap[r] <= 0) return false;
     else return true;
 }
-

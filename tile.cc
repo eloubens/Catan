@@ -227,7 +227,12 @@ bool Tile::isPlaceValidRes(string vertexNum, Color color, Residence res) {
 
 string Tile::getResocIntFormat() { return to_string(static_cast<int>(resocType)); }
 
-
+bool Tile::isRes() {
+    for (auto v : vertices) {
+        if (v->isOccupied()) return true;
+    }
+    return false;
+}
 
 /*
 

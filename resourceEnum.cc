@@ -1,4 +1,7 @@
 #include "resourceEnum.h"
+using namespace std;
+
+#include <iostream>
 
 std::string getResocStr(Resource r) {
     switch (r) {

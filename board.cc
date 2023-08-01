@@ -1114,3 +1114,8 @@ pair<Resource, int> Board::getResoc(int tileNum, int tileValRolled, Color player
 void Board::setGeeseV2(int tileNum, bool geese) {
     tiles[tileNum].setGeese(geese);
 }
+
+bool Board::isRes(int tileNum) {
+    return tiles[tileNum].isRes();
+
+}
