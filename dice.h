@@ -5,7 +5,6 @@
 class Dice final {
     std::string type = "load"; // load or fair 
  public:
-    // no ctor needed
     int rollFair();
     void setDice(std::string cmd);
     std::string getDiceType();

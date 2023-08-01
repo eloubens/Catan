@@ -8,12 +8,8 @@ using namespace std;
 
 class View {
     Model *model;
-
  public:
     View(Model *model);
-    
-    void printBoard(); 
-    // helpers for printBoard
     string getResource(int n);
     void update(string & text, int &width, int &pad, int &right_pad, int &left_pad);
     void printTileTop(int prevPad, string v1, string v2, string e);
@@ -25,6 +21,7 @@ class View {
     void printVertex(string i);
     void printEdge(int prevPad, string i);
     void printSingleBar(int prevPad);
+    void printBoard(); 
 };
 
 #endif

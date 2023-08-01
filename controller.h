@@ -20,22 +20,22 @@ class Controller {
     std::ostream &out = std::cout;
     std::istream &in = std::cin;
     std::ostream &err = std::cerr;
-    //int state = 0; // program state
+
     Color turn = Color::B; // Blue goes first 
-    std::unique_ptr<Model> model; // default ctor initializes to nullptr
-    std::unique_ptr<View> view; // default ctor initializes to nullptr
+    std::unique_ptr<Model> model; 
+    std::unique_ptr<View> view;
 
     int roll(Color turn);
     int trade();
     int geese();
-    // sets the Model field of the controller. Loads a board from a file, creates and loads a randomized board, or loads a saved game.
     int setModel(bool canRandomize, bool foundRandomize, unsigned &seed, std::vector<string> &arg_vec);
+    // sets the Model field of the controller. Either loads a board from a file, creates and loads a randomized board, or loads a saved game.
+    
     bool isSpecialState(int n);
     int save(std::string fileName = "backup.sv");
     int beginningOfGame();
     bool isEOF();
     int buildDefaultBasements(int i, bool isInc);
-    // NEED TO ADD CODE HERE TO PRINT THE STATUS OF THE PLAYER IN FUNCTIONS LATER
     int beginningOfTurn(); 
     int DuringTurn();
     void buildRes(std::string vertexNum);
@@ -50,7 +50,7 @@ class Controller {
  public: 
     // no ctor
     int general(std::vector<string> &arg_vec);
-    int createController(std::vector<string> &arg_vec); // reads in command line inputs, creates model and view
+    int createController(std::vector<string> &arg_vec); // reads command line inputs, creates model and view
 };
 
 #endif

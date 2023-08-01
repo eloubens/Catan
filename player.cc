@@ -18,7 +18,7 @@ Player::Player(Color color) : color{color},
         {Resource::GLASS, 0},
         {Resource::HEAT, 0},
         {Resource::WIFI, 0}
-    }  {}
+    }  { }
 
 Player::Player(istringstream &playerData, Color color) : color{color} {
     int num = 0;
@@ -40,7 +40,7 @@ bool Player::hasOccupTile(int tileNum) {
 
 void Player::addOccupiedTiles(int tileNum) {
     // the original tile found was checked already to be a duplicate by hasOccupTilesu
-    // but the original tiles' shared tiles still might be a duplicate
+    // the original tiles shared tiles still might be a duplicate
     for (auto num : occupiedTiles) {
         if (num == tileNum) { return; }
     }
@@ -66,7 +66,7 @@ Color Player::getColour() {
     return color;
 }
 
- vector<pair<string, int>> Player::removeHalfResocs() {
+vector<pair<string, int>> Player::removeHalfResocs() {
     vector<pair<string, int>> resocs;
 
     int numToLose = resocTotal / 2;
@@ -75,12 +75,10 @@ Color Player::getColour() {
     vector<Resource> lostResocs;
     std::map<Resource, int> lostResocsCounts;
 
-    
     // put all currently owned resources from resocMap into a new vector
     for (const auto& pair : resocMap) {
         const Resource& r = pair.first;
         int count = pair.second;
-
         for (int i = 0; i < count; ++i) {
             allResocs.emplace_back(r);
         }
@@ -98,7 +96,7 @@ Color Player::getColour() {
         std::uniform_int_distribution<size_t> dist(0, allResocs.size() - 1);
         size_t indexToRemove = dist(rng);
 
-        // Add the lost resource to the 'lostResocs' vector before erasing it from 'allResocs'
+        // Adds the lost resource to the 'lostResocs' vector before erasing it from 'allResocs'
         Resource lost = allResocs[indexToRemove];
         lostResocs.emplace_back(lost);
 
@@ -161,21 +159,8 @@ Color Player::getColour() {
         std::pair<Resource, int> lost(Resource::PARK, p);
         removeResoc(lost);
     }
-
-
     return resocs;
- }
-/*
-
-Color color
-int buildingPoints = 0
-int resocTotal = 0
-Dice dice
-std::map<Resource, int> resocMap
-std::vector<int> occupiedTiles
-
-*/
-
+}
 
 void Player::updateResocMap(const pair<Resource, int> &gainedResoc) {
     resocMap[gainedResoc.first] += gainedResoc.second;
@@ -197,7 +182,6 @@ bool Player::hasRes(int tileNum) {
             return true;
         }
     }
-
     return false;
 }
 
@@ -225,38 +209,20 @@ string Player::stealResoc() {
 
     // Add the lost resource
     Resource lost = allResocs[indexToRemove];
-    
     stolenResoc = getResocStr(lost);
 
     std::pair<Resource, int> lostR(lost, 1);
-
     removeResoc(lostR);
-
     return stolenResoc;
 }
-
-
-/*
-void Player::addResoc(string resoc) {
-    Resource r = getResocR(resoc);
-    resocMap[r] += 1;
-}
-*/
 
 string Player::getDiceType() {
     return dice.getDiceType();
 }
 
-/*void Player::removeResoc(string resoc) {
-    Resource r = getResocR(resoc);
-    resocMap[r] -= 1;
-}*/
-
-
 int Player::fairRoll() {
     int rollVal = dice.rollFair();
     return rollVal;
-
 }
 
 bool Player::enoughResoc(string give) {
