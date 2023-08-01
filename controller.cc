@@ -260,8 +260,8 @@ void Controller::printHelp() {
     << "trade <colour> <give> <take>" << endl << "next" << endl << "save <file>" << endl << "help" << endl;
 }
 
-bool Controller::hasWon() {
-    return model->hasWon(turn);
+bool Controller::hasWon(Color c) {
+    return model->hasWon(c);
 }
 
 int Controller::DuringTurn() {
@@ -309,7 +309,7 @@ int Controller::DuringTurn() {
             } else if (cmd == "build-road") {
                 buildRoad(num);
             }
-            if (hasWon()) {
+            if (hasWon(turn)) {
                 return gameWon;
             }
         } else {
@@ -372,19 +372,28 @@ void Controller::buildRes(string vertexNum){
 int Controller::general(vector<string> &arg_vec) {
     if (isSpecialState(createController(arg_vec))) { return invalidInput; } // could only return invalidInput here
     while(true) {
+        bool gameHasWon = false;
         // beginning of game. 
         if (!wasBoardLoad) {
             if (isSpecialState(beginningOfGame())) { return save(); }
         }
+        // checking if a player already has >= 10 building points
+        if (wasBoardLoad) {
+            for (int i = 0 ; i < playerAmount; i++) {
+                if (hasWon(static_cast<Color>(i))) { 
+                    gameHasWon = true;
+                }
+            }
+        }
+       
         wasBoardLoad = false; // for when a new game starts, was Board will not be applicable anymore
         // game begins
-        while(true) {
+        while(!gameHasWon) {
             if (isSpecialState(beginningOfTurn())) { return save(); }
             int state = DuringTurn();
             if (state == eofNoSave) { return eof; }
             if (state == eof) { 
                 return save(); 
-                out << "I am je";
             }
             if (state == gameWon) { break; }
         }
@@ -395,7 +404,6 @@ int Controller::general(vector<string> &arg_vec) {
             if (!(cin >> input)) { return eof; } // Doesn't save file here on eof
         } while(input != "yes" && input != "no");
         if (input == "yes") {
-            //resetGame(); WRITE THIS FUNCTION
             reset();
             continue;
         }
@@ -518,8 +526,6 @@ int Controller::trade() {
     if (isEOF()) return eof; 
 
     out << curPlayer << " offers " << toTradeWith << " one " << give << " for one " << take << "." << endl;
-
-
     while(true) {
         out << "Does " <<  toTradeWith << " accept this offer?" << endl << "> ";
         in >> answer;
@@ -562,14 +568,11 @@ void Controller::randomize(ostringstream& board_oss, unsigned& seed) {
 void Controller::reset() {
     unsigned seed = chrono::system_clock::now().time_since_epoch().count();
     ostringstream board_oss;
-
     randomize(board_oss, seed);
     istringstream board_iss{board_oss.str()};
-    // Create a new Model instance
-    std::unique_ptr<Model> newModel = std::make_unique<Model>(board_iss);
-    
-    // Assign the new Model to the existing unique_ptr
-    model = std::move(newModel);   
+    // Create a new Model and view instance
+    model =  make_unique<Model>(board_iss);
+    view = make_unique<View>(model.get());
 }
 
 
