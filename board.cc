@@ -1115,7 +1115,7 @@ void Board::setGeeseV2(int tileNum, bool geese) {
     tiles[tileNum].setGeese(geese);
 }
 
-bool Board::isRes(int tileNum) {
-    return tiles[tileNum].isRes();
+bool Board::isRes(int tileNum, string colour) {
+    return tiles[tileNum].isRes(colour);
 
 }

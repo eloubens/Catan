@@ -272,8 +272,9 @@ vector<string> Model::getPlayersToStealFrom(Color turn) {
     string c;
 
     for (int i = 0; i < 4; ++i) {
+        c = getColorStr(players[i].getColour());
         if ((players[i].hasRes(geeseTile)) && (players[i].getResocTotal() >= 1) && (players[i].getColour() != turn)) {
-            if (board.isRes(geeseTile)) {
+            if (board.isRes(geeseTile, c)) {
                 c = getColorStr(players[i].getColour());
                 p.emplace_back(c);
             }

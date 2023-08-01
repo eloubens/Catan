@@ -50,7 +50,7 @@ class Board {
 
     void setGeeseTileNum(int tile);
 
-    bool isRes(int tileNum);
+    bool isRes(int tileNum, std::string colour);
 };
 
 #endif
