@@ -196,7 +196,7 @@ bool Player::hasRes(int tileNum) {
 
 string Player::stealResoc() {
     string stolenResoc;
-    int numToLose = 1;
+    //int numToLose = 1;
     vector<Resource> allResocs;
 
     // put all currently owned resources from resocMap into a new vector
