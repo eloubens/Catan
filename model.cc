@@ -193,7 +193,27 @@ vector<pair<string, vector<pair<string, int>>>> Model::lostResoc() {
         }
     }
     return lostResocs;
+}vector<pair<string, int>> Model::numLostResoc() {
+    vector<pair<string, int>> nLost;
+    for (auto p : players) {
+        if (p.getResocTotal() >= 10) {
+            int numLost = p.getResocTotal() / 2;
+            string c;
+
+            if (p.getColour() == Color::B) c = "Blue";
+            else if (p.getColour() == Color::O) c = "Orange";
+            else if (p.getColour() == Color::R) c = "Red";
+            else if (p.getColour() == Color::Y) c = "Yellow";
+
+            nLost.emplace_back(make_pair(c, numLost));
+        }
+    }
+
+    return nLost;
+
 }
+
+
 
 void Model::placeGeese(int tile) {
     int geeseCurrentTile = board.getGeeseTile();
