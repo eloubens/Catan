@@ -238,7 +238,6 @@ vector<pair<string, int>> Model::numLostResoc() {
     for (auto p : players) {
         if (p.getResocTotal() >= 10) {
             int numLost = p.getResocTotal() / 2;
-
             string c = getColorStr(p.getColour());
             nLost.emplace_back(make_pair(c, numLost));
         }
