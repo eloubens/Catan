@@ -169,21 +169,6 @@ int Controller::buildDefaultBasements(int i, bool isInc) {
     return i;
 }
 
-void Controller::printStatus(int i) {
-    int points = model->getBuildingPoints(i);
-    if (points == 1 ) {
-        out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building point,"; 
-    } else {
-        out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building points,"; 
-    }
-    for (const auto& entry : model->getResocMap(i)) {
-        if (entry.first == Resource::WIFI) {
-            out << " and " << entry.second << " " << getResocLowerCaseStr(entry.first) << "." << endl;; 
-        } else {
-            out << " " << entry.second << " " << getResocLowerCaseStr(entry.first) << ","; 
-        }
-    }
-}
 
 // prints residences of player turn
 void Controller::printResidences() {
@@ -247,8 +232,8 @@ void Controller::printHelp() {
     << "trade <colour> <give> <take>" << endl << "next" << endl << "save <file>" << endl << "help" << endl;
 }
 
-bool Controller::hasWon() {
-    return model->hasWon(turn);
+bool Controller::hasWon(Color c) {
+    return model->hasWon(c);
 }
 
 int Controller::DuringTurn() {
@@ -295,7 +280,7 @@ int Controller::DuringTurn() {
             } else if (cmd == "build-road") {
                 buildRoad(num);
             }
-            if (hasWon()) {
+            if (hasWon(turn)) {
                 return gameWon;
             }
         } else {
@@ -351,17 +336,28 @@ void Controller::buildRes(string vertexNum){
 int Controller::general(vector<string> &arg_vec) {
     if (isSpecialState(createController(arg_vec))) { return invalidInput; } // only return invalidInput here
     while(true) {
+        bool gameHasWon = false;
         // beginning of game. 
         if (!wasBoardLoad) {
             if (isSpecialState(beginningOfGame())) { return save(); }
         }
+        // checking if a player already has >= 10 building points
+        if (wasBoardLoad) {
+            for (int i = 0 ; i < playerAmount; i++) {
+                if (hasWon(static_cast<Color>(i))) { 
+                    gameHasWon = true;
+                }
+            }
+        }
+       
         wasBoardLoad = false; // for when a new game starts, was Board will not be applicable anymore
-        while(true) {
+        // game begins
+        while(!gameHasWon) {
             if (isSpecialState(beginningOfTurn())) { return save(); }
             int state = DuringTurn();
             if (state == eofNoSave) { return eof; }
             if (state == eof) { 
-                return save();
+                return save(); 
             }
             if (state == gameWon) { break; }
         }
@@ -413,8 +409,8 @@ int Controller::geese() {
 
     int i = 0;
     for (const auto& p : v) {
-        out << "Builder " << p.first << "loses " << numLost[i].second << "resources to the geese. They lose:" << endl;
-        for (const auto& resourcePair : p.second) {
+        out << "Builder " << p.first << " loses " << numLost[i].second << " resources to the geese. They lose:" << endl;
+         for (const auto& resourcePair : p.second) {
             out << resourcePair.second << " " << resourcePair.first << std::endl;
         }
     }
@@ -446,19 +442,25 @@ int Controller::geese() {
         } else {
             for (auto n : playersSteal) {
                 if (n == playersSteal[playersSteal.size() - 1]) {
-                    out << " " << n << ".";
+                    out << " " << n << "." << endl;
                 } else {
                     out << " " << n << ",";
                 }
             }
         }
-        out << "Choose a builder to steal from." << endl << "> ";
+        
         string toSteal;
-        in >> toSteal;
-        if (isEOF()) return eof;
+
+        while(true) {
+            out << "Choose a builder to steal from." << endl << "> ";
+            in >> toSteal;
+            if (isEOF()) return eof;
+            auto it = std::find(playersSteal.begin(), playersSteal.end(), toSteal);
+            if (it != playersSteal.end()) break;
+            else out << "You cannot choose that builder." << endl;
+        }
         string stolenResoc = model->steal(curPlayer, toSteal);
         out << "Builder " << curPlayer << " steals " << stolenResoc << " from Builder " << toSteal << "." << endl;
-        model->updateSteal(curPlayer, toSteal, stolenResoc);
     }
     return 0;
 }
@@ -472,16 +474,14 @@ int Controller::trade() {
 
     in >> toTradeWith >> give >> take;
     if (isEOF()) return eof; 
-
     out << curPlayer << " offers " << toTradeWith << " one " << give << " for one " << take << "." << endl;
-
+    
     while(true) {
         out << "Does " <<  toTradeWith << " accept this offer?" << endl << "> ";
         in >> answer;
         if (isEOF()) return eof;
         if ((answer == "yes") || (answer == "no")) break;
     }
-
     if (answer == "yes") {
         if (model->enoughResoc(curPlayer, give)) {
             if (model->validSteal(toTradeWith, take)) {
@@ -512,10 +512,23 @@ void Controller::reset() {
     ostringstream board_oss;
     randomize(board_oss, seed);
     istringstream board_iss{board_oss.str()};
+    // Create a new Model and view instance
+    model =  make_unique<Model>(board_iss);
+    view = make_unique<View>(model.get());
+}
 
-    // Create a new Model instance
-    std::unique_ptr<Model> newModel = std::make_unique<Model>(board_iss);
-    
-    // Assign the new Model to the existing unique_ptr
-    model = std::move(newModel);   
+void Controller::printStatus(int i) {
+    int points = model->getBuildingPoints(i);
+    if (points == 1 ) {
+        out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building point,"; 
+    } else {
+        out << getColorStr(model->GetColour(i)) << " has " << model->getBuildingPoints(i) << " building points,"; 
+    }
+    for (const auto& entry : model->getResocMap(i)) {
+        if (entry.first == Resource::WIFI) {
+            out << " and " << entry.second << " " << getResocLowerCaseStr(entry.first) << "." << endl;; 
+        } else {
+            out << " " << entry.second << " " << getResocLowerCaseStr(entry.first) << ","; 
+        }
+    }
 }

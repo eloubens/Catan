@@ -82,6 +82,6 @@ class Model{
     bool enoughResoc(string curPlayer, string give);
     bool validSteal(string tradePlayer, string take);
     int getGeeseTile();
-    void updateSteal(string curPlayer, string stealPlayer, string resoc);
 };
+
 #endif

@@ -41,7 +41,7 @@ class Controller {
     void buildRes(std::string vertexNum);
     void improveRes(std::string vertexNum);
     void buildRoad(std::string edgeNum);
-    bool hasWon();
+    bool hasWon(Color c);
     void printHelp();
     void printStatus(int i);
     void printResidences();

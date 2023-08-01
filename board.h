@@ -41,7 +41,8 @@ class Board {
     int getGeeseTile();
     void setGeeseV2(int tileNum, bool geese);
     void setGeeseTileNum(int tile);
-    bool isRes(int tileNum);
+
+    bool isRes(int tileNum, std::string colour);
 };
 
 #endif
