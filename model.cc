@@ -238,13 +238,8 @@ vector<pair<string, int>> Model::numLostResoc() {
     for (auto p : players) {
         if (p.getResocTotal() >= 10) {
             int numLost = p.getResocTotal() / 2;
-            string c;
 
-            if (p.getColour() == Color::B) c = "Blue";
-            else if (p.getColour() == Color::O) c = "Orange";
-            else if (p.getColour() == Color::R) c = "Red";
-            else if (p.getColour() == Color::Y) c = "Yellow";
-
+            string c = getColorStr(p.getColour());
             nLost.emplace_back(make_pair(c, numLost));
         }
     }

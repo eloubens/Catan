@@ -444,8 +444,9 @@ int Controller::roll(Color turn) {
 
 int Controller::geese() {
     // removing half of anyone who has 10+ resources
-    vector<pair<string, vector<pair<string, int>>>> v = model->lostResoc();
     vector<pair<string, int>> numLost = model->numLostResoc();
+    vector<pair<string, vector<pair<string, int>>>> v = model->lostResoc();
+
     int i = 0;
     
     for (const auto& p : v) {
@@ -454,6 +455,7 @@ int Controller::geese() {
          for (const auto& resourcePair : p.second) {
             out << resourcePair.second << " " << resourcePair.first << std::endl;
         }
+        ++i;
     }
 
     // placing geese on different tile now
