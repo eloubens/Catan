@@ -25,6 +25,7 @@ Player::Player(istringstream &playerData, Color color) : color{color} {
     for (int r = 0; r < resocAmount - 1; r++) {// park isn't included
         playerData >> num;
         resocMap[static_cast<Resource>(r)] = num;
+        resocTotal += num;
     }
 }
 
