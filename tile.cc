@@ -227,9 +227,11 @@ bool Tile::isPlaceValidRes(string vertexNum, Color color, Residence res) {
 
 string Tile::getResocIntFormat() { return to_string(static_cast<int>(resocType)); }
 
-bool Tile::isRes() {
+bool Tile::isRes(string colour) {
     for (auto v : vertices) {
-        if (v->isOccupied()) return true;
+        cout << "v->getVertex[0]: " << v->getVertex()[0] << endl;
+        cout << "colour[0]: " << colour[0] << endl;
+        if (v->isOccupied() && v->getVertex()[0] == colour[0]) return true;
     }
     return false;
 }
