@@ -1,8 +1,6 @@
 #include "resourceEnum.h"
 using namespace std;
 
-#include <iostream>
-
 std::string getResocStr(Resource r) {
     switch (r) {
         case Resource::BRICK:
@@ -50,5 +48,3 @@ Resource getResocR(std::string r) {
     else if (r == "WIFI") return Resource::WIFI;
     else return Resource::NA;
 }
-
-
