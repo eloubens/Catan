@@ -1,5 +1,4 @@
 #include <utility>
-#include <iostream>
 #include <vector> 
 #include <sstream>
 #include <algorithm>
@@ -8,7 +7,6 @@
 #include <chrono>
 #include <string>
 #include "controller.h"
-
 
 using namespace std;
 
@@ -19,11 +17,10 @@ const int eof = -1;
 const int vertexMax = 53;
 const int edgeMax = 71;
 
-// returns true if non-normal state
 bool Controller::isSpecialState(int n) { return n != 0; }
 
-// sets the Model field of the controller. 
-// Loads a board from a file, creates and loads a randomized board, or loads a saved game.
+/*   sets the Model field of the controller. Loads a board from a file, creates
+     and loads a randomized board, or loads a saved game. */
 int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed, vector<string> &arg_vec) {
     ostringstream board_oss; 
     if (canRandomize && foundRandomize) {  // means -boardload found and  no -board or -load found
@@ -31,24 +28,13 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
         istringstream board_iss{board_oss.str()}; 
         model = make_unique<Model>(board_iss); 
         return 0;
-        // TESTING
-        // Assume you have a std::unique_ptr<Model> named model
-        // Create a new Model instance
-        //std::unique_ptr<Model> newModel = std::make_unique<Model>(board_iss);
-        // Assign the new Model to the existing unique_ptr
-        //model = std::move(newModel);
-
-
-        // own testing
-        //cout << board_oss.str() << endl;
-    } else if (!canRandomize) { // means -board or -load found
+    } else if (!canRandomize) { // -board or -load found
         int size = arg_vec.size(); 
         for (int i = 0; i < size; i++) {
             // loading board from speicified file
             if (arg_vec[i] == "-board") { 
                 i++;
                 ifstream ifs{arg_vec[i]};
-                //ifstream ifs{arg_vec[i]};
                 if (!ifs) {
                     err << "Error: Could not open file" << endl;
                     return invalidInput;
@@ -56,11 +42,8 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
                 board_oss << ifs.rdbuf();
                 istringstream board_iss(board_oss.str());
                 model = make_unique<Model>(board_iss);
-                // own testing
-                //cout << board_oss.str() << endl;
                 return 0;
             } 
-            // loading game from specified file 
             else if (arg_vec[i] == "-load") { 
                 wasBoardLoad = true;
                 i++;
@@ -72,7 +55,6 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
                 int turnColor, geeseTileNum;
                 string resoc, settlements, board;
                 ifs >> turnColor;
-                // setting field variable
                 turn = static_cast<Color>(turnColor); 
                 vector<istringstream> pResocs, pSettlements;
                 for (int i = 0; i < playerAmount; i++) {
@@ -89,7 +71,8 @@ int Controller::setModel(bool canRandomize, bool foundRandomize, unsigned &seed,
                 return 0;
             }
         }
-    } else { // read in from the default layout.txt file
+    } else { 
+        // read in from the default layout.txt file
         ifstream ifs{"layout.txt"};
         board_oss << ifs.rdbuf();
         istringstream board_file{board_oss.str()};
@@ -103,8 +86,7 @@ int Controller::createController(vector<string> &arg_vec) {
     bool foundRandomize = false; // is -generate-board command found
     unsigned seed = chrono::system_clock::now().time_since_epoch().count();
 
-	// setting the seed if specified
-    // collecting commands
+	// setting the seed if specified, collecting commands
     int size = arg_vec.size(); 
     for (int i = 0; i < size; i++) {
         if (arg_vec[i] == "-seed") {
@@ -138,12 +120,7 @@ int Controller::save(string fileName) {
 
 bool Controller::isEOF() { return in.eof(); }
 
-
 int Controller::beginningOfGame() {
-    //for (int i = 0; i < 3; i++) {
-    // int i = 0;
-    // buildDefaultBasements(i, true);
-    // buildDefaultBasements(i, true);
     for (int i = 0; i < playerAmount; i++) {
         try {
             i = buildDefaultBasements(i, true);
@@ -161,8 +138,6 @@ int Controller::beginningOfGame() {
     return 0;
 }
 
-// if isInc, means its in the increasing loop
-// building Mandatory Basements
 int Controller::buildDefaultBasements(int i, bool isInc) {
     int tester;
     string bVertex; // basement vertex
@@ -180,7 +155,8 @@ int Controller::buildDefaultBasements(int i, bool isInc) {
             i++;
         }
         return i;
-    } // checks for invalid input and invalid vertex
+    } 
+    // checks for invalid input and invalid vertex
     bVertex = to_string(tester);
     if(!model->placeBasement(bVertex, c, false)) {
         out << "You cannot build here." << endl;
@@ -237,10 +213,7 @@ int Controller::beginningOfTurn() {
             out << "Dice set to fair." << endl;
         }
         out << "> ";
-    }  
-
-
-    // ANYTIME YOU USE in >>. Must use isEOF() command and return oef if true
+    } 
 
     // dice is rolled
     int rollVal = roll(turn); 
@@ -265,7 +238,6 @@ int Controller::beginningOfTurn() {
             out << "No builders gained resources." << endl;
         }
     }
-    
     return 0;
 }
 
@@ -284,7 +256,7 @@ int Controller::DuringTurn() {
     string cmd, num;
     while(true) {
         out << "> ";
-        if (!(in >> cmd)) { return eof; } // would only fail at eof since cmd is a string
+        if (!(in >> cmd)) { return eof; }
         if (cmd == "next") { break; }
         else if (cmd == "board") { view->printBoard(); }
         else if (cmd == "help") {
@@ -299,7 +271,6 @@ int Controller::DuringTurn() {
                 in.ignore();
                 return eof;
             }
-            //out << cmd;
             save(cmd);
             return eofNoSave;
         } else if (cmd == "trade") {
@@ -330,10 +301,6 @@ int Controller::DuringTurn() {
         } else {
             out << "Invalid command." << endl;
         }
-        // can't improve from a tower to more , can't improve if nothing on vertex
-        // check b uilding points for imrpove res and make road commands
-        // cannot build road through a vertex of a different residence
-        //return gameWon; if building points more than 10
     }
     if (turn == Color::Y) {
         turn = Color::B;
@@ -342,7 +309,6 @@ int Controller::DuringTurn() {
     }
     return 0;
 }
-
 
 void Controller::buildRoad(string edgeNum) {
     if (!model->hasEnoughResoc(turn, Road::R)) {
@@ -356,7 +322,6 @@ void Controller::buildRoad(string edgeNum) {
     out << "Road Placed." << endl;
 }
 
-// To improve a res old today
 void Controller::improveRes(string vertexNum) {
     auto [res, wasPlaced] = model->placeNonBasement(vertexNum, turn);
     if (!model->hasEnoughResoc(turn, res)) {
@@ -383,34 +348,31 @@ void Controller::buildRes(string vertexNum){
     out << "Basement Placed." << endl;
 }
 
-//this acts like the main function essentially 
 int Controller::general(vector<string> &arg_vec) {
-    if (isSpecialState(createController(arg_vec))) { return invalidInput; } // could only return invalidInput here
+    if (isSpecialState(createController(arg_vec))) { return invalidInput; } // only return invalidInput here
     while(true) {
         // beginning of game. 
         if (!wasBoardLoad) {
             if (isSpecialState(beginningOfGame())) { return save(); }
         }
         wasBoardLoad = false; // for when a new game starts, was Board will not be applicable anymore
-        // game begins
         while(true) {
             if (isSpecialState(beginningOfTurn())) { return save(); }
             int state = DuringTurn();
             if (state == eofNoSave) { return eof; }
             if (state == eof) { 
-                return save(); 
-                out << "I am je";
+                return save();
             }
             if (state == gameWon) { break; }
         }
         string input;
-        // state will always be gameWon here
+
+        // state will be gameWon
         do {
             out << "Would you like to play again? " << endl << "> ";
-            if (!(cin >> input)) { return eof; } // Doesn't save file here on eof
+            if (!(cin >> input)) { return eof; }
         } while(input != "yes" && input != "no");
         if (input == "yes") {
-            //resetGame(); WRITE THIS FUNCTION
             reset();
             continue;
         }
@@ -438,32 +400,26 @@ int Controller::roll(Color turn) {
             } else {
                 break;
             }
-
         }
-        //model->diceRolledUpdate(rollVal); (should not call from here)
     } else if (diceType == "fair") {
         rollVal = model->fairRoll(turn);
-        //model->diceRolledUpdate(rollVal); (should not call from here)
     }
-
     return rollVal;
 }
 
 int Controller::geese() {
-    // removing half of anyone who has 10+ resources
     vector<pair<string, vector<pair<string, int>>>> v = model->lostResoc();
     vector<pair<string, int>> numLost = model->numLostResoc();
+
     int i = 0;
-    
     for (const auto& p : v) {
         out << "Builder " << p.first << "loses " << numLost[i].second << "resources to the geese. They lose:" << endl;
-
-         for (const auto& resourcePair : p.second) {
+        for (const auto& resourcePair : p.second) {
             out << resourcePair.second << " " << resourcePair.first << std::endl;
         }
     }
 
-    // placing geese on different tile now
+    // placing geese on different tile 
     int tileNum;
     int curGeeseTile = model->getGeeseTile();
     out << "Choose where to place the GEESE." << endl << "> ";
@@ -475,8 +431,7 @@ int Controller::geese() {
         out << "Choose where to place the GEESE." << endl << "> ";
         in >> tileNum;
         if (isEOF()) return eof;;
-    }
-   
+    }   
     model->placeGeese(tileNum);
 
     // stealing resources
@@ -486,7 +441,6 @@ int Controller::geese() {
         out << "Builder " << curPlayer << " has no builders to steal from." << endl;
     } else {
         out << "Builder " << curPlayer << " can choose to steal from";
-
         if (playersSteal.size() == 1) {
             out << " " << playersSteal[0] << "." << endl;
         } else {
@@ -501,11 +455,8 @@ int Controller::geese() {
         out << "Choose a builder to steal from." << endl << "> ";
         string toSteal;
         in >> toSteal;
-        if (isEOF()) return eof;;
-        // check from eof and valid input
-
+        if (isEOF()) return eof;
         string stolenResoc = model->steal(curPlayer, toSteal);
-
         out << "Builder " << curPlayer << " steals " << stolenResoc << " from Builder " << toSteal << "." << endl;
         model->updateSteal(curPlayer, toSteal, stolenResoc);
     }
@@ -524,12 +475,10 @@ int Controller::trade() {
 
     out << curPlayer << " offers " << toTradeWith << " one " << give << " for one " << take << "." << endl;
 
-
     while(true) {
         out << "Does " <<  toTradeWith << " accept this offer?" << endl << "> ";
         in >> answer;
         if (isEOF()) return eof;
-
         if ((answer == "yes") || (answer == "no")) break;
     }
 
@@ -543,53 +492,30 @@ int Controller::trade() {
         } else {
             out << "You do not have enough resources." << endl;
         }
-    
     }
-
     return 0;
-
 }
 
 void Controller::randomize(ostringstream& board_oss, unsigned& seed) {
-   
     vector<int> tileVal = {2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12}; // die roll
-    // 4 bricks(0), 4 energy(1), 4 glass(2), 3 heat(3), 3 wifi(4), 1 park(5)
     vector<int> tileResource = {0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5}; 
     default_random_engine rng{seed};
     shuffle(tileResource.begin(), tileResource.end(), rng);
     shuffle(tileVal.begin(), tileVal.end(), rng);
     for (int i = 0; i < tilesAmount; i++) {
         board_oss << " " << tileResource[i] << " " << tileVal[i]; 
-    } 
-
+    }
 }
 
 void Controller::reset() {
     unsigned seed = chrono::system_clock::now().time_since_epoch().count();
     ostringstream board_oss;
-
     randomize(board_oss, seed);
     istringstream board_iss{board_oss.str()};
+
     // Create a new Model instance
     std::unique_ptr<Model> newModel = std::make_unique<Model>(board_iss);
     
     // Assign the new Model to the existing unique_ptr
     model = std::move(newModel);   
 }
-
-
-/*    
-std::ostream &out = std::cout;
-std::istream &in = std::cin;
-std::ostream &err = std::cerr;
-Color turn = Color::B;
-std::unique_ptr<Model> model; 
-std::unique_ptr<View> view; 
-*/ 
-
-/*
-    B = 0, // Player 1, Blue
-    R = 1, // Player 2, Red
-    O = 2, // Player 3, Orange
-    Y = 3,  // Player 4, Yellow
-*/

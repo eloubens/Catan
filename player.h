@@ -18,7 +18,6 @@ class Player {
     std::vector<int> occupiedTiles;
     int buildingPoints = 0, resocTotal = 0;
  public:
-    
     Player(std::istringstream &playerData, Color color);
     // adds tileNum to vector of occupiedTiles, doesn't add duplicates
     void addOccupiedTiles(int tileNum);

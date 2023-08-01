@@ -11,7 +11,6 @@ string Tile::getResource() {
     return getResocStr(resocType);
 }
 
-
 bool Tile::tileHasVE(string componentNum, bool isVertex) {
     if (isVertex) {
         for (int i = 0; i < verticesAmount; i++) {
@@ -28,16 +27,6 @@ bool Tile::tileHasVE(string componentNum, bool isVertex) {
     }
     return false;
 }
-
-// void Tile::findGetRes(string vertexNum) {
-//     for (int i = 0; i < vertexNum; i++) {
-//         try {
-//             vertices[i].findGetRes(string vertexNum);
-//         } catch(auto [res, player]) {
-//             throw pair<int,int>{res, player};
-//         }
-//     }
-// }
 
 void Tile::placeNonBasement(string vertexNum, Color c) {
     for (int i = 0; i < verticesAmount; i++)  {
@@ -59,7 +48,6 @@ void Tile::placeRoad(string edgeNum, Color c) {
     }
 }
 
-// Correct. Leave as is. 
 void Tile::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     for (int i = 0; i < verticesAmount; i++)  {
         try {
@@ -69,17 +57,6 @@ void Tile::placeBasement(string bVertex, Color c, bool isDuringTurn) {
         }
     }
 }
-
-/*
-
-int tileNum
-int tileValue = 0
-Resource resocType
-Vertex *vertices[6]
-Edge *edges[6]
-bool isGeese = false
-
-*/
 
 string Tile::getVertex(vertexEnum v) {
     return vertices[static_cast<int>(v)]->getVertex();
@@ -108,9 +85,7 @@ string Tile::getTileValueReg() {
     return oss.str();  
 }
 
-
-// used for save
-// deals with duplicates
+// used for save, deals with duplicates
 void Tile::addSettlementsLocation(Color c, vector<string> &roads, vector<string> &resNum, vector<Residence> &resType) {
     string location;
     bool foundDuplicate;
@@ -145,17 +120,14 @@ void Tile::addSettlementsLocation(Color c, vector<string> &roads, vector<string>
             }
         }
     }
-
 }
-
-
-
 
 Tile::Tile(int tileNum, Vertex *v1, Vertex *v2, Vertex *v3, Vertex *v4, Vertex *v5, Vertex *v6, 
             Edge *e1, Edge *e2, Edge *e3, Edge *e4, Edge *e5, Edge *e6) :
             tileNum{tileNum}, vertices{v1, v2, v3, v4, v5, v6}, edges{e1, e2, e3, e4, e5, e6} {}
 
 Vertex *Tile::getVertexAdr(vertexEnum num) {return vertices[static_cast<int>(num)];}
+
 Edge *Tile::getEdgeAdr(edgeEnum num) {return edges[static_cast<int>(num)];}
 
 void Tile::placeAdjVerticesV(vertexEnum vertex, vector<Vertex*> &&adjVertices) {
@@ -174,10 +146,10 @@ void Tile::placeAdjEdgesE(edgeEnum edge,std::vector<Edge*> &&adjEdges) {
     edges[static_cast<int>(edge)]->setAdjE(move(adjEdges));
 }
 
-
 void Tile::setTileVal(int tileVal) { this->tileValue = tileVal; }
 
 void Tile::setGeese() { isGeese = true; }
+
 bool Tile::getGeese() {return isGeese;}
 
 void Tile::setGeese(bool geese) { isGeese = geese; }
@@ -233,14 +205,3 @@ bool Tile::isRes() {
     }
     return false;
 }
-
-/*
-
-int tileNum
-int tileValue = 0
-Resource resocType
-Vertex *vertices[6]
-Edge *edges[6]
-bool isGeese = false
-
-*/
