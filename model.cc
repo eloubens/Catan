@@ -141,7 +141,7 @@ map<string, Residence> Model::getVertexResMap(int player) {
     string playerCol = getColorChar(this->players[player].getColour()); 
     map <string, Residence> m;
     for (int j : this->players[player].getOccupiedTiles()) { // all the tiles
-        for (int k = 0; k < 6; k++) { // all the vertices
+        for (int k = 0; k < verticesAmount; k++) { // all the vertices
             Vertex * vertex = this->getTiles()[j].getVertexAdr(static_cast<vertexEnum>(k)); 
             if (vertex->getPlayer() == playerCol) {
                 m[vertex->getLocation()] = vertex->getRes(); 
@@ -178,8 +178,8 @@ void Model::save(Color turn, string fileName) {
         }
         backup << endl;
     }
-    for (int i = 0; i < 19; i++) {
-        if (i == 18) {
+    for (int i = 0; i < tilesAmount; i++) {
+        if (i == tilesAmount - 1) {
             backup << board.getTileResoc(i) << " " << board.getTileVal(i) << endl;
             break;
         }
@@ -359,17 +359,16 @@ int Model::fairRoll(Color turn) {
 }
 
 bool Model::enoughResoc(string curPlayer, string give) {
-    for(int i = 0; i < 4; ++i) {
+    for(int i = 0; i < playerAmount; ++i) {
         if (getColorStr(players[i].getColour()) == curPlayer) {
             return players[i].enoughResoc(give);
         }
     }
-
     return false;
 }
 
 bool Model::validSteal(string tradePlayer, string take) {
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < playerAmount; ++i) {
         if (getColorStr(players[i].getColour()) == tradePlayer) {
             return players[i].validSteal(take);
         }
