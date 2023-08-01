@@ -21,7 +21,7 @@ Player::Player(Color color) : color{color},
     }  {}
 
 Player::Player(istringstream &playerData, Color color) : color{color} {
-    int num;
+    int num = 0;
     for (int r = 0; r < resocAmount - 1; r++) {// park isn't included
         playerData >> num;
         resocMap[static_cast<Resource>(r)] = num;
@@ -106,54 +106,60 @@ Color Player::getColour() {
         allResocs.erase(allResocs.begin() + indexToRemove);
     }
 
-    int b; // brick
-    int e; // energy
-    int g; // glass
-    int h; // heat
-    int w; // wifi
-    int p; // park
+    int b = 0;
+    int e = 0;
+    int g = 0;
+    int h = 0;
+    int w = 0;
+    int p = 0;
+
 
     for (const auto& r : lostResocs) {
-        if (r == Resource::BRICK) ++b;
-        else if (r == Resource::ENERGY) ++e;
-        else if (r == Resource::GLASS) ++g;
-        else if (r == Resource::HEAT) ++h;
-        else if (r == Resource::WIFI) ++w;
-        else if (r == Resource::PARK) ++p;
-        else continue;
+        string resoc = getResocStr(r);
+        if (resoc == "BRICK") ++b;
+        else if (resoc == "ENERGY") ++e;
+        else if (resoc == "GLASS") ++g;
+        else if (resoc == "HEAT") ++h;
+        else if (resoc == "WIFI") ++w;
+        else if (resoc == "PARK") ++p;
     }
 
-    int total = b + e + g + h + w + p;
-    resocTotal -= total;
+    //int total = b + e + g + h + w + p;
 
     if (b > 0) {
         resocs.emplace_back(make_pair("BRICK", b));
-        resocMap[Resource::BRICK] -= b;
+        std::pair<Resource, int> lost(Resource::BRICK, b);
+        removeResoc(lost);
     }
 
     if (e > 0) {
         resocs.emplace_back(make_pair("ENERGY", e));
-        resocMap[Resource::ENERGY] -= e;
+        std::pair<Resource, int> lost(Resource::ENERGY, e);
+        removeResoc(lost);
     }
 
     if (g > 0) {
         resocs.emplace_back(make_pair("GLASS", g));
-        resocMap[Resource::GLASS] -= g;
+        std::pair<Resource, int> lost(Resource::GLASS, g);
+        removeResoc(lost);
     }
     
     if (h > 0) {
         resocs.emplace_back(make_pair("HEAT", h));
-        resocMap[Resource::HEAT] -= h;
+        std::pair<Resource, int> lost(Resource::HEAT, h);
+        removeResoc(lost);
     }
 
     if (w > 0) {
         resocs.emplace_back(make_pair("WIFI", w));
-        resocMap[Resource::WIFI] -= w;
+        std::pair<Resource, int> lost(Resource::WIFI, w);
+        removeResoc(lost);
     }
 
     if (p > 0) {
         resocs.emplace_back(make_pair("PARK", p));
-        resocMap[Resource::PARK] -= p;
+        std::pair<Resource, int> lost(Resource::PARK, p);
+        removeResoc(lost);
     }
 
 

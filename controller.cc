@@ -449,7 +449,7 @@ int Controller::geese() {
     int i = 0;
     
     for (const auto& p : v) {
-        out << "Builder " << p.first << "loses " << numLost[i].second << "resources to the geese. They lose:" << endl;
+        out << "Builder " << p.first << " loses " << numLost[i].second << " resources to the geese. They lose:" << endl;
 
          for (const auto& resourcePair : p.second) {
             out << resourcePair.second << " " << resourcePair.first << std::endl;
