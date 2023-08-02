@@ -164,12 +164,12 @@ vector<pair<string, int>> Player::removeHalfResocs() {
 
 void Player::updateResocMap(const pair<Resource, int> &gainedResoc) {
     resocMap[gainedResoc.first] += gainedResoc.second;
-    ++resocTotal;
+    resocTotal += gainedResoc.second;
 }
 
 void Player::removeResoc(const pair<Resource, int> &lostResoc) {
     resocMap[lostResoc.first] -= lostResoc.second;
-    --resocTotal;
+    resocTotal -= lostResoc.second;
 }
 
 map<Resource, int>& Player::getResocMap() { return resocMap; }
