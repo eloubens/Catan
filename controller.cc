@@ -341,10 +341,10 @@ void Controller::buildRoad(string edgeNum) {
     out << "Road Placed." << endl;
 }
 
-// To improve a res old today
+// To improve a residence
 void Controller::improveRes(string vertexNum) {
     auto [res, wasPlaced] = model->placeNonBasement(vertexNum, turn);
-    if (!model->hasEnoughResoc(turn, res)) {
+    if (res != Residence::NONE && !model->hasEnoughResoc(turn, res)) {
         out << "You do not have enough resources." << endl;
         return;
     }
@@ -372,21 +372,23 @@ void Controller::buildRes(string vertexNum){
 int Controller::general(vector<string> &arg_vec) {
     if (isSpecialState(createController(arg_vec))) { return invalidInput; } // could only return invalidInput here
     while(true) {
-        bool gameHasWon = false;
         // beginning of game. 
         if (!wasBoardLoad) {
             if (isSpecialState(beginningOfGame())) { return save(); }
         }
+        
         // checking if a player already has >= 10 building points
+        bool gameHasWon = false;
         if (wasBoardLoad) {
             for (int i = 0 ; i < playerAmount; i++) {
                 if (hasWon(static_cast<Color>(i))) { 
                     gameHasWon = true;
+                    break;
                 }
             }
         }
-       
-        wasBoardLoad = false; // for when a new game starts, was Board will not be applicable anymore
+        wasBoardLoad = false; // for when a new game starts, wasBoard will not be applicable anymore
+        
         // game begins
         while(!gameHasWon) {
             if (isSpecialState(beginningOfTurn())) { return save(); }
@@ -398,6 +400,7 @@ int Controller::general(vector<string> &arg_vec) {
             if (state == gameWon) { break; }
         }
         string input;
+        
         // state will always be gameWon here
         do {
             out << "Would you like to play again? " << endl << "> ";

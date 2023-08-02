@@ -43,8 +43,8 @@ void Tile::placeNonBasement(string vertexNum, Color c) {
     for (int i = 0; i < verticesAmount; i++)  {
         vertices[i]->placeNonBasement(vertexNum, c);
         try {
-        } catch(Residence r) {
-            throw r;
+        } catch(pair<Residence, bool> p) {
+            throw p;
         }
     }
 }

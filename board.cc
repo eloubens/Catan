@@ -83,10 +83,12 @@ void Board::placeNonBasement(string vertexNum, Color c) {
     for (int i = 0; i < tilesAmount; i++) {
         try {
             tiles[i].placeNonBasement(vertexNum, c);
-        } catch (Residence r) {
-           // cout << "Board polace" << endl;
-            throw r;
+        } catch(pair<Residence, bool> p) {
+            throw p;
         }
+           // cout << "Board polace" << endl;
+        //     throw p;
+        // }
         //cout << "Board did not polace" << endl;
     }
 }

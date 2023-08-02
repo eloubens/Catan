@@ -22,6 +22,7 @@ Player::Player(Color color) : color{color},
 
 Player::Player(istringstream &playerData, Color color) : color{color} {
     int num;
+    // reading in resoucres of the player
     for (int r = 0; r < resocAmount - 1; r++) {// park isn't included
         playerData >> num;
         resocMap[static_cast<Resource>(r)] = num;
@@ -173,12 +174,12 @@ std::vector<int> occupiedTiles
 
 void Player::updateResocMap(const pair<Resource, int> &gainedResoc) {
     resocMap[gainedResoc.first] += gainedResoc.second;
-    ++resocTotal;
+    resocTotal += gainedResoc.second;
 }
 
 void Player::removeResoc(const pair<Resource, int> &lostResoc) {
     resocMap[lostResoc.first] -= lostResoc.second;
-    --resocTotal;
+    resocTotal -= lostResoc.second;
 }
 
 map<Resource, int>& Player::getResocMap() { return resocMap; }

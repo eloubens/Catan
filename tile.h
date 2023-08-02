@@ -46,7 +46,7 @@ class Tile {
     void setGeese(bool geese);
     bool getGeese();
     // basic setter method
-   // void findGetRes(std::string vertexNum);
+    // void findGetRes(std::string vertexNum);
     void placeNonBasement(std::string vertexNum, Color c);
     void setResoc(Resource resocType);
     void placeAdjVerticesV(vertexEnum vertex, std::vector<Vertex*> &&adjVertices);

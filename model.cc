@@ -94,18 +94,15 @@ bool Model::placeRoad(string edgeNum, Color c) {
 }
 
 pair<Residence, bool> Model::placeNonBasement(string bVertex, Color c) {
-    Residence res;
-    bool wasPlaced = false;
     try {
         board.placeNonBasement(bVertex, c); // will only catch a vector of occupiedTiles if can build on the tile
-    } catch (Residence r) {
-        if (r != Residence::NONE) {
-            wasPlaced = true;
-            players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(r));
+    } catch (pair<Residence, bool> p) {
+        if (p.second == true) {
+            players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(p.first));
         }
-        res = r;
+        return p;
     }
-    return {res, wasPlaced}; // putting this outside so compiler doesn't say warning
+    return pair<Residence, bool>{Residence::NONE, false}; // putting this outside so compiler doesn't say warning, but actually not needed
 }
 
 bool Model::placeBasement(string bVertex, Color c, bool isDuringTurn) {

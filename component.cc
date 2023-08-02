@@ -1,6 +1,7 @@
 #include "component.h"
 #include "colorEnum.h"
 #include <sstream>
+#include <utility>
 #include <iostream>
 
 using namespace std;
@@ -58,10 +59,10 @@ int Vertex::getResidenceAmount(Color color) const {
 void Vertex::placeNonBasement(string vertexNum, Color c) {
     if (location != vertexNum) { return; }
     if (player != c || residenceType == Residence::NONE || residenceType == Residence::T) {
-        throw Residence::NONE; // meaning no residence was improved
+        throw pair<Residence, bool>{residenceType, false}; // meaning no residence was improved
     }
     residenceType = static_cast<Residence>(static_cast<int>(residenceType) + 1);
-    throw residenceType;
+    throw pair<Residence, bool>{residenceType, true};
 }
 
 void Edge::placeRoad(string edgeNum, Color c) {
