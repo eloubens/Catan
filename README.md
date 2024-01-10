@@ -98,7 +98,6 @@ Extra Credit Features
 To begin, we ensured that there were no new’s and delete’s present in our code. This part was tricky to implement since it would have been easy to reset the game, simply by deleting the pointer to the board to get rid of all the settlements and roads built and creating a new one, so that the constructor could initialise all fields to the standard state of the board before the players start. It would have been easier this way to reset all the players and their status as well. Regardless, we managed to utilise smart pointers and created a reset function to take care of all issues, to reset the game properly. 
 Also, since we do not use new and delete in the code, we have no memory leaks! 
 
-<br>
 Answers to Questions 
 <br>
 1. You have to implement the ability to choose between randomly setting up the resources of the board and reading the resources used from a file at runtime. What design pattern could you use to implement this feature? Did you use this design pattern? Why or why not? 
@@ -123,7 +122,6 @@ The design patterns that could be used to facilitate this ability are both the o
 
 Yes we used exceptions. They were partly used for catching errors (e.g. setting the seed when using the soi built-in function). Additionally they were mainly used when building residences and roads. Here, we used the try catch blocks to throw bools, integers, and Residences. We used exceptions in these functions because sometimes you would need a function to return something and sometimes you wouldn’t: throwing and catching works very well for this. Ex: in the placing residence and roads functions, we would need to loop through the tiles to find the vertex/edge we want and then determine if we can place the road/residence on there. Some tiles wouldn’t even have the vertex/edge we want to find, so you wouldn’t need anything from those function calls (aka was a residence placed or not). Therefore it would be cleaner to loop through all the tiles and return information pertaining to the status of a placed road/vertex only if the vertex/edge was found on the tile. Looking back, it would have also been better to use exceptions for invalid input when reading in (specifically when eof would be encountered). We wrote it so that we would return if we found eof or not in each function call in Controller, but throwing and catching would have been a cleaner and more elegant solution.
 
-<br>
 Final Questions
 <br>
 1. What lessons did this project teach you about developing software in teams? If you worked alone, what lessons did you learn about writing large programs?
