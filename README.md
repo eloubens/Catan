@@ -2,6 +2,7 @@
 Authors - Krupa, Hadeya, Liz
 
 Introduction
+<br>
 In this document, we present an in-depth analysis of our game "Constructors," which is inspired by the popular board game Catan. This game showcases the application of various design patterns and OOP principles. Throughout this report, we will provide a comprehensive overview of the project, detailing the overall structure, the UML class model, and the design techniques used to address the various challenges encountered during the development process. Additionally, we will discuss how our design supports adaptability and resilience to changes in the program specification.
 
 Overview
