@@ -1,5 +1,6 @@
-# Catan
-Constructor - Krupa, Hadeya, Liz
+# Catan Game
+Authors - Krupa, Hadeya, Liz
+
 Introduction
 In this document, we present an in-depth analysis of our game "Constructors," which is inspired by the popular board game Catan. This game project was developed as part of the CS246 final project, and it showcases the application of various design patterns and techniques  that were taught in class.
 Throughout this report, we will provide a comprehensive overview of the project, detailing the overall structure, the UML class model, and the design techniques used to address the various challenges encountered during the development process. Additionally, we will discuss how our design supports adaptability and resilience to changes in the program specification.
