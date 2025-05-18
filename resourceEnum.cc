@@ -1,4 +1,5 @@
 #include "resourceEnum.h"
+using namespace std;
 
 std::string getResocStr(Resource r) {
     switch (r) {
@@ -30,7 +31,7 @@ std::string getResocLowerCaseStr(Resource r) {
         case Resource::HEAT:
             return "heat";
         case Resource::WIFI:
-            return "wifi";
+            return "WiFi";
         case Resource::PARK:
             return "park";
         default:
@@ -47,5 +48,3 @@ Resource getResocR(std::string r) {
     else if (r == "WIFI") return Resource::WIFI;
     else return Resource::NA;
 }
-
-

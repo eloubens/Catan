@@ -14,7 +14,6 @@ int Dice::rollFair() {
     int rollVal;
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine rng{seed};
-
     std::uniform_int_distribution<int> dist(0, d.size() - 1);
 
     int first = dist(rng);
@@ -22,18 +21,12 @@ int Dice::rollFair() {
 
     int f = d[first];
     int s = d[second];
-
     rollVal = f + s;
     return rollVal;
 }
-
 
 void Dice::setDice(std::string cmd) {
     type = cmd;
 }
 
 string Dice::getDiceType() { return type; }
-
-/*
- DiceType type = DiceType::LOADED;
- */

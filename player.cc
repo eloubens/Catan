@@ -18,19 +18,29 @@ Player::Player(Color color) : color{color},
         {Resource::GLASS, 0},
         {Resource::HEAT, 0},
         {Resource::WIFI, 0}
-    }  {}
+    }  { }
 
 Player::Player(istringstream &playerData, Color color) : color{color} {
-    int num;
+    int num = 0;
     for (int r = 0; r < resocAmount - 1; r++) {// park isn't included
         playerData >> num;
         resocMap[static_cast<Resource>(r)] = num;
+        resocTotal += num;
     }
 }
 
 int Player::getBuildingPoints() { return buildingPoints; }
 
+bool Player::hasOccupTile(int tileNum) {
+    for (auto num : occupiedTiles) {
+        if (num == tileNum) { return true; }
+    }
+    return false;
+}
+
 void Player::addOccupiedTiles(int tileNum) {
+    // the original tile found was checked already to be a duplicate by hasOccupTilesu
+    // the original tiles shared tiles still might be a duplicate
     for (auto num : occupiedTiles) {
         if (num == tileNum) { return; }
     }
@@ -56,7 +66,7 @@ Color Player::getColour() {
     return color;
 }
 
- vector<pair<string, int>> Player::removeHalfResocs() {
+vector<pair<string, int>> Player::removeHalfResocs() {
     vector<pair<string, int>> resocs;
 
     int numToLose = resocTotal / 2;
@@ -65,12 +75,10 @@ Color Player::getColour() {
     vector<Resource> lostResocs;
     std::map<Resource, int> lostResocsCounts;
 
-    
     // put all currently owned resources from resocMap into a new vector
     for (const auto& pair : resocMap) {
         const Resource& r = pair.first;
         int count = pair.second;
-
         for (int i = 0; i < count; ++i) {
             allResocs.emplace_back(r);
         }
@@ -88,7 +96,7 @@ Color Player::getColour() {
         std::uniform_int_distribution<size_t> dist(0, allResocs.size() - 1);
         size_t indexToRemove = dist(rng);
 
-        // Add the lost resource to the 'lostResocs' vector before erasing it from 'allResocs'
+        // Adds the lost resource to the 'lostResocs' vector before erasing it from 'allResocs'
         Resource lost = allResocs[indexToRemove];
         lostResocs.emplace_back(lost);
 
@@ -96,73 +104,72 @@ Color Player::getColour() {
         allResocs.erase(allResocs.begin() + indexToRemove);
     }
 
-    int b; // brick
-    int e; // energy
-    int g; // glass
-    int h; // heat
-    int w; // wifi
-    int p; // park
+    int b = 0;
+    int e = 0;
+    int g = 0;
+    int h = 0;
+    int w = 0;
+    int p = 0;
+
 
     for (const auto& r : lostResocs) {
-        if (r == Resource::BRICK) ++b;
-        else if (r == Resource::ENERGY) ++e;
-        else if (r == Resource::GLASS) ++g;
-        else if (r == Resource::HEAT) ++h;
-        else if (r == Resource::WIFI) ++w;
-        else if (r == Resource::PARK) ++p;
-        else continue;
+        string resoc = getResocStr(r);
+        if (resoc == "BRICK") ++b;
+        else if (resoc == "ENERGY") ++e;
+        else if (resoc == "GLASS") ++g;
+        else if (resoc == "HEAT") ++h;
+        else if (resoc == "WIFI") ++w;
+        else if (resoc == "PARK") ++p;
     }
 
-    int total = b + e + g + h + w + p;
-    resocTotal -= total;
+    //int total = b + e + g + h + w + p;
 
     if (b > 0) {
         resocs.emplace_back(make_pair("BRICK", b));
-        resocMap[Resource::BRICK] -= b;
+        std::pair<Resource, int> lost(Resource::BRICK, b);
+        removeResoc(lost);
     }
 
     if (e > 0) {
         resocs.emplace_back(make_pair("ENERGY", e));
-        resocMap[Resource::ENERGY] -= e;
+        std::pair<Resource, int> lost(Resource::ENERGY, e);
+        removeResoc(lost);
     }
 
     if (g > 0) {
         resocs.emplace_back(make_pair("GLASS", g));
-        resocMap[Resource::GLASS] -= g;
+        std::pair<Resource, int> lost(Resource::GLASS, g);
+        removeResoc(lost);
     }
     
     if (h > 0) {
         resocs.emplace_back(make_pair("HEAT", h));
-        resocMap[Resource::HEAT] -= h;
+        std::pair<Resource, int> lost(Resource::HEAT, h);
+        removeResoc(lost);
     }
 
     if (w > 0) {
         resocs.emplace_back(make_pair("WIFI", w));
-        resocMap[Resource::WIFI] -= w;
+        std::pair<Resource, int> lost(Resource::WIFI, w);
+        removeResoc(lost);
     }
 
     if (p > 0) {
         resocs.emplace_back(make_pair("PARK", p));
-        resocMap[Resource::PARK] -= p;
+        std::pair<Resource, int> lost(Resource::PARK, p);
+        removeResoc(lost);
     }
-
-
     return resocs;
- }
-/*
-
-Color color
-int buildingPoints = 0
-int resocTotal = 0
-Dice dice
-std::map<Resource, int> resocMap
-std::vector<int> occupiedTiles
-
-*/
-
+}
 
 void Player::updateResocMap(const pair<Resource, int> &gainedResoc) {
     resocMap[gainedResoc.first] += gainedResoc.second;
+    resocTotal += gainedResoc.second;
+}
+
+void Player::removeResoc(const pair<Resource, int> &lostResoc) {
+    resocMap[lostResoc.first] -= lostResoc.second;
+    resocTotal -= lostResoc.second;
 }
 
 map<Resource, int>& Player::getResocMap() { return resocMap; }
@@ -173,16 +180,14 @@ bool Player::hasRes(int tileNum) {
     for (auto n : occupiedTiles) {
         if (tileNum == n) {
             return true;
-            break;
         }
     }
-
     return false;
 }
 
 string Player::stealResoc() {
     string stolenResoc;
-    int numToLose = 1;
+    //int numToLose = 1;
     vector<Resource> allResocs;
 
     // put all currently owned resources from resocMap into a new vector
@@ -204,58 +209,20 @@ string Player::stealResoc() {
 
     // Add the lost resource
     Resource lost = allResocs[indexToRemove];
-    
     stolenResoc = getResocStr(lost);
 
-    // update Player info
-    resocTotal -= numToLose;
-    resocMap[lost] -= numToLose;
-
+    std::pair<Resource, int> lostR(lost, 1);
+    removeResoc(lostR);
     return stolenResoc;
-}
-
-
-void Player::getStatus(std::ostream &out) {
-    out << getColorStr(color) << " has " << buildingPoints << " building points,"; 
-
-    for (const auto& entry : resocMap) {
-        if (entry.first == Resource::WIFI) {
-            out << " and " << entry.second << " " << getResocLowerCaseStr(entry.first) << "." << endl;; 
-        } else {
-            out << " " << entry.second << " " << getResocLowerCaseStr(entry.first) << ","; 
-        }
-    }
-
-    out << getColorStr(color) << " has built:" ;
-    
-}
-
-void Player::addResoc(string resoc) {
-    if (resoc == "Brick") resocMap[Resource::BRICK] += 1;
-    else if (resoc == "Energy") resocMap[Resource::ENERGY] += 1;
-    else if (resoc == "Glass") resocMap[Resource::GLASS] += 1;
-    else if (resoc == "Heat") resocMap[Resource::HEAT] += 1;
-    else if (resoc == "Wifi") resocMap[Resource::WIFI] += 1;
-    else if (resoc == "Park") resocMap[Resource::PARK] += 1;
 }
 
 string Player::getDiceType() {
     return dice.getDiceType();
 }
 
-void Player::removeResoc(string resoc) {
-    if (resoc == "Brick") resocMap[Resource::BRICK] -= 1;
-    else if (resoc == "Energy") resocMap[Resource::ENERGY] -= 1;
-    else if (resoc == "Glass") resocMap[Resource::GLASS] -= 1;
-    else if (resoc == "Heat") resocMap[Resource::HEAT] -= 1;
-    else if (resoc == "Wifi") resocMap[Resource::WIFI] -= 1;
-    else if (resoc == "Park") resocMap[Resource::PARK] -= 1;
-}
-
 int Player::fairRoll() {
     int rollVal = dice.rollFair();
     return rollVal;
-
 }
 
 bool Player::enoughResoc(string give) {

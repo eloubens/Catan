@@ -1,27 +1,19 @@
 #include "component.h"
 #include "colorEnum.h"
 #include <sstream>
-#include <iostream>
 
 using namespace std;
  
 Component::Component(string location) : location{location} {}
 
-//Component::Component(string location, Color playerType) : location{location}, playerType{playerType} {}
-
 Edge::Edge(string location) : Component{location} {}
+
 Vertex::Vertex(string location) : Component{location} {}
 
 string Edge::getEdge() {
     if (isRoad) {
-        string s = getColorChar(player);
+        string s = getColorChar(player) + "R";
         return s; 
-        // ostringstream oss;
-        // if (player == Color::R) {oss << "R";}
-        // else if (player == Color::B) {oss << "B";}
-        // else if (player == Color::O) {oss << "O";}
-        //else {oss << "Y";}
-        //return oss.str(); 
     } else {
         return location; 
     }
@@ -32,13 +24,6 @@ string Vertex::getVertex() {
         return location; 
     } else {
         ostringstream oss;
-        // if (player == Color::R) {oss << "R";}
-        // else if (player == Color::B) {oss << "B";}
-        // else if (player == Color::O) {oss << "O";}
-        // else {oss << "Y";}
-        // if (residenceType == Residence::H) {oss << "H";}
-        // else if (residenceType == Residence::B) {oss << "B";}
-        // else if (residenceType == Residence::T) {oss << "T";}
         oss << getColorChar(player); 
         oss << getResStr(residenceType);
         return oss.str();
@@ -50,41 +35,73 @@ int Vertex::getResidenceAmount(Color color) const {
     return static_cast<int>(residenceType);
 }
 
+void Vertex::placeNonBasement(string vertexNum, Color c) {
+    if (location != vertexNum) { return; }
+    if (player != c || residenceType == Residence::NONE || residenceType == Residence::T) {
+        throw Residence::NONE; // no residence was improved
+    }
+    residenceType = static_cast<Residence>(static_cast<int>(residenceType) + 1);
+    throw residenceType;
+}
+
+void Edge::placeRoad(string edgeNum, Color c) {
+    if (location != edgeNum) { return; } // correct edge
+    if (isRoad) { 
+        throw false;
+    } 
+    for (auto v : adjVertices) {
+        if (v->isOwnedBy(c)) {
+            player = c;
+            isRoad = true;
+            throw true;
+        }
+    }
+    for (auto e : adjEdges) {
+        if (e->isOwnedBy(c)) {
+            for (auto v : adjVertices) {
+                if (e->hasAdjVertex(v)) {
+                    if (!v->isOccupied()) {
+                        player = c;
+                        isRoad = true;
+                        throw true;
+                    }
+                } 
+            }
+        }
+    }
+    throw false;
+}
+
+bool Edge::hasAdjVertex(Vertex *v) {
+    for (auto adjV : adjVertices) {
+        if (adjV == v) { return true; }
+    }
+    return false;
+}
+
 void Vertex::placeBasement(string bVertex, Color c, bool isDuringTurn) {
-    if (location != bVertex) { return; } // correct vertex
+    if (location != bVertex) { return; }
     if (player != Color::DNE) { 
         throw false;
-    } // check that it is totally empty
+    }
     for (auto v : adjVertices) {
         if (v->isOccupied()) {
             throw false;
         }
     }
     if (isDuringTurn) {
-        bool ownsAdjEdge = false;
+        bool ownsAdjE = false;
         for (auto e : adjEdges) {
             if (e->isOwnedBy(c)) {
-                ownsAdjEdge = true;
+                ownsAdjE = true;
                 break;
             }
         }
-        if (ownsAdjEdge == false) { throw false; }
+        if (ownsAdjE == false) { throw false; }
     }
     player = c;
     residenceType = Residence::B;
     throw true;
-    // add res here
-
-
-    // check that adjacent vertices are empty (only if arrays are not 0)
-/*
-string location
-Color player = Color::DNE
-std::vector<Vertex*> adjVertices
-std::vector<Edge*> adjEdges
-Residence residenceType = Residence::NONE
-*/
-
 }
 
 bool Component::isOccupied() {
@@ -114,8 +131,6 @@ void Component::setAdjE(std::vector<Edge*> &&adjEdges) {
 
 bool Component::isNum(std::string num) { return location == num; }
 
-
-
 void Edge::setValidRoad(Color color) { 
     isRoad = true; 
     player = color;
@@ -125,19 +140,3 @@ void Vertex::setValidRes(Color color, Residence res) {
     residenceType = res;
     player = color;
 }
-/*
-Component:
-
-int location
-Color player
-std::vector<Vertex*> adjVertices
-std::vector<Edge*> adjEdges
-*/
-
-/*
-Residence residenceType = Residence::NONE
-*/
-
-/*
-bool isRoad = false;
-*/

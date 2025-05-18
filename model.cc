@@ -1,16 +1,18 @@
 #include <string>
+#include <iostream>
 #include "model.h"
 #include "colorEnum.h"
 #include <iostream>
 #include <utility>
 #include <vector>
+#include <map>
 
 using namespace std;
 
 const int winningGamePoints = 10;
 
-Model::Model(istringstream &iss) : players{Player{Color::B}, Player{Color::R}, Player{Color::O}, Player{Color::Y}},
-                             board{iss} {}
+Model::Model(istringstream &iss) : players{Player{Color::B}, Player{Color::R}, 
+    Player{Color::O}, Player{Color::Y}}, board{iss} {}
 
 Model::Model(vector<istringstream> &&pResocs, vector<istringstream> &&pSettlements, istringstream &board, int geeseTileNum) :
     players{
@@ -21,87 +23,97 @@ Model::Model(vector<istringstream> &&pResocs, vector<istringstream> &&pSettlemen
     },
     board{board, geeseTileNum} {
         for (int i = 0; i < playerAmount; i++) {
-            int veNum, tileNum; //ve means vertex or edge
-            pSettlements[i].ignore(); // ignores 'r' for road
-            // reading in roads
-            while(pSettlements[i] >> veNum) {  // edge num
-                //tileNum stores the number of the tile that the road was placed om
+            int veNum, tileNum; 
+            while(pSettlements[i] >> veNum) { 
                 tileNum = this->board.placeValidRoad(to_string(veNum), static_cast<Color>(i));
-                players[i].addOccupiedTiles(tileNum);
+                updatePlayerSettlements(tileNum, to_string(veNum), static_cast<Color>(i), false); 
             }
             pSettlements[i].clear();
-            pSettlements[i].ignore();  // ignores 'h' for house
-            char r;
+            pSettlements[i].ignore();
+            string r;
             Residence res;
+
             while(pSettlements[i] >> veNum) {
                 pSettlements[i] >> r;
-                res = static_cast<Residence>(r);
+                res = getResFromStr(r);
                 tileNum = this->board.placeValidRes(to_string(veNum), static_cast<Color>(i), res);
                 players[i].addBuildingPoints(static_cast<int>(res));
-                players[i].addOccupiedTiles(tileNum);
+                updatePlayerSettlements(tileNum, to_string(veNum), static_cast<Color>(i)); 
             }
         }
     }
-
 
 bool Model::hasEnoughResoc(Color c, variant<Residence, Road> type) {
     return players[static_cast<int>(c)].hasEnoughResoc(settlementCost[type]);
 }
 
-// OLD CODE
-// void Model::roll(Color turn) {
-//     int tileValRolled = players[static_cast<int>(turn)].roll();
-//     if (tileValRolled == 7) {
-//         // GEESE STUFF HERE 
-//     }
-/* void Model::roll(Color turn) {
-    int tileValRolled = players[static_cast<int>(turn)].roll();
-    
-    if (tileValRolled == 7) {
-        // GEESE STUFF HERE 
+void Model::updatePlayerSettlements(int tileNum, string componentNum, Color c, bool isVertexNum) {
+    vector<int> occupTiles{tileNum}; // storing tileNum in vector
+    if (!players[static_cast<int>(c)].hasOccupTile(tileNum)) {
+        board.addTilesContaining(occupTiles, tileNum + 1, componentNum, isVertexNum); // adds all tiles sharing componentNum excluding tileNum
     }
- */
+    for (auto n : occupTiles) {
+        players[static_cast<int>(c)].addOccupiedTiles(n);
+    }
+}
 
+bool Model::placeRoad(string edgeNum, Color c) {
+    try {
+        board.placeRoad(edgeNum, c); // catch a vector of occupiedTiles if can build on the tile
+    } catch (int tileNum) {
+        updatePlayerSettlements(tileNum, edgeNum, c, false); // adds buidling points and occupied tiles
+        return true;
+    }
+    return false;
+}
 
-//     // gets resources for each player 
-//     for (int player = 0; player < playerAmount - 1; player++) {
-//         vector<int> occupiedTiles = players[player].getOccupiedTiles();
-//         int vecSize = occupiedTiles.size();
-//         for (int j = 0; j < vecSize; j++) {
-//             // gets the number of resources for 1 tile
-//             const pair<Resource, int> gainedResoc = board.getResoc(occupiedTiles[j], tileValRolled, static_cast<Color>(player));
-//             if (gainedResoc.second != 0) {
-//                 players[player].updateResocMap(gainedResoc);
-//             }
-//         }
-//     }
-// }
-//auto [resoc, amount] resocGained =
+pair<Residence, bool> Model::placeNonBasement(string bVertex, Color c) {
+    Residence res;
+    bool wasPlaced = false;
+    try {
+        board.placeNonBasement(bVertex, c); // catch a vector of occupiedTiles if can build on the tile
+    } catch (Residence r) {
+        if (r != Residence::NONE) {
+            wasPlaced = true;
+            players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(r));
+        }
+        res = r;
+    }
+    return {res, wasPlaced};
+}
 
-// returns if you can place a basement or not
-// in add OccupiedTiles, you would check for duplicates there
 bool Model::placeBasement(string bVertex, Color c, bool isDuringTurn) {
     try {
-        board.placeBasement(bVertex, c, isDuringTurn); // will only catch a vector of occupiedTiles if can build on the tile
-    } catch (const vector<int> &occupTiles) {
-        for (auto n : occupTiles) {
-            players[static_cast<int>(c)].addOccupiedTiles(n);
-        }
+        board.placeBasement(bVertex, c, isDuringTurn); // catch a vector of occupiedTiles if can build on the tile
+    } catch (int tileNum) {
+        updatePlayerSettlements(tileNum, bVertex, c); // adds buidling points and occupied tiles
         players[static_cast<int>(c)].addBuildingPoints(static_cast<int>(Residence::B));
         return true;
     }
-    return false; // if nothing gets thrown, means that residence was not able to be built on
+    return false; // residence was not able to be built on, if nothign was thrown
 }
 
 Tile* Model::getTiles() {
     return board.getTiles();
 }
 
+int Model::getBuildingPoints(int i) {
+    return players[i].getBuildingPoints(); 
+}
+
+Color Model::GetColour(int i){
+    return players[i].getColour(); 
+}
+
+map<Resource, int>& Model::getResocMap(int i) {
+    return players[i].getResocMap(); 
+}
+
 map<string, Residence> Model::getVertexResMap(int player) {
     string playerCol = getColorChar(this->players[player].getColour()); 
     map <string, Residence> m;
     for (int j : this->players[player].getOccupiedTiles()) { // all the tiles
-        for (int k = 0; k < 6; k++) { // all the vertices
+        for (int k = 0; k < verticesAmount; k++) { // all the vertices
             Vertex * vertex = this->getTiles()[j].getVertexAdr(static_cast<vertexEnum>(k)); 
             if (vertex->getPlayer() == playerCol) {
                 m[vertex->getLocation()] = vertex->getRes(); 
@@ -111,11 +123,10 @@ map<string, Residence> Model::getVertexResMap(int player) {
     return m; 
 }
 
-
 void Model::save(Color turn, string fileName) {
     ofstream backup{fileName};
-    
     backup << static_cast<int>(turn) << endl;
+    
     for (int i = 0; i < playerAmount; i++) {
         map<Resource, int> &resocMap = (players[i]).getResocMap();
         for (int j = 0; j < resocAmount - 1; j++) { // park not included
@@ -138,8 +149,8 @@ void Model::save(Color turn, string fileName) {
         }
         backup << endl;
     }
-    for (int i = 0; i < 19; i++) {
-        if (i == 18) {
+    for (int i = 0; i < tilesAmount; i++) {
+        if (i == tilesAmount - 1) {
             backup << board.getTileResoc(i) << " " << board.getTileVal(i) << endl;
             break;
         }
@@ -147,6 +158,7 @@ void Model::save(Color turn, string fileName) {
     }
     backup << to_string((board.getGeeseTile()));
 }
+
 void Model::setDice(Color c, string cmd) {
     players[static_cast<int>(c)].setDice(cmd);
 }
@@ -157,15 +169,12 @@ vector<map<Resource, int>> Model::diceRolledUpdate(int rollVal) {
     for (int i = 0; i < playerAmount; i++) {
         const vector<int>& occupTiles = players[i].getOccupiedTiles();
         for (auto tileNum : occupTiles) {
-            //{Resource::NA, 0}, {resocType, resocTotal}
-            resocGained = board.getResoc(tileNum, rollVal, static_cast<Color>(i)); // gets resource gained of 1 player for 1 reasource
+            resocGained = board.getResoc(tileNum, rollVal, static_cast<Color>(i)); // resource gained of 1 player for 1 reasource
             auto [resoc, resocNum] = resocGained;
             if (resocNum != 0) {
                 if (pResocsGained[i].count(resoc) == 0) {
                     pResocsGained[i][resoc] = resocNum;
-                } else {
-                    pResocsGained[i][resoc] += resocNum;
-                }
+                } else { pResocsGained[i][resoc] += resocNum; }
                 players[i].updateResocMap(resocGained);
             }
         }
@@ -173,42 +182,23 @@ vector<map<Resource, int>> Model::diceRolledUpdate(int rollVal) {
     return pResocsGained;
 }
 
-/*
-Player players[4];
-Board board;
-*/
-
 vector<pair<string, vector<pair<string, int>>>> Model::lostResoc() {
     vector<pair<string, vector<pair<string, int>>>> lostResocs;
-    for (auto p : players) {
-        if (p.getResocTotal() >= 10) {
-            vector<pair<string, int>> resocs = p.removeHalfResocs();
-            string c;
-
-            if (p.getColour() == Color::B) c = "Blue";
-            else if (p.getColour() == Color::O) c = "Orange";
-            else if (p.getColour() == Color::R) c = "Red";
-            else if (p.getColour() == Color::Y) c = "Yellow";
+    for (int i = 0; i < 4; ++i) {
+        if (players[i].getResocTotal() >= 10) {
+            vector<pair<string, int>> resocs = players[i].removeHalfResocs();
+            string c = getColorStr(players[i].getColour());
 
             lostResocs.emplace_back(make_pair(c, resocs));
         }
     }
-
     return lostResocs;
-}
-
-vector<pair<string, int>> Model::numLostResoc() {
+}vector<pair<string, int>> Model::numLostResoc() {
     vector<pair<string, int>> nLost;
     for (auto p : players) {
         if (p.getResocTotal() >= 10) {
             int numLost = p.getResocTotal() / 2;
-            string c;
-
-            if (p.getColour() == Color::B) c = "Blue";
-            else if (p.getColour() == Color::O) c = "Orange";
-            else if (p.getColour() == Color::R) c = "Red";
-            else if (p.getColour() == Color::Y) c = "Yellow";
-
+            string c = getColorStr(p.getColour());
             nLost.emplace_back(make_pair(c, numLost));
         }
     }
@@ -217,14 +207,15 @@ vector<pair<string, int>> Model::numLostResoc() {
 
 }
 
+
+
 void Model::placeGeese(int tile) {
     int geeseCurrentTile = board.getGeeseTile();
-
     if (tile != geeseCurrentTile) {
-        board.setGeese(geeseCurrentTile, false);
-        board.setGeese(tile, true);
+        board.setGeeseTileNum(tile);
+        board.setGeeseV2(geeseCurrentTile, false);
+        board.setGeeseV2(tile, true);
     }
-
 }
 
 vector<string> Model::getPlayersToStealFrom(Color turn) {
@@ -232,34 +223,37 @@ vector<string> Model::getPlayersToStealFrom(Color turn) {
     int geeseTile = board.getGeeseTile();
     string c;
 
-    for (auto n : players) {
-        if ((n.hasRes(geeseTile)) && (n.getResocTotal() >= 1) && (n.getColour() != turn)) {
-            c = getColorStr(n.getColour());
-            // conv enum Color to string
-            p.emplace_back(c);
+    for (int i = 0; i < 4; ++i) {
+        c = getColorStr(players[i].getColour());
+        if ((players[i].hasRes(geeseTile)) && (players[i].getResocTotal() >= 1) && (players[i].getColour() != turn)) {
+            if (board.isRes(geeseTile, c)) {
+                c = getColorStr(players[i].getColour());
+                p.emplace_back(c);
+            }
         }
     }
-
     return p;
-
 }
 
 string Model::steal(string curPlayer, string playerToSteal) {
     string c, r;
-    for (auto p : players) {
-        c = getColorStr(p.getColour()); // enum to str
-        if (c == playerToSteal){
-            r = p.stealResoc();
-        }
-    }
+    Resource resoc;
 
-    for (auto n : players) {
-        c = getColorStr(n.getColour());
+    for(int i = 0; i < 4; ++i) {
+        c = getColorStr(players[i].getColour());
+        if (c == playerToSteal) {
+            r = players[i].stealResoc();
+            resoc = getResocR(r);
+        }   
+    }
+    std::pair<Resource, int> gainedCur(resoc, 1);
+    
+    for (int k = 0; k < 4; ++k) {
+        c = getColorStr(players[k].getColour());
         if (c == curPlayer) {
-            n.addResoc(r);
+            players[k].updateResocMap(gainedCur);
         }
     }
-
     return r;
 }
 
@@ -275,17 +269,20 @@ bool Model::hasWon(Color turn) {
     return players[static_cast<int>(turn)].getBuildingPoints() >= winningGamePoints;
 }
 
-
 void Model::trade(string curPlayer, string tradePlayer, string give, string take) {
-    for (auto p : players) {
-        if(getColorStr(p.getColour()) == curPlayer) {
-            p.addResoc(take);
-            p.removeResoc(give);
+    Resource g = getResocR(give);
+    Resource t = getResocR(take);
+    std::pair<Resource, int> gainedCur(t, 1);
+    std::pair<Resource, int> lostCur(g, 1);
+    for (int i = 0; i < 4; ++i) {
+        string c = getColorStr(players[i].getColour());
+        if (c == curPlayer) {
+            players[i].updateResocMap(gainedCur);
+            players[i].removeResoc(lostCur);
         }
-        
-        if(getColorStr(p.getColour()) == tradePlayer) {
-            p.addResoc(give);
-            p.removeResoc(take);
+        if (c == tradePlayer) {
+            players[i].updateResocMap(lostCur);
+            players[i].removeResoc(gainedCur);
         }
     }
 }
@@ -297,26 +294,27 @@ int Model::fairRoll(Color turn) {
             rollVal = p.fairRoll();
         }
     }
-
     return rollVal;
 }
 
 bool Model::enoughResoc(string curPlayer, string give) {
-    for (auto p : players) {
-        if (getColorStr(p.getColour()) == curPlayer) {
-            return p.enoughResoc(give);
+    for(int i = 0; i < playerAmount; ++i) {
+        if (getColorStr(players[i].getColour()) == curPlayer) {
+            return players[i].enoughResoc(give);
         }
     }
-
     return false;
 }
 
 bool Model::validSteal(string tradePlayer, string take) {
-    for (auto p : players) {
-        if (getColorStr(p.getColour()) == tradePlayer) {
-            return p.validSteal(take);
+    for (int i = 0; i < playerAmount; ++i) {
+        if (getColorStr(players[i].getColour()) == tradePlayer) {
+            return players[i].validSteal(take);
         }
     }
-
     return false;
+}
+
+int Model::getGeeseTile() {
+    return board.getGeeseTile();
 }

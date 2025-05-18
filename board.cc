@@ -1,4 +1,3 @@
-
 #include <iomanip>
 #include <vector>
 #include <iostream>
@@ -11,8 +10,8 @@
  
 using namespace std;
 
-const unsigned long maxSharedTiles = 3; /// magic number
-const int tilesNum = 19;
+const unsigned long maxVSharedTiles = 3; // cut down on runtime
+const int tilesAmount = 19;
 
 Board::Board(istringstream &iss, int geeseTileNum) : Board{iss, true} { 
     this->geeseTileNum = geeseTileNum; 
@@ -21,49 +20,80 @@ Board::Board(istringstream &iss, int geeseTileNum) : Board{iss, true} {
 
 int Board::getGeeseTile() { return geeseTileNum; }
 
+void Board::setGeeseTileNum(int tile) { 
+    geeseTileNum = tile;
+}
+
 void Board::addSettlementsLocation(int tileNum, Color c, vector<string> &roads, vector<string> &resNum, vector<Residence> &resType) {
     tiles[tileNum].addSettlementsLocation(c, roads, resNum, resType);
 }
 
-string Board::getTileVal(int num) { return tiles[num].getTileValueReg(); }    
+string Board::getTileVal(int num) { return tiles[num].getTileValueReg(); }  
+
 string Board::getTileResoc(int num) { return tiles[num].getResocIntFormat(); }
 
-// returns true if bVertex is a vertex that is shared by/adjacent to multiple tiles (more than 1).
-bool Board::isSharedVertex(string bVertex) {
-    vector<string> nonSharedV{"0","1","2","5","6","11","12","17","24","29","36","41","42","47","48","51","52","53"};
-    for (auto n : nonSharedV) {
-        if(bVertex == n) { return false; }
+// returns true if bVertex is a vertex that is shared by/adjacent to multiple tiles.
+bool Board::isShared(string componentNum, bool isVertex) {
+    if (isVertex) {
+        for (auto n : nonSharedV) {
+            if(componentNum == n) { return false; }
+        }
+    } else {
+        for (auto n : nonSharedE) {
+            if(componentNum == n) { return false; }
+        }
     }
     return true;
 }
 
-// Used to find all tiles sharing bVertex and add them to occupTiles.
-// This excludes the first tile in the board that contains bVertex and assumes it has
-// already been added to occupTiles.
-void Board::addTilesHavingVertex(vector<int> &occupTiles, int startingTile, string bVertex) {
-     if (isSharedVertex(bVertex)) { // means bVertex is shared by many tiles
-        for (int j = startingTile; j < tilesNum; j++) {
-            if (tiles[j].tileHasVertex(bVertex)) {
+/*  Used to find all tiles starting at startingTile sharing componentNum
+    and add them to occupTiles. Assumes original tile found has already 
+    been added to occupTiles */
+void Board::addTilesContaining(vector<int> &occupTiles,int startingTile, string componentNum, bool isVertexNum) {
+    if (isShared(componentNum, isVertexNum)) { // means bVertex is shared by many tiles
+        for (int j = startingTile; j < tilesAmount; j++) {
+            if (tiles[j].tileHasVE(componentNum, isVertexNum)) {
                 occupTiles.emplace_back(j);
-                if (occupTiles.size() == maxSharedTiles) { break; } // to prevent unecessary looping,
+                if (isVertexNum) {
+                    if (occupTiles.size() == maxVSharedTiles) { return; } // to prevent unecessary looping,
+                } else {
+                    return; // maximum shared edges by tiles is 2 and occupTiles already has 1 tile when a paramater
+                }
             }
         }
     }
 }
 
-// only throws if it knows you can place a res
-// then throws a vector of all tiles having the vertex that you are building on.
+void Board::placeNonBasement(string vertexNum, Color c) {
+    for (int i = 0; i < tilesAmount; i++) {
+        try {
+            tiles[i].placeNonBasement(vertexNum, c);
+        } catch (Residence r) {
+            throw r;
+        }
+    }
+}
+
 void Board::placeBasement(string bVertex, Color c, bool isDuringTurn) {
-    // if the vertex is shared by 2 tiles, need to add the second tile to
-    //      list of occupied tiles.
-    for (int i = 0; i < tilesNum; i++) {
+    for (int i = 0; i < tilesAmount; i++) {
         try {
             tiles[i].placeBasement(bVertex, c, isDuringTurn);
         } catch(bool isValid){
             if(isValid) {
-                vector<int> occupTiles{i}; // adding tile i to vector
-                addTilesHavingVertex(occupTiles, i + 1, bVertex);
-                throw occupTiles;
+                throw i;
+            }
+            return;
+        }
+    }
+}
+
+void Board::placeRoad(string edgeNum, Color c) {
+    for (int i = 0; i < tilesAmount; i++) {
+        try {
+            tiles[i].placeRoad(edgeNum, c);
+        } catch(bool isValid){
+            if(isValid) {
+                throw i;
             }
             return;
         }
@@ -117,116 +147,88 @@ tiles{
 } {
     // reading in resources and tile values from ifs
     int tileVal, resoc;
-    for (int i = 0 ; i < tilesNum; i++) {
+    for (int i = 0 ; i < tilesAmount; i++) {
         iss >> resoc >> tileVal;
         tiles[i].setTileVal(tileVal);
         if (isLoadGame) { 
             tiles[i].setResoc(static_cast<Resource>(resoc));
-        } else if (tiles[i].setResocSetGeese(static_cast<Resource>(resoc))) { // isLoadGame = false here
+        } else if (tiles[i].setResocSetGeese(static_cast<Resource>(resoc))) {
             geeseTileNum = i;
         } 
     }
 
-// TILE 0
     // Tile 0, Vertex 0
-    // Adjacent Vertices: 1(TR), 3(ML)
     tiles[0].placeAdjVerticesV(vertexEnum::TL, 
         vector<Vertex*>{tiles[0].getVertexAdr(vertexEnum::TR), tiles[0].getVertexAdr(vertexEnum::ML)});
-    // Adjacent Edges: 0(T), 1(TL)
     tiles[0].placeAdjEdgesV(vertexEnum::TL, 
         vector<Edge*>{tiles[0].getEdgeAdr(edgeEnum::T), tiles[0].getEdgeAdr(edgeEnum::TL)});
 
     // Tile 0, Edge 0
-    // Adjacent Vertices: 0(TL), 1(TR)
     tiles[0].placeAdjVerticesE(edgeEnum::T,
         vector<Vertex*>{tiles[0].getVertexAdr(vertexEnum::TL), tiles[0].getVertexAdr(vertexEnum::TR)});
-    // Adjacent Edges: 1(TL), 2(TR)
     tiles[0].placeAdjEdgesE(edgeEnum::T,
         vector<Edge*>{tiles[0].getEdgeAdr(edgeEnum::TL), tiles[0].getEdgeAdr(edgeEnum::TR)});
 
     // Tile 0, Vertex 1
-    // Adjacent Vertices: 0(TL), 4(MR)
     tiles[0].placeAdjVerticesV(vertexEnum::TR, 
         vector<Vertex*>{tiles[0].getVertexAdr(vertexEnum::TL), tiles[0].getVertexAdr(vertexEnum::MR)});
-    // Adjacent Edges: 0(T), 2(TR)
     tiles[0].placeAdjEdgesV(vertexEnum::TR, 
         vector<Edge*>{tiles[0].getEdgeAdr(edgeEnum::T), tiles[0].getEdgeAdr(edgeEnum::TR)});
 
     // Tile 0, Edge 1
-    // Adjacent Vertices: 0(TL), 3(ML)
     tiles[0].placeAdjVerticesE(edgeEnum::TL,
         vector<Vertex*>{tiles[0].getVertexAdr(vertexEnum::TL), tiles[0].getVertexAdr(vertexEnum::ML)});
-    // Adjacent Edges: 3(TILE 1: T), 6(BL), 0(T)
     tiles[0].placeAdjEdgesE(edgeEnum::TL,
         vector<Edge*>{tiles[1].getEdgeAdr(edgeEnum::T), tiles[0].getEdgeAdr(edgeEnum::BL), tiles[0].getEdgeAdr(edgeEnum::T)});
 
     // Tile 0, Edge 2
-    // Adjacent Vertices: TR, MR
     tiles[0].placeAdjVerticesE(edgeEnum::TR, 
         vector<Vertex*>{tiles[0].getVertexAdr(vertexEnum::TR), tiles[0].getVertexAdr(vertexEnum::MR)});
-    // Adjacent Edges: T, BR, TILE 2: T
     tiles[0].placeAdjEdgesE(edgeEnum::TR, 
         vector<Edge*>{tiles[0].getEdgeAdr(edgeEnum::T), tiles[0].getEdgeAdr(edgeEnum::BR), tiles[2].getEdgeAdr(edgeEnum::T)});
 
     // Tile 0, Vertex 3
-    // Adjacent Vertices: TL, BL, TILE 1: TL
     tiles[0].placeAdjVerticesV(vertexEnum::ML, 
         vector<Vertex*>{tiles[0].getVertexAdr(vertexEnum::TL), tiles[0].getVertexAdr(vertexEnum::BL), tiles[1].getVertexAdr(vertexEnum::TL)});
-    // Adjacent Edges: TL, BL, TILE 1: T
     tiles[0].placeAdjEdgesV(vertexEnum::ML, 
         vector<Edge*>{tiles[0].getEdgeAdr(edgeEnum::TL), tiles[0].getEdgeAdr(edgeEnum::BL), tiles[1].getEdgeAdr(edgeEnum::T)});
 
     // Tile 0, Vertex 4
-    // Adjacent Vertices: TR, BR, TILE 2: TR
     tiles[0].placeAdjVerticesV(vertexEnum::MR, 
         vector<Vertex*>{tiles[0].getVertexAdr(vertexEnum::TR), tiles[0].getVertexAdr(vertexEnum::BR), tiles[2].getVertexAdr(vertexEnum::TR)});
-    // Adjacent Edges: TR, BR, TILE 2: T
     tiles[0].placeAdjEdgesV(vertexEnum::MR, 
         vector<Edge*>{tiles[0].getEdgeAdr(edgeEnum::TR), tiles[0].getEdgeAdr(edgeEnum::BR), tiles[2].getEdgeAdr(edgeEnum::T)});
 
     // Tile 0, Edge 6
-    // Adjacent Vertices: ML, BL
     tiles[0].placeAdjVerticesE(edgeEnum::BL, 
         vector<Vertex*>{tiles[0].getVertexAdr(vertexEnum::ML), tiles[0].getVertexAdr(vertexEnum::BL)});
-    // Adjacent Edges: TL, B, TILE 1: T, BR
     tiles[0].placeAdjEdgesE(edgeEnum::BL, 
         vector<Edge*>{tiles[0].getEdgeAdr(edgeEnum::TL), tiles[0].getEdgeAdr(edgeEnum::B), tiles[1].getEdgeAdr(edgeEnum::T), tiles[1].getEdgeAdr(edgeEnum::BR)});
 
     // Tile 0, Edge 7
-    // Adjacent Vertices: MR, BR
     tiles[0].placeAdjVerticesE(edgeEnum::BR, 
         vector<Vertex*>{tiles[0].getVertexAdr(vertexEnum::MR), tiles[0].getVertexAdr(vertexEnum::BR)});
-    // Adjacent Edges: TR, B, TILE 2: T, BL
     tiles[0].placeAdjEdgesE(edgeEnum::BR, 
         vector<Edge*>{tiles[0].getEdgeAdr(edgeEnum::TR), tiles[0].getEdgeAdr(edgeEnum::B), tiles[2].getEdgeAdr(edgeEnum::T), tiles[2].getEdgeAdr(edgeEnum::BL)});
 
     // Tile 0, Vertex 8
-    // Adjacent Vertices: ML, BR, TILE 1: BR
     tiles[0].placeAdjVerticesV(vertexEnum::BL, 
         vector<Vertex*>{tiles[0].getVertexAdr(vertexEnum::ML), tiles[0].getVertexAdr(vertexEnum::BR), tiles[1].getVertexAdr(vertexEnum::BR)});
-    // Adjacent Edges: BL, B, TILE 1: BR
     tiles[0].placeAdjEdgesV(vertexEnum::BL, 
         vector<Edge*>{tiles[0].getEdgeAdr(edgeEnum::BL), tiles[0].getEdgeAdr(edgeEnum::B), tiles[1].getEdgeAdr(edgeEnum::BR)});
     
     // Tile 0, Edge 10
-    // Adjacent Vertices: BL, BR
     tiles[0].placeAdjVerticesE(edgeEnum::B, 
         vector<Vertex*>{tiles[0].getVertexAdr(vertexEnum::BL), tiles[0].getVertexAdr(vertexEnum::BR)});
-    // Adjacent Edges: BL, BR, TILE 4: TL, TR
     tiles[0].placeAdjEdgesE(edgeEnum::B, 
         vector<Edge*>{tiles[0].getEdgeAdr(edgeEnum::BL), tiles[0].getEdgeAdr(edgeEnum::BR), tiles[4].getEdgeAdr(edgeEnum::TL), tiles[4].getEdgeAdr(edgeEnum::TR)});
 
     // Tile 0, Vertex 9
-    // Adjacent Vertices: MR, BL, TILE 2: BL
     tiles[0].placeAdjVerticesV(vertexEnum::BR, 
         vector<Vertex*>{tiles[0].getVertexAdr(vertexEnum::MR), tiles[0].getVertexAdr(vertexEnum::BL), tiles[2].getVertexAdr(vertexEnum::BL)});
-    // Adjacent Edges: BR, B, TILE 2: BL
     tiles[0].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[0].getEdgeAdr(edgeEnum::BR), tiles[0].getEdgeAdr(edgeEnum::B), tiles[2].getEdgeAdr(edgeEnum::BL)});
     
-    // ---------------------------------------------
-
-    // TILE 1
     // Tile 1, Vertex 2
     tiles[1].placeAdjVerticesV(vertexEnum::TL, 
         vector<Vertex*>{tiles[1].getVertexAdr(vertexEnum::TR), tiles[1].getVertexAdr(vertexEnum::ML)});
@@ -281,9 +283,6 @@ tiles{
     tiles[1].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[1].getEdgeAdr(edgeEnum::BR), tiles[1].getEdgeAdr(edgeEnum::B), tiles[4].getEdgeAdr(edgeEnum::BL)});
 
-    // ---------------------------------------
-
-    // TILE 2
     // Tile 2, Edge 4
     tiles[2].placeAdjVerticesE(edgeEnum::T,
         vector<Vertex*>{tiles[2].getVertexAdr(vertexEnum::TL), tiles[2].getVertexAdr(vertexEnum::TR)});
@@ -339,9 +338,6 @@ tiles{
     tiles[2].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[2].getEdgeAdr(edgeEnum::BR), tiles[2].getEdgeAdr(edgeEnum::B), tiles[5].getEdgeAdr(edgeEnum::BL)});
 
-    // ---------------------------------------
-
-    // TILE 3
     // Tile 3, Vertex 6
     tiles[3].placeAdjVerticesV(vertexEnum::TL, 
         vector<Vertex*>{tiles[3].getVertexAdr(vertexEnum::TR), tiles[3].getVertexAdr(vertexEnum::ML)});
@@ -396,9 +392,6 @@ tiles{
     tiles[3].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[3].getEdgeAdr(edgeEnum::BR), tiles[3].getEdgeAdr(edgeEnum::B), tiles[8].getEdgeAdr(edgeEnum::TR)});
 
-    // ---------------------------------------
-
-    // TILE 4
     // Tile 4, Edge 22
     tiles[4].placeAdjVerticesE(edgeEnum::BL, 
         vector<Vertex*>{tiles[4].getVertexAdr(vertexEnum::ML), tiles[4].getVertexAdr(vertexEnum::BL)});
@@ -429,9 +422,6 @@ tiles{
     tiles[4].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[4].getEdgeAdr(edgeEnum::BR), tiles[4].getEdgeAdr(edgeEnum::B), tiles[9].getEdgeAdr(edgeEnum::TR)});
 
-    // ---------------------------------------
-
-    // TILE 5
     // Tile 5, Edge 11
     tiles[5].placeAdjVerticesE(edgeEnum::T,
         vector<Vertex*>{tiles[5].getVertexAdr(vertexEnum::TL), tiles[5].getVertexAdr(vertexEnum::TR)});
@@ -486,9 +476,6 @@ tiles{
     tiles[5].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[5].getEdgeAdr(edgeEnum::BR), tiles[5].getEdgeAdr(edgeEnum::B), tiles[10].getEdgeAdr(edgeEnum::TR)});
 
-    // ---------------------------------------
-
-    // TILE 6
     // Tile 6, Edge 30
     tiles[6].placeAdjVerticesE(edgeEnum::BL, 
         vector<Vertex*>{tiles[6].getVertexAdr(vertexEnum::ML), tiles[6].getVertexAdr(vertexEnum::BL)});
@@ -519,9 +506,6 @@ tiles{
     tiles[6].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[6].getEdgeAdr(edgeEnum::BR), tiles[6].getEdgeAdr(edgeEnum::B), tiles[11].getEdgeAdr(edgeEnum::TR)});
 
-    // ---------------------------------------
-
-    // TILE 7
     // Tile 7, Edge 32
     tiles[7].placeAdjVerticesE(edgeEnum::BL, 
         vector<Vertex*>{tiles[7].getVertexAdr(vertexEnum::ML), tiles[7].getVertexAdr(vertexEnum::BL)});
@@ -552,8 +536,6 @@ tiles{
     tiles[7].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[7].getEdgeAdr(edgeEnum::BR), tiles[7].getEdgeAdr(edgeEnum::B), tiles[12].getEdgeAdr(edgeEnum::TR)});
 
-    // ---------------------------------------
-    // TILE 8  
     // Tile 8, Edge 29
     tiles[8].placeAdjVerticesE(edgeEnum::TL,
         vector<Vertex*>{tiles[8].getVertexAdr(vertexEnum::TL), tiles[8].getVertexAdr(vertexEnum::ML)});
@@ -596,8 +578,6 @@ tiles{
     tiles[8].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[8].getEdgeAdr(edgeEnum::BR), tiles[8].getEdgeAdr(edgeEnum::B), tiles[13].getEdgeAdr(edgeEnum::TR)});
 
-    // ---------------------------------------
-    // TILE 9
     // Tile 9, Edge 39
     tiles[9].placeAdjVerticesE(edgeEnum::BL, 
         vector<Vertex*>{tiles[9].getVertexAdr(vertexEnum::ML), tiles[9].getVertexAdr(vertexEnum::BL)});
@@ -628,8 +608,6 @@ tiles{
     tiles[9].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[9].getEdgeAdr(edgeEnum::BR), tiles[9].getEdgeAdr(edgeEnum::B), tiles[14].getEdgeAdr(edgeEnum::TR)});
 
-    // ---------------------------------------
-    // TILE 10
     // Tile 10, Edge 34
     tiles[10].placeAdjVerticesE(edgeEnum::TR, 
         vector<Vertex*>{tiles[10].getVertexAdr(vertexEnum::TR), tiles[10].getVertexAdr(vertexEnum::MR)});
@@ -672,8 +650,6 @@ tiles{
     tiles[10].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[10].getEdgeAdr(edgeEnum::BR), tiles[10].getEdgeAdr(edgeEnum::B), tiles[15].getEdgeAdr(edgeEnum::TR)});
 
-    // ---------------------------------------
-    // TILE 11
     // Tile 11, Edge 47
     tiles[11].placeAdjVerticesE(edgeEnum::BL, 
         vector<Vertex*>{tiles[11].getVertexAdr(vertexEnum::ML), tiles[11].getVertexAdr(vertexEnum::BL)});
@@ -704,8 +680,6 @@ tiles{
     tiles[11].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[11].getEdgeAdr(edgeEnum::BR), tiles[11].getEdgeAdr(edgeEnum::B), tiles[16].getEdgeAdr(edgeEnum::TR)});
 
-// ---------------------------------------
-    // TILE 12
     // Tile 12, Edge 49
     tiles[12].placeAdjVerticesE(edgeEnum::BL, 
         vector<Vertex*>{tiles[12].getVertexAdr(vertexEnum::ML), tiles[12].getVertexAdr(vertexEnum::BL)});
@@ -736,9 +710,6 @@ tiles{
     tiles[12].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[12].getEdgeAdr(edgeEnum::BR), tiles[12].getEdgeAdr(edgeEnum::B), tiles[17].getEdgeAdr(edgeEnum::TR)});
 
-    // ---------------------------------------
-
-    // TILE 13
     // Tile 13, Edge 46
     tiles[13].placeAdjVerticesE(edgeEnum::TL,
         vector<Vertex*>{tiles[13].getVertexAdr(vertexEnum::TL), tiles[13].getVertexAdr(vertexEnum::ML)});
@@ -781,10 +752,6 @@ tiles{
     tiles[13].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[13].getEdgeAdr(edgeEnum::BR), tiles[13].getEdgeAdr(edgeEnum::B), tiles[16].getEdgeAdr(edgeEnum::BL)});
 
-
-    // ---------------------------------------
-
-    // TILE 14
     // Tile 14, Edge 56
     tiles[14].placeAdjVerticesE(edgeEnum::BL, 
         vector<Vertex*>{tiles[14].getVertexAdr(vertexEnum::ML), tiles[14].getVertexAdr(vertexEnum::BL)});
@@ -815,9 +782,6 @@ tiles{
     tiles[14].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[14].getEdgeAdr(edgeEnum::BR), tiles[14].getEdgeAdr(edgeEnum::B), tiles[18].getEdgeAdr(edgeEnum::TR)});
 
-    // ---------------------------------------
-
-    // TILE 15
     // Tile 15, Edge 51
     tiles[15].placeAdjVerticesE(edgeEnum::TR, 
         vector<Vertex*>{tiles[15].getVertexAdr(vertexEnum::TR), tiles[15].getVertexAdr(vertexEnum::MR)});
@@ -860,9 +824,6 @@ tiles{
     tiles[15].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[15].getEdgeAdr(edgeEnum::BR), tiles[15].getEdgeAdr(edgeEnum::B)});
 
-    // ---------------------------------------
-
-    // TILE 16
     // Tile 16, Edge 63
     tiles[16].placeAdjVerticesE(edgeEnum::BL, 
         vector<Vertex*>{tiles[16].getVertexAdr(vertexEnum::ML), tiles[16].getVertexAdr(vertexEnum::BL)});
@@ -893,10 +854,6 @@ tiles{
     tiles[16].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[16].getEdgeAdr(edgeEnum::BR), tiles[16].getEdgeAdr(edgeEnum::B), tiles[18].getEdgeAdr(edgeEnum::BL)});
 
-
-    // ---------------------------------------
-
-    // TILE 17
     // Tile 17, Edge 65
     tiles[17].placeAdjVerticesE(edgeEnum::BL, 
         vector<Vertex*>{tiles[17].getVertexAdr(vertexEnum::ML), tiles[17].getVertexAdr(vertexEnum::BL)});
@@ -927,9 +884,6 @@ tiles{
     tiles[17].placeAdjEdgesV(vertexEnum::BR, 
         vector<Edge*>{tiles[17].getEdgeAdr(edgeEnum::BR), tiles[17].getEdgeAdr(edgeEnum::B)});
 
-    // ---------------------------------------
-    
-    // TILE 18
     // Tile 18, Edge 69
     tiles[18].placeAdjVerticesE(edgeEnum::BL, 
         vector<Vertex*>{tiles[18].getVertexAdr(vertexEnum::ML), tiles[18].getVertexAdr(vertexEnum::BL)});
@@ -959,90 +913,40 @@ tiles{
         vector<Vertex*>{tiles[18].getVertexAdr(vertexEnum::BL), tiles[18].getVertexAdr(vertexEnum::BR)});
     tiles[18].placeAdjEdgesE(edgeEnum::B, 
         vector<Edge*>{tiles[18].getEdgeAdr(edgeEnum::BL), tiles[18].getEdgeAdr(edgeEnum::BR)});
-
-    //cout << tiles[1].vertices[0]->adjEdges[0] << endl;
-
-    /* for (auto n : tiles) {
-        cout << "Tile: " << n.tileNum << endl;
-        for (auto m : n.vertices) {
-            cout << endl << "Vertex: " << m->location << endl;
-            cout << "Adjacent Edges: ";
-            for (auto k : m->adjEdges) {
-                cout << k->location << " ";
-            }
-            cout << endl;
-            cout << "Adjacent Vertices: ";
-            for (auto l : m->adjVertices) {
-                cout << l->location << " ";
-            }
-            cout << endl;
-        }
-        for (auto p : n.edges) {
-            cout << endl << "Edge: " << p->location << endl;
-            cout << "Adjacent Edges: ";
-            for (auto a : p->adjEdges) {
-              cout << a->location << " ";
-            }
-            cout << endl;
-            cout << "Adjacent Vertices: ";
-            for (auto b : p->adjVertices) {
-              cout << b->location << " ";
-            }
-            cout << endl;
-        }
-        cout << endl;
-    }
-    */
-//*/
 }
-    /*
-    int tileVal, r;
-    ifs >> r >> tileVal;
-    tile[0].setVal(tileVal);
-    tile[0].setResoc(r);   
-   
-    tile[0].placeAdjVerticesV(0, vector<Vertex*> temp {tile[0].getVertexAt(1), tile[0].getVertexAt(3)});
-    placeAdjEdgesV
-
-    Vertex Class:
-    placeAdjVerticesV
-    placeAdjEdgesV
-
-    Edge Class:
-    placeAdjVerticesE
-    placeAdjEdgesE
-*/
 
 // returns tileNum that road is on
 int Board::placeValidRoad(string edgeNum, Color color) {
-    // finding what tile the road is on and placing it
-    for (int i = 0; i < tilesNum; i++) {
+    for (int i = 0; i < tilesAmount; i++) {
         if(tiles[i].isPlaceValidRoad(edgeNum, color)) {
             return i;
         }
     }
-    return -1; // just so compiler doesn't give a warning for no return statement
+    return -1;
 }
 
 int Board::placeValidRes(string vertexNum, Color color, Residence res) {
-     // finding what tile the res is on and placing it
-    for (int i = 0; i < tilesNum; i++) {
+    for (int i = 0; i < tilesAmount; i++) {
         if(tiles[i].isPlaceValidRes(vertexNum, color, res)) {
             return i;
         }
     }
-    return -1; // just so compiler doesn't give a warning for no return statement
+    return -1;
 }
 
 Tile *Board::getTiles() {
     return this->tiles;
 }
 
-
 pair<Resource, int> Board::getResoc(int tileNum, int tileValRolled, Color player) const {
     return tiles[tileNum].evalResoc(tileValRolled, player);
 }
 
-void Board::setGeese(int tileNum, bool geese) {
+void Board::setGeeseV2(int tileNum, bool geese) {
     tiles[tileNum].setGeese(geese);
+}
+
+bool Board::isRes(int tileNum, string colour) {
+    return tiles[tileNum].isRes(colour);
+
 }
