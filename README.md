@@ -1,8 +1,7 @@
 # Catan OOP Game
 
 Introduction
-<br>
-This document provides an in-depth analysis of the game "Constructors," which is inspired by the popular board game Catan. This project showcases the application of various design patterns and OOP principles. This report includes the overall structure, the UML class model, and the design techniques used in the code.
+Built a fully functional multiplayer version of Catan from scratch in C++, emphasizing clean architecture and maintainability. Used the Model-View-Controller design pattern to decouple the game logic (Model), user input handling (Controller), and terminal-based UI (View). The game supports loading/saving states, randomized or user-defined boards, and features complex game mechanics like resource trading, road/residence building, and the geese mechanic. Employed C++ features such as smart pointers, enums, and exception handling to ensure stability and scalability.
 
 Architecture
 <br>
